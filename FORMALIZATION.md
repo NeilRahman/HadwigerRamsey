@@ -505,12 +505,17 @@ Checked results so far:
 | Connected dominating cores turn a complete family into a clique minor | `cliqueMinor_of_complete_dominated`, `BranchSets.lean` |
 | Uniform logarithm and product-mass perturbation bounds | `log_lipschitz`, `product_mass_stability`, `lambda_stability`, `Stability.lean` |
 | Multiplicative accuracy gives the exact additive error outside the square root | `additive_accuracy` |
+| Public finite vertex-Menger proof, with its full proof dependency subset | `Lax17Proofs.SimpleGraph.Menger.finite_vertex_menger_sharp`, `vendor/menger/` |
+| Cut connectivity supplies disjoint set-to-set paths | `disjoint_paths_between_large_sets`, `Menger.lean` |
+| Cut connectivity supplies internally disjoint paths, including adjacent endpoints | `internally_disjoint_paths`, `Menger.lean` |
+| Appendix A.4, with positive connectivity and the same constants | `short_paths_vertexConnectivity`, `short_paths`, `Menger.lean`; counting in `ShortPaths.lean` |
+| Greedily choose globally disjoint interiors from large candidate families | `exists_path_avoiding`, `allocate_path_interiors`, `PathAllocation.lean` |
 
 The following substantial ingredients remain unproved: the random
 multitype complete-equipartition lemma (including its sampling and
 expectation estimates); the full graph-deletion density stability lemma;
 integer rounding and the uniform asymptotic corollary; the existence of
-the random reservoirs and their short disjoint path families; and the
+the random reservoirs and their surviving short disjoint path families; and the
 final assembly and uniform choice of n-zero. The checked selection lemma
 does not assert that the reservoirs themselves exist.
 
@@ -528,9 +533,12 @@ was located. A public finite vertex-Menger proof was located in
 That snapshot uses Lean 4.33.0 and Mathlib commit
 `db584cd6d46c92f209a44c0f1c829460d327499d`, now matching this project's
 Lean/Mathlib version. The earlier temporary trial under 4.24 exposed missing
-newer walk/list APIs. The external proof is still not imported, vendored,
-or counted as an established dependency of this project. Assessing and
-integrating it is future work, outside this upgrade of the existing lemmas.
+newer walk/list APIs. The four-file proof dependency subset is now vendored
+unchanged under `vendor/menger/`, with its Apache 2.0 license and provenance.
+The public theorem is used directly, and its kernel dependency report is
+included in the root build. The upstream concept/contract files are not
+imported. The local bridge derives internally disjoint endpoint paths from
+the public set-to-set theorem and this project's cut definition of connectivity.
 
 Logical correspondence of the work completed so far:
 
@@ -552,6 +560,30 @@ Logical correspondence of the work completed so far:
    appendix: any disjoint connected dominating enlargements suffice.
    It preserves the same branch-set argument. No new assertion about
    finding those enlargements is assumed to establish Theorem 1.5.
+6. Appendix A.4 explicitly assumes positive connectivity, as already
+   authorized. Its parameter `k` may be any positive lower bound on the
+   vertex connectivity, so the manuscript's value follows by taking
+   `k = vertexConnectivity G`. The path count is written `k ≤ 2 * Q.card`,
+   which is exactly the claimed real inequality `Q.card ≥ k/2`.
+   `short_paths_vertexConnectivity` also states that specialization explicitly,
+   using the manuscript's real-valued path-count inequality.
+7. The cited Menger step is expanded using the existing public proof.
+   For nonadjacent endpoints, a neighborhood packing gives `k` paths.
+   For adjacent endpoints, it gives `k-1` paths with nonempty interiors,
+   and the direct edge supplies the additional path. These details do not
+   change the manuscript's argument or conclusion.
+8. The counting proof uses the weaker bound of `n` on the total number
+   of internal vertices, rather than `n-2`. This suffices for exactly the
+   same bound `2n/k+1`. Lean filters the finite path family into short
+   and long paths and compares their total numbers of internal vertices.
+9. The final greedy path-allocation argument is stated for any finite
+   list of requested distinct endpoint pairs. A candidate family for each
+   request has more than `number_of_requests * (H-1)` internally disjoint
+   paths, each of length at most `H` with interior in `C`. This is exactly
+   the finite counting condition used in the appendix, abstracted from
+   the consecutive-pair lists in the sets `M_a`. The reservoir existence,
+   the asymptotic inequality ensuring that condition, and the construction
+   of the connected cores are not assumed proved by this lemma.
 
 The root build covers all current first-party modules and prints the
 standard-foundation dependency reports for the main new helper results.

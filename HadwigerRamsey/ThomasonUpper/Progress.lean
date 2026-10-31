@@ -4,6 +4,8 @@ import HadwigerRamsey.ThomasonUpper.ReservoirDomination
 import HadwigerRamsey.ThomasonUpper.BranchSets
 import HadwigerRamsey.ThomasonUpper.Deletion
 import HadwigerRamsey.ThomasonUpper.Stability
+import HadwigerRamsey.ThomasonUpper.Menger
+import HadwigerRamsey.ThomasonUpper.PathAllocation
 
 /-!
 Checked ingredients toward Theorem 1.5 of the October 31 manuscript.

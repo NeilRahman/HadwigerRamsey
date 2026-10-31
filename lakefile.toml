@@ -13,3 +13,7 @@ rev = "v4.33.0"
 [[lean_lib]]
 name = "LeanCert"
 srcDir = "vendor/lean-cert"
+
+[[lean_lib]]
+name = "Lax17Proofs"
+srcDir = "vendor/menger"

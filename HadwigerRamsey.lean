@@ -23,3 +23,9 @@ import HadwigerRamsey.ThomasonUpper.Progress
 #print axioms HadwigerRamsey.ThomasonUpper.reservoir_dominating_sets
 #print axioms HadwigerRamsey.ThomasonUpper.cliqueMinor_of_complete_dominated
 #print axioms HadwigerRamsey.ThomasonUpper.lambda_stability
+#print axioms Lax17Proofs.SimpleGraph.Menger.finite_vertex_menger_sharp
+#print axioms HadwigerRamsey.ThomasonUpper.disjoint_paths_between_large_sets
+#print axioms HadwigerRamsey.ThomasonUpper.internally_disjoint_paths
+#print axioms HadwigerRamsey.ThomasonUpper.short_paths
+#print axioms HadwigerRamsey.ThomasonUpper.short_paths_vertexConnectivity
+#print axioms HadwigerRamsey.ThomasonUpper.allocate_path_interiors
