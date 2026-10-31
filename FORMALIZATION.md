@@ -299,23 +299,112 @@ analytic library or vendored code for this lemma.
   of the logarithmic cost before the same midpoint inequality. It does
   not require rescaling probabilities. The public `opt` theorem
   specializes the helper to the original positive-weight/equality
-  hypotheses. The stronger helper is useful for a future compactness
-  proof; it is not an `optapprox` formalization.
+  hypotheses. The stronger helper is available for reuse; the later `optapprox` proof
+  instead uses the explicitly requested reduction to the public `opt` theorem.
 - In `diagonal_le_function`, a zero weight is handled directly before
   division by αᵢ². For a positive weight, the proof follows the
   manuscript's exponential comparison. The constant β is proved
   positive as `HadwigerRamsey.beta_pos`, and all logarithm domains and
   radicand nonnegativity are justified explicitly. These are consequences
   of the existing assumptions, not new conditions.
-- There are no other logical changes. In particular, no compactness
-  theorem, approximate parameter δ, or `optapprox` endpoint is added.
+- There are no other logical changes to the `opt` argument. The
+  `optapprox` corollary is treated separately below.
 
 The manuscript source remains unchanged; the preceding corrections are
-implemented in the Lean proof and recorded here. For the future
-`optapprox` task, the agreed intended statement uses the closed bounds
-αᵢ ≥ 0 and pᵢ,qᶜᵢⱼ ≤ 1−ζ, and explicitly supplies δ > 0. That task
-remains deferred until requested.
+implemented in the Lean proof and recorded here. The `optapprox`
+formalization below uses the agreed closed bounds and explicitly positive δ.
 
 The root module imports `Opt.lean` and prints dependency reports for both
 `opt` and `Optimization.opt_of_nonneg`. Both use only `propext`,
 `Classical.choice`, and `Quot.sound`, including their dependency on `fopt`.
+
+
+## Approximate optimization corollary (`optapprox`)
+
+`HadwigerRamsey.optapprox` in `HadwigerRamsey/OptApprox.lean` proves the
+agreed closed version of the corollary: for every ζ > 0 there is δ > 0,
+uniform in every positive dimension k ≤ 1/ζ and every choice of data.
+Weights satisfy αᵢ ≥ 0 and ∑αᵢ = 1; probabilities satisfy
+0 ≤ pᵢ,qᴮᵢⱼ,qᴳᵢⱼ ≤ 1−ζ. Matrix symmetry is included as in the manuscript.
+The conclusion is that conditions (a)–(e), with exactly their stated weak
+inequalities, cannot all hold. The negative double sums are written out
+explicitly in the public statement, with the same β as before.
+There is no additional restriction such as ζ < 1 or αᵢ > 0.
+
+### Explicit dependency on `opt`
+
+The new proof does not directly invoke `Optimization.opt_of_nonneg`.
+Instead its checked proof dependencies follow this chain:
+
+`optapprox` → `OptApprox.bounded_dimensions` →
+`OptApprox.fixed_dimension` → `OptApprox.defect_pos_on_bad` →
+`Optimization.opt_closed_from_opt` →
+`Optimization.opt_nonneg_equalities_from_opt` →
+`Optimization.opt_fintype` → **`HadwigerRamsey.opt`**.
+
+`OptApprox/DependencyAudit.lean` inspects the elaborated proof expressions,
+checks that this endpoint reaches the public `opt` declaration, and prints
+the path during the root build. This is a dependency audit, not a proof
+premise. The existing `opt` theorem itself still has its original proof
+through the earlier stronger helper and `fopt`.
+
+### Complete proof details and manuscript correspondence
+
+1. **Agreed statement changes:** the strict bounds on the weights and
+   probabilities are replaced by the compact closure αᵢ ≥ 0 and
+   pᵢ,qᶜᵢⱼ ≤ 1−ζ, and the conclusion explicitly supplies δ > 0.
+   The manuscript file is preserved; these are the intended corrections
+   specified in the conversation. All other hypotheses and all five
+   conditions are retained.
+2. **Remove zero weights:** restrict the index set to {i | αᵢ > 0}.
+   The surviving weights still sum to one. All weighted matrix sums
+   are unchanged because every deleted row or column has zero weight.
+   Mathlib's `Finset.sum_congr_set`, `Fintype.sum_equiv`, and
+   `Fintype.equivFin` justify the restriction and reindexing needed to
+   apply the public `opt` theorem.
+3. **Convert mass inequalities to equalities:** for each diagonal index,
+   divide pᵢ, qᴮᵢᵢ, qᴳᵢᵢ by their sum; for each off-diagonal pair,
+   divide qᴮᵢⱼ, qᴳᵢⱼ by their sum. All denominators are at least one.
+   The new probabilities stay nonnegative and strictly below one and
+   the required sums become one. Applying `opt` after positive-support
+   restriction gives an outcome for the reduced data. Monotonicity of
+   −log(1−t), square root, and the weighted costs transfers that outcome
+   back to the original data. Symmetry is not needed for `opt`, so no
+   symmetry condition is required by these reduction lemmas.
+4. **Make compactness concrete:** for fixed k, form the compact product
+   box of weights in [0,1] and probabilities in [0,1−ζ]. The bound
+   αᵢ ≤ 1 follows from normalization and nonnegativity. The set `Bad`
+   imposes normalization and conditions (c)–(e); it is closed in this
+   compact box, hence compact. Logarithm continuity is valid even on
+   the boundary because 1−pᵢ and 1−qᶜᵢⱼ are at least ζ > 0.
+5. **A positive compact minimum gives the tolerance:** define
+   D = ∑ᵢ max(1−pᵢ−qᴮᵢᵢ−qᴳᵢᵢ,0)
+   + ∑ᵢ≠ⱼ max(1−qᴮᵢⱼ−qᴳᵢⱼ,0).
+   This is continuous and nonnegative. It is strictly positive on `Bad`:
+   otherwise all mass sums are at least one, and the reduction to `opt`
+   contradicts the gap ζ in (c)–(e). If `Bad` is nonempty, its minimum
+   m is positive. Choose δ = m/(k+k²+1). Conditions (a)–(b) would give
+   D ≤ (k+k²)δ < m, a contradiction. If `Bad` is empty, choose δ = 1.
+   This is an explicit implementation of the manuscript's compactness
+   argument; it uses a minimum rather than a convergent subsequence.
+6. **Uniformity in dimension:** there are finitely many k between zero
+   and floor(1/ζ). Choose the least of their positive tolerances, using
+   Mathlib's `Finset.exists_min_image`. The final statement restricts
+   to the positive dimensions required by the manuscript. The resulting
+   δ depends only on ζ, as required.
+7. **No additional mathematical assumption:** the compactness proof in
+   fact works without matrix symmetry. The public endpoint still
+   includes the manuscript's symmetry hypotheses. There are no numerical
+   computations or additional analytic estimates in this corollary.
+
+Mathlib supplies compactness of closed real intervals, finite products
+and function spaces, closedness of equalities and inequalities,
+continuity of logarithm/square root/finite sums/max, and the extreme-value
+result `IsCompact.exists_isMinOn`. These results are reused directly.
+The only new first-party files are `OptApprox/Reduction.lean`,
+`OptApprox/Compactness.lean`, `OptApprox.lean`, and the small dependency
+audit module. No further external library is added.
+
+The root module includes `#print axioms HadwigerRamsey.optapprox`.
+Its only foundational dependencies are `propext`, `Classical.choice`,
+and `Quot.sound`. The source guard and full build cover the new files.

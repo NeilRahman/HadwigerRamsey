@@ -14,7 +14,12 @@ cubic-bound proof and endpoint convention are described in the guide.
 
 Lemma `opt` is proved as `HadwigerRamsey.opt`. Its symbolic proof reuses
 `fopt` and Mathlib, with a stronger helper allowing zero weights and
-one-sided mass constraints. `optapprox` has not yet been formalized.
+one-sided mass constraints.
+
+Corollary `optapprox` is proved as `HadwigerRamsey.optapprox`, with closed
+parameter bounds and δ > 0. Its proof explicitly depends on `opt` through
+positive-support restriction and probability rescaling, followed by
+compactness. The build checks that theorem dependency.
 
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.
