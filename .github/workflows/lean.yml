@@ -1,0 +1,24 @@
+name: Lean proof check
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Lean toolchain
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --no-modify-path --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch compiled Mathlib dependencies
+        run: lake exe cache get
+      - name: Reject proof placeholders
+        run: python3 scripts/check_proofs.py
+      - name: Check all proofs and print theorem axioms
+        run: lake build
+      - name: Check tracked files stayed unchanged
+        run: git diff --exit-code
