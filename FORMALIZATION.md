@@ -514,20 +514,30 @@ Checked results so far:
 | Positive integer rounding with exact total and coordinate error at most 1/ell | `positive_rounded_masses`, `Rounding.lean` |
 | Exact-multiple class trimming, positive common multiplicity, and uniform deletion bound | `rounded_class_trimming`, `Trimming.lean` |
 | Regularized logarithmic weights: loss at most tau/a and uniform perturbation stability | `regularizedLambda_error`, `regularizedLambda_stability`, `Regularization.lean` |
+| Appendix A.5 with the exact sampling rate, path length, reservoir sizes, and surviving-path threshold | `exists_reservoirs`, `ReservoirExistence.lean` |
+| Independent path-survival events and Hoeffding event-count bounds | `IndependentBlocks.lean`, `Concentration.lean`, `ReservoirSampling.lean` |
+| The three failure probabilities have sum below one uniformly for large n | `reservoir_failure_eventually_lt_one`, `ReservoirAsymptotic.lean` |
+| Disjoint connected cores and the finite final clique-minor construction | `connected_reservoir_cores`, `cliqueMinor_of_reservoirs`, `ConnectedCores.lean`, `FiniteAssembly.lean` |
+| Uniform reservoirs-first conversion of any admissible complete family into a minor | `reservoirs_complete_family_to_minor`, `FiniteAssembly.lean` |
+| Both allocation budgets with the manuscript's actual logarithmic ceiling | `eventually_reservoir_allocation_budgets`, `AllocationBudgets.lean` |
+| Exact floor counts in a capped spanning subgraph and uniform entropy rounding error | `exists_capped_subgraph_entropy`, `EdgeSelection.lean`, `Capping.lean` |
+| A.1 nonneighbor averages, tau <= rho <= 1, and equation rho-geomean, including diagonal blocks | `rho_bounds`, `rho_geomean_bound`, `NonneighborWeights.lean` |
 
 The following substantial ingredients remain unproved: the random
 multitype complete-equipartition lemma (including its sampling and
 expectation estimates); the uniform asymptotic corollary (beyond its now
-checked finite rounding, trimming, and regularization ingredients); the existence of
-the random reservoirs and their surviving short disjoint path families; and the
-final assembly and uniform choice of n-zero. The checked selection lemma
-does not assert that the reservoirs themselves exist.
+checked finite rounding, trimming, and regularization ingredients); and the
+end-to-end assembly and uniform choice of n-zero. The reservoirs now have
+an unconditional existence theorem under the manuscript's connectivity
+hypothesis. The finite final construction and its allocation budgets are
+also proved, but do not supply the still-missing complete equipartition.
 
 Mathlib reuse includes induced-graph connectedness, connected unions and
 walk supports, interedge counts, rational edge densities, the handshaking
 lemma, the maximum possible edge count, finite fiber sums, and logarithm
-inequalities. Mathlib also contains general Chernoff/Markov tools, but the
-reservoir probability argument has not yet been formalized.
+inequalities. The reservoir argument now reuses Mathlib's independent
+product measures, bounded-variable sub-Gaussian theorem, and Hoeffding
+inequality. No new concentration inequality is assumed.
 
 The literature search identified Thomason's *The Extremal Function for
 Complete Minors* (2001), cited in the manuscript as MR1814910. No ready
@@ -627,6 +637,59 @@ Logical correspondence of the work completed so far:
     generalization of the manuscript's `0 < tau < 1`; the loss bound
     remains exactly `tau/a`. They do not assert the probabilistic
     complete-equipartition result or finish the asymptotic corollary.
+15. A.5 uses exactly the manuscript's independent three-label experiment,
+    with probabilities `r`, `r`, and `1-2*r`. Mathlib's Hoeffding inequality
+    replaces the quoted multiplicative Chernoff bounds. The resulting
+    total failure bound is
+    `2*exp(-2*r^2*n) + n*exp(-c*r^2*n/2)`
+    `+ n^2*exp(-c*n*(r^(H-1))^2/4)`.
+    These exponents differ from the manuscript, but all three conclusions,
+    including `r = 1/log(log n)`, `H = ceil(2/c)+1`, and
+    `T = c*n*r^(H-1)/4`, are unchanged. The order threshold still depends
+    only on `c`.
+16. Path-survival probabilities may differ with path length. Their events
+    are proved independent from disjoint interiors, and each probability
+    is bounded below by `r^(H-1)`. Hoeffding is applied to these independent,
+    not necessarily identically distributed indicators. For every fixed
+    positive coefficient and fixed power, the asymptotic proof bounds the
+    exponential tail by `n^-4`; this is sufficient for the same union
+    bounds. It uses `log(log n) <= log n` and Mathlib's existing result
+    that powers dominate logarithmic powers, rather than the manuscript's
+    informal growth comparison.
+17. Each nonempty `M_a` is connected by a star from one selected root,
+    rather than by consecutive-pair paths in a list. There are exactly
+    `|M_a|-1` requests, so the manuscript's `m*L` path budget still applies.
+    The root contributes a length-zero walk when expressing the connected
+    core as a union of walk supports; it consumes no reservoir vertices.
+    Nonemptiness of `M_a` is derived from its domination of nonempty `W_a`.
+18. The finite final assembly states its complete family, reservoir
+    separation, and two allocation budgets explicitly. These are the
+    same inputs used in the appendix. The allocation-budget theorem
+    proves both budgets uniformly from `m <= C*n/sqrt(log n)` and
+    `K <= C*sqrt(log n)`, with the exact ceiling-logarithm formula for `L`.
+    It assumes `K >= 1` and `H >= 1`, as satisfied by the manuscript's
+    parameters, and allows a larger uniform order threshold.
+    `reservoirs_complete_family_to_minor` combines these results: it
+    chooses `C,D` first, then handles every complete family outside them
+    with the stated size bounds. Thus reservoir existence and both
+    allocation budgets are discharged rather than assumed by that endpoint.
+19. Edge thinning is indexed by unordered pairs of class labels, so each
+    undirected edge is selected once. The resulting graph is a spanning
+    subgraph of `G`; the chosen counts are exactly the manuscript's
+    floors, with denominator `n_i*n_j` off the diagonal and `choose(n_i,2)`
+    on the diagonal. The entropy error is explicitly at most
+    `4/(epsilon*a^2*n^2)` when each class has size at least `a*n` and
+    `a*n >= 2`. This gives the manuscript's uniform vanishing error;
+    it does not assume the thinned graph retains connectivity.
+20. The A.1 preliminary estimates use the complement graph to encode
+    nonneighbors distinct from the vertex itself. For diagonal blocks,
+    Lean proves the upper bound needed later rather than recording the
+    exact extra factor `(n_i-1)/n_i`. The logarithmic form of AM-GM follows
+    from Mathlib's `log x <= x-1`, and exponentiating gives the original
+    product-form `rho-geomean` inequality with the same `ell_j/ell` weights.
+    These are preliminary estimates only:
+    sorting into blocks, random permutations, the conditional second-part
+    bound, and the complete-equipartition conclusion remain unproved.
 
 The root build covers all current first-party modules and prints the
 standard-foundation dependency reports for the main new helper results.

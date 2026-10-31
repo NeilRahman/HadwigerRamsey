@@ -35,3 +35,12 @@ import HadwigerRamsey.ThomasonUpper.Progress
 #print axioms HadwigerRamsey.ThomasonUpper.rounded_class_trimming
 #print axioms HadwigerRamsey.ThomasonUpper.regularizedLambda_error
 #print axioms HadwigerRamsey.ThomasonUpper.regularizedLambda_stability
+#print axioms HadwigerRamsey.ThomasonUpper.exists_reservoirs
+#print axioms HadwigerRamsey.ThomasonUpper.connected_reservoir_cores
+#print axioms HadwigerRamsey.ThomasonUpper.cliqueMinor_of_reservoirs
+#print axioms HadwigerRamsey.ThomasonUpper.eventually_reservoir_allocation_budgets
+#print axioms HadwigerRamsey.ThomasonUpper.exists_capped_subgraph_entropy
+#print axioms HadwigerRamsey.ThomasonUpper.average_log_regularized_nonneighbor_le
+#print axioms HadwigerRamsey.ThomasonUpper.rho_geomean_bound
+#print axioms HadwigerRamsey.ThomasonUpper.reservoirs_complete_family_to_minor
+#print axioms HadwigerRamsey.ThomasonUpper.rho_bounds
