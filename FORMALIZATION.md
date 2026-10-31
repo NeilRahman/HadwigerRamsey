@@ -256,7 +256,66 @@ The new first-party modules are:
   outer interval coverage and the global cubic bound.
 - `FOpt.lean`: manuscript-facing definitions and theorem.
 
-All three manuscript endpoints are imported and their dependency reports
+The three endpoints above are imported and their dependency reports
 printed in `HadwigerRamsey.lean`. The source guard also checks vendored
 Lean sources. The fopt endpoint requires only `propext`,
 `Classical.choice`, and `Quot.sound`.
+
+
+## Optimization lemma (`opt`)
+
+`HadwigerRamsey.opt` in `HadwigerRamsey/Opt.lean` proves the manuscript's
+three-way alternative with positive weights summing to one, probabilities
+in [0,1), the exact diagonal/off-diagonal sum conditions, and the same β.
+The conclusion writes out the manuscript's negative double sums explicitly.
+Matrix symmetry is not required, consistently with the statement of `opt`.
+No additional hypotheses or numerical approximations are introduced.
+
+The argument follows the manuscript: negate the alternatives, square the
+three strict inequalities, average the two matrix costs, use logarithm
+concavity, bound the diagonal terms by f(αᵢ), and contradict `fopt`.
+Mathlib's `Real.strictConcaveOn_log_Ioi.concaveOn` directly supplies the
+midpoint inequality, which is equivalent to convexity of −log(1−x).
+The other reused results include `Real.log_le_log`,
+`Real.le_log_iff_exp_le`, `Real.log_div`, `Real.sq_sqrt`, `Real.sqrt_lt`,
+and finite-sum distribution and comparison theorems. There is no new
+analytic library or vendored code for this lemma.
+
+### Mathematical correspondence and differences
+
+- The averaging step uses the **sum** of the two logarithms, implementing
+  the agreed correction to the two minus signs in the manuscript.
+  All sums use the same index set `Fin k`, implementing the agreed fixes
+  of the stray k/ℓ indices (the Lean name k simply denotes the dimension).
+- `Optimization.logCost p` abbreviates −log(1−p).
+  `Optimization.energy α q` is the sum of the weighted logarithmic costs;
+  `energy_eq_neg_sum` proves equality with the displayed negative double
+  sum. The identity −log((1+pᵢ)/2) = log 2 − log(1+pᵢ) packages the
+  manuscript's diagonal/off-diagonal algebra as the reusable bound
+  `energy_average_lower`.
+- The stronger helper `Optimization.opt_of_nonneg` permits αᵢ = 0 and
+  replaces the exact mass equalities by pᵢ+qᴮᵢᵢ+qᴳᵢᵢ ≥ 1 and
+  qᴮᵢⱼ+qᴳᵢⱼ ≥ 1 for i ≠ j. This is proved directly, using monotonicity
+  of the logarithmic cost before the same midpoint inequality. It does
+  not require rescaling probabilities. The public `opt` theorem
+  specializes the helper to the original positive-weight/equality
+  hypotheses. The stronger helper is useful for a future compactness
+  proof; it is not an `optapprox` formalization.
+- In `diagonal_le_function`, a zero weight is handled directly before
+  division by αᵢ². For a positive weight, the proof follows the
+  manuscript's exponential comparison. The constant β is proved
+  positive as `HadwigerRamsey.beta_pos`, and all logarithm domains and
+  radicand nonnegativity are justified explicitly. These are consequences
+  of the existing assumptions, not new conditions.
+- There are no other logical changes. In particular, no compactness
+  theorem, approximate parameter δ, or `optapprox` endpoint is added.
+
+The manuscript source remains unchanged; the preceding corrections are
+implemented in the Lean proof and recorded here. For the future
+`optapprox` task, the agreed intended statement uses the closed bounds
+αᵢ ≥ 0 and pᵢ,qᶜᵢⱼ ≤ 1−ζ, and explicitly supplies δ > 0. That task
+remains deferred until requested.
+
+The root module imports `Opt.lean` and prints dependency reports for both
+`opt` and `Optimization.opt_of_nonneg`. Both use only `propext`,
+`Classical.choice`, and `Quot.sound`, including their dependency on `fopt`.
