@@ -31,6 +31,8 @@ Its exact target proposition and checked preliminary lemmas are in
 Appendix A.4 (short internally disjoint paths) is proved using the public
 finite vertex-Menger proof vendored in `vendor/menger/`.
 The finite greedy allocation of globally disjoint path interiors is also proved.
+Appendix A.2 (vertex-deletion stability) is proved, together with the finite
+rounding, trimming, and logarithmic regularization steps used in A.3.
 
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.

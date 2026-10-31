@@ -29,3 +29,9 @@ import HadwigerRamsey.ThomasonUpper.Progress
 #print axioms HadwigerRamsey.ThomasonUpper.short_paths
 #print axioms HadwigerRamsey.ThomasonUpper.short_paths_vertexConnectivity
 #print axioms HadwigerRamsey.ThomasonUpper.allocate_path_interiors
+#print axioms HadwigerRamsey.ThomasonUpper.vertex_deletion_stability
+#print axioms HadwigerRamsey.ThomasonUpper.deletedBlockDensity_eq_induced
+#print axioms HadwigerRamsey.ThomasonUpper.positive_rounded_masses
+#print axioms HadwigerRamsey.ThomasonUpper.rounded_class_trimming
+#print axioms HadwigerRamsey.ThomasonUpper.regularizedLambda_error
+#print axioms HadwigerRamsey.ThomasonUpper.regularizedLambda_stability

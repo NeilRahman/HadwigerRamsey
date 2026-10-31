@@ -510,11 +510,15 @@ Checked results so far:
 | Cut connectivity supplies internally disjoint paths, including adjacent endpoints | `internally_disjoint_paths`, `Menger.lean` |
 | Appendix A.4, with positive connectivity and the same constants | `short_paths_vertexConnectivity`, `short_paths`, `Menger.lean`; counting in `ShortPaths.lean` |
 | Greedily choose globally disjoint interiors from large candidate families | `exists_path_avoiding`, `allocate_path_interiors`, `PathAllocation.lean` |
+| Appendix A.2: actual vertex-deletion stability, including diagonal densities and Lambda | `vertex_deletion_stability`, `DensityDeletion.lean` |
+| Positive integer rounding with exact total and coordinate error at most 1/ell | `positive_rounded_masses`, `Rounding.lean` |
+| Exact-multiple class trimming, positive common multiplicity, and uniform deletion bound | `rounded_class_trimming`, `Trimming.lean` |
+| Regularized logarithmic weights: loss at most tau/a and uniform perturbation stability | `regularizedLambda_error`, `regularizedLambda_stability`, `Regularization.lean` |
 
 The following substantial ingredients remain unproved: the random
 multitype complete-equipartition lemma (including its sampling and
-expectation estimates); the full graph-deletion density stability lemma;
-integer rounding and the uniform asymptotic corollary; the existence of
+expectation estimates); the uniform asymptotic corollary (beyond its now
+checked finite rounding, trimming, and regularization ingredients); the existence of
 the random reservoirs and their surviving short disjoint path families; and the
 final assembly and uniform choice of n-zero. The checked selection lemma
 does not assert that the reservoirs themselves exist.
@@ -584,6 +588,45 @@ Logical correspondence of the work completed so far:
    the consecutive-pair lists in the sets `M_a`. The reservoir existence,
    the asymptotic inequality ensuring that condition, and the construction
    of the connected cores are not assumed proved by this lemma.
+10. Appendix A.2 now has a complete uniform endpoint for every `a > 0`.
+    One possible explicit choice is
+    `C = 2 + 8/a + 16/a^2 + 4*abs(log(2/a))/a` and
+    `N = ceil(4/a) + 1`. Its entropy conclusion assumes `C*delta <= a/2`,
+    an explicit version of the manuscript's sufficiently-small-delta
+    qualification. The mass and density estimates hold throughout the
+    original range `0 <= delta < a/2`. Although intermediate helpers
+    assume `a <= 1`, the uniform endpoint derives this from the nonempty
+    graph and class-size hypotheses; it is not a new hypothesis.
+11. A.2 uses Mathlib's existing relation-density perturbation bound instead
+    of reproducing the manuscript's edge-loss computation. A diagonal
+    block is represented on ordered distinct vertex pairs; the numerator
+    and denominator both double, so its density is exactly the original
+    unordered-pair density. This yields the explicit stronger bounds
+    `2*delta` for each mass change and `8*delta/a` for each density change.
+    Surviving-class densities are computed directly in the original
+    graph on the surviving classes. `deletedClassMass_eq_induced` and
+    `deletedBlockDensity_eq_induced` prove equality with the actual class
+    masses and densities in the induced graph `G-Z`, including the
+    diagonal convention. Their complementary densities are written as `1-p`.
+12. The A.3 rounding proof floors all scaled weights and adds one to an
+    arbitrary subset of coordinates of the necessary size. The sum is
+    exactly `ell`; each scaled coordinate changes by at most one.
+    Positivity is proved under `a*ell >= 1`. This is the manuscript's
+    rounding-remainder construction with an explicit largeness condition.
+13. The A.3 trimming construction uses the same minimum of integer
+    quotients and subsets of size `s*m_i`. Its uniform finite deletion
+    bound is `n/(a*ell) + ell`, or fraction `1/(a*ell) + ell/n`.
+    The combined endpoint assumes `a*ell >= 2` and `4*ell <= n` to
+    guarantee `s > 0`. Establishing these conditions and the vanishing
+    deletion fraction for the manuscript's eventual choice of `ell`
+    remains part of the unfinished asymptotic corollary.
+14. The regularization estimates use the same function
+    `-log(min(1,q+tau))`. Mathlib's bound for the minimum function and the
+    existing logarithmic stability theorem replace the manuscript's
+    informal Lipschitz argument. They allow any `tau >= 0`, a harmless
+    generalization of the manuscript's `0 < tau < 1`; the loss bound
+    remains exactly `tau/a`. They do not assert the probabilistic
+    complete-equipartition result or finish the asymptotic corollary.
 
 The root build covers all current first-party modules and prints the
 standard-foundation dependency reports for the main new helper results.
