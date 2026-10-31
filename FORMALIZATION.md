@@ -163,4 +163,100 @@ result. This is a search outcome, not a claim that none exists.
 - Mathlib also provides finite union bounds, exponential/logarithm and
   square-root identities, ceilings, finite sums, and graph connectivity.
 
-No third-party Lean source was copied into this repository.
+The earlier two formalizations use Mathlib directly. Lemma 3.6 additionally
+uses the vendored LeanCert interval-analysis subset described below.
+
+
+## Lemma 3.6: optimization (`fopt`)
+
+The endpoint is `HadwigerRamsey.fopt` in `HadwigerRamsey/FOpt.lean`.
+It quantifies over every natural k and α : Fin k → ℝ, assumes αᵢ ≥ 0
+and ∑αᵢ = 1, and proves ∑f(αᵢ) ≤ log 2 − β² with exactly the
+manuscript's β = sqrt(−log(10−4 sqrt 6))/2. The public definitions are
+`HadwigerRamsey.beta` and `HadwigerRamsey.optimizationFunction`.
+
+### Complete differences from the manuscript's argument
+
+1. **Endpoint completion:** the manuscript defines f only on [0,1),
+   although its hypotheses allow αᵢ = 1 and its proof uses h(1). We use
+   the same formula at x = 1. At x = 0 the total Lean expression equals
+   zero and agrees with the specified f(0). No extra hypothesis excludes
+   zero weights or a weight of one. Values outside [0,1] are irrelevant.
+2. **Exact constants:** write q = 10 − 4 sqrt 6, c = −log(q)/4 = β²,
+   F = log 2 − c, and a = 4F − 16cq/(2−q). The auxiliary constant a
+   and cubic P(x) = Fx + ax(x−1/2)(1−x) are new. Lean proves a ≥ 0.
+   The identity (2−q)² = 16q proves 2f(1/2) = F exactly, retaining
+   that part of the manuscript. The choice of a also makes P and f
+   have equal first derivatives at 1/2.
+3. **A stronger pointwise bound replaces the reduction to two weights:**
+   prove f(x) ≤ P(x) for every x ∈ [0,1]. We do not establish or assume
+   monotonicity of f(x)/x on (0,1/2]. We never divide by a weight or by
+   1−α₁, so the zero-weight and α₁ = 1 cases need no exception.
+4. **Whole-interval bounds replace the plotted root/sign argument:**
+   for D = P−f, prove D ≥ 0 on [0,0.35] analytically from
+   f(x) ≤ x² log 2 and rational coefficient bounds. On [0.35,0.4]
+   and [0.6,1], exact rational interval certificates prove D ≥ 0
+   on cells of width 1/1000. On [0.4,0.6], certificates prove
+   D″ ≥ 0; Mathlib's calculus and convexity results, together with
+   D(1/2) = D′(1/2) = 0, give D ≥ 0. The outer certificates use
+   indices 350–399 and 600–1000; curvature uses 400–600, so boundaries
+   are covered with overlap. The slight extra coverage beyond the
+   desired intervals is harmless. There is no assertion about the
+   number or location of roots of h′, no approximate critical point,
+   and no use of the comparison h(1) ≈ 0.284 < F ≈ 0.293.
+5. **The final summation is algebraic:**
+   P(x+y)−P(x)−P(y) = 3axy(1−x−y) ≥ 0 for x,y ≥ 0, x+y ≤ 1.
+   Induction yields ∑f(αᵢ) ≤ ∑P(αᵢ) ≤ P(∑αᵢ) = P(1) = F.
+   This handles all finite k directly, instead of choosing a largest
+   weight and studying h(x) = f(x)+f(1−x).
+6. **Numerical evidence is replaced by proved error bounds:**
+   the rational boxes are
+   q ∈ [202041028,202041030]/10⁹,
+   c ∈ [399821,399822]/10⁶,
+   F ∈ [293325,293327]/10⁶,
+   a ∈ [4544,4545]/10⁴, and
+   log 2 ∈ [693147,693148]/10⁶.
+   The q bounds follow from (sqrt 6)² = 6. The others follow from
+   proved logarithm interval bounds. Each exponential/logarithm
+   interval is rounded outward to multiples of 10⁻⁹, with a proof
+   that containment is preserved. Certificate depth is 16; the
+   constant bounds use depth 20. `decide +kernel` checks each finite
+   cell through ordinary kernel reduction. Floating-point experiments
+   helped choose the envelope, but are absent from the proof premises.
+
+The hypotheses and conclusion are unchanged apart from completing f(1).
+The manuscript itself is unedited. The root-count and monotonicity claims
+from its particular argument are neither required nor verified by this
+alternative proof.
+
+### Reuse and module map
+
+The pinned Mathlib supplies real differentiation rules, logarithm and
+square-root identities, finite sums, and
+`convexOn_of_hasDerivWithinAt2_nonneg` together with
+`ConvexOn.isMinOn_of_rightDeriv_eq_zero`. The public
+[LeanCert project](https://github.com/alerad/leancert/tree/122a3776fe157f92ee8a1116faf079378bcf18af)
+supplies the rational interval and Taylor/logarithm enclosure theorems.
+The exact source, notices and compatibility changes are recorded in
+`vendor/lean-cert/README.md`. This is reused analytic infrastructure,
+not an existing formalization of this particular optimization inequality.
+A targeted public search for the Hadwiger–Ramsey optimization lemma did
+not locate a pre-existing proof of the exact inequality.
+
+The new first-party modules are:
+
+- `FOpt/Definitions.lean`: constants and exact half-point identities.
+- `FOpt/Algebra.lean`: cubic superadditivity and the finite-sum argument.
+- `FOpt/Calculus.lean`: both derivatives and tangency at 1/2.
+- `FOpt/Interval.lean`: sound expression bounds and outward rounding.
+- `FOpt/Constants.lean`: certified boxes for the constants.
+- `FOpt/Certificates.lean`: finite whole-cell checks in blocks of ten.
+- `FOpt/Coverage.lean`: coverage of the required intervals by these blocks.
+- `FOpt/Envelope.lean`: analytic small interval, convex middle interval,
+  outer interval coverage and the global cubic bound.
+- `FOpt.lean`: manuscript-facing definitions and theorem.
+
+All three manuscript endpoints are imported and their dependency reports
+printed in `HadwigerRamsey.lean`. The source guard also checks vendored
+Lean sources. The fopt endpoint requires only `propext`,
+`Classical.choice`, and `Quot.sound`.

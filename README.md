@@ -9,6 +9,9 @@ on the Hadwiger number, is fully proved in Lean.
 Lemma 3.1 (`bigset`), for a nonempty ground set, is also proved as
 `HadwigerRamsey.bigset`; see the guide for the empty-set boundary condition.
 
+Lemma 3.6 (`fopt`) is proved as `HadwigerRamsey.fopt`; its alternative
+cubic-bound proof and endpoint convention are described in the guide.
+
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.
 See [FORMALIZATION.md](FORMALIZATION.md) for the exact statement and paper-to-Lean map.
