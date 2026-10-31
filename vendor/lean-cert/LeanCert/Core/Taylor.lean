@@ -6,6 +6,7 @@ Authors: LeanCert Contributors
 import Mathlib.Analysis.Calculus.Taylor
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
@@ -132,19 +133,15 @@ lemma iteratedDerivWithin_Icc_left_eq_iteratedDeriv {f : ℝ → ℝ} {c x : ℝ
   induction n generalizing f with
   | zero => simp only [iteratedDerivWithin_zero, iteratedDeriv_zero]
   | succ n ih =>
-    have hf_n : ContDiff ℝ n f := hf.of_le (by simp : (n : WithTop ℕ∞) ≤ (n + 1 : ℕ))
     rw [iteratedDerivWithin_succ', iteratedDeriv_succ']
-    have h_one_le : (1 : WithTop ℕ∞) ≤ ((n : ℕ) + 1 : ℕ) := by
-      simp only [Nat.cast_add, Nat.cast_one]
-      exact le_add_of_nonneg_left (zero_le _)
     have h_eq_derivWithin : EqOn (derivWithin f (Icc c x)) (deriv f) (Icc c x) := by
       intro y hy
       rcases eq_or_ne y c with rfl | hne_c
       · exact derivWithin_Icc_left_eq_deriv hcx
-            ((hf.differentiable h_one_le).differentiableAt)
+            ((hf.differentiable (by simp)).differentiableAt)
       · rcases eq_or_ne y x with rfl | hne_x
         · exact derivWithin_Icc_right_eq_deriv hcx
-              ((hf.differentiable h_one_le).differentiableAt)
+              ((hf.differentiable (by simp)).differentiableAt)
         · apply derivWithin_of_mem_nhds
           apply Icc_mem_nhds
           · exact lt_of_le_of_ne hy.1 (Ne.symm hne_c)
@@ -172,22 +169,18 @@ lemma iteratedDerivWithin_Icc_left_eq_iteratedDeriv_of_isOpen {f : ℝ → ℝ} 
   induction n generalizing f with
   | zero => simp only [iteratedDerivWithin_zero, iteratedDeriv_zero]
   | succ n ih =>
-    have hf_n : ContDiffOn ℝ n f U := hf.of_le (by simp : (n : WithTop ℕ∞) ≤ (n + 1 : ℕ))
     rw [iteratedDerivWithin_succ', iteratedDeriv_succ']
-    have h_one_le : (1 : WithTop ℕ∞) ≤ ((n : ℕ) + 1 : ℕ) := by
-      simp only [Nat.cast_add, Nat.cast_one]
-      exact le_add_of_nonneg_left (zero_le _)
     -- For each y in Icc c x, derivWithin f = deriv f
     have h_eq_derivWithin : EqOn (derivWithin f (Icc c x)) (deriv f) (Icc c x) := by
       intro y hy
       rcases eq_or_ne y c with rfl | hne_c
       · -- At c: use that f is differentiable at c (from ContDiffOn on open U)
         exact derivWithin_Icc_left_eq_deriv hcx
-            ((hf.differentiableOn h_one_le).differentiableAt (hU_open.mem_nhds hcU))
+            ((hf.differentiableOn (by simp)).differentiableAt (hU_open.mem_nhds hcU))
       · rcases eq_or_ne y x with rfl | hne_x
         · -- At x: use right endpoint lemma
           exact derivWithin_Icc_right_eq_deriv hcx
-              ((hf.differentiableOn h_one_le).differentiableAt (hU_open.mem_nhds (hI_sub hy)))
+              ((hf.differentiableOn (by simp)).differentiableAt (hU_open.mem_nhds (hI_sub hy)))
         · -- Interior: Icc is a neighborhood
           apply derivWithin_of_mem_nhds
           apply Icc_mem_nhds
@@ -200,6 +193,18 @@ lemma iteratedDerivWithin_Icc_left_eq_iteratedDeriv_of_isOpen {f : ℝ → ℝ} 
     rw [h_congr hc_mem]
     have hdf : ContDiffOn ℝ n (deriv f) U := hf.deriv_of_isOpen hU_open le_rfl
     exact ih hdf
+
+/-- Compatibility with the ordered-interval Taylor theorem used upstream. -/
+private theorem taylor_mean_remainder_lagrange_ordered {f : ℝ → ℝ}
+    {x c : ℝ} {m : ℕ} (hcx : c < x)
+    (hf : ContDiffOn ℝ m f (Set.Icc c x))
+    (hd : DifferentiableOn ℝ (iteratedDerivWithin m f (Set.Icc c x)) (Set.Ioo c x)) :
+    ∃ y ∈ Set.Ioo c x, f x - taylorWithinEval f m (Set.Icc c x) c x =
+      iteratedDerivWithin (m+1) f (Set.Icc c x) y * (x-c)^(m+1) / (m+1).factorial := by
+  simpa only [Set.uIcc_of_le hcx.le, Set.uIoo_of_lt hcx] using
+    (taylor_mean_remainder_lagrange hcx.ne
+      (by simpa only [Set.uIcc_of_le hcx.le] using hf)
+      (by simpa only [Set.uIcc_of_le hcx.le, Set.uIoo_of_lt hcx] using hd))
 
 /-- Taylor remainder bound for c < x case with ContDiffOn hypothesis.
 
@@ -230,7 +235,7 @@ theorem taylor_remainder_bound_on_c_lt_x {f : ℝ → ℝ} {a b c : ℝ} {m : �
       exact_mod_cast this
     have hdiff := hf_on.differentiableOn_iteratedDerivWithin hm_lt huniq
     exact hdiff.mono Ioo_subset_Icc_self
-  obtain ⟨ξ, hξ_mem, hLagrange⟩ := taylor_mean_remainder_lagrange hcx hf_on_m hf_diff
+  obtain ⟨ξ, hξ_mem, hLagrange⟩ := taylor_mean_remainder_lagrange_ordered hcx hf_on_m hf_diff
   have hξ_ab : ξ ∈ Icc a b := hI_sub' (Ioo_subset_Icc_self hξ_mem)
   have hderiv_ξ : iteratedDerivWithin (m + 1) f (Icc c x) ξ = iteratedDeriv (m + 1) f ξ :=
     iteratedDerivWithin_Icc_interior_eq hcx hξ_mem
@@ -284,7 +289,7 @@ private lemma iteratedDeriv_translate_of_contDiffOn {f : ℝ → ℝ} {k : ℝ} 
       filter_upwards [h_nhds_mem] with y hy_mem
       have hf' : ContDiffOn ℝ 1 f U := hf.of_le (by norm_cast; omega)
       have hdiff : DifferentiableAt ℝ f (y + k) :=
-        (hf'.differentiableOn le_rfl).differentiableAt (hU_open.mem_nhds hy_mem)
+        (hf'.differentiableOn (by norm_num)).differentiableAt (hU_open.mem_nhds hy_mem)
       have hlin : DifferentiableAt ℝ (fun z => z + k) y :=
         differentiableAt_id.add (differentiableAt_const _)
       have h := deriv_comp y hdiff hlin
@@ -503,7 +508,7 @@ lemma iteratedDeriv_reflect {f : ℝ → ℝ} {c : ℝ} {n : ℕ} (hf : ContDiff
     have hderiv_eq : deriv (fun x => f (x + 2 * c)) = fun x => deriv f (x + 2 * c) := by
       ext x
       have hdiff : DifferentiableAt ℝ f (x + 2 * c) :=
-        (hf'.differentiable (by norm_cast; omega : (1 : WithTop ℕ∞) ≤ (n + 1 : ℕ))).differentiableAt
+        (hf'.differentiable (by simp)).differentiableAt
       have hlin : DifferentiableAt ℝ (fun y => y + 2 * c) x :=
         differentiableAt_id.add (differentiableAt_const _)
       have h1 := deriv_comp x hdiff hlin
@@ -546,7 +551,7 @@ theorem taylor_remainder_bound_c_lt_x {f : ℝ → ℝ} {a b c : ℝ} {m : ℕ} 
       exact_mod_cast this
     have hdiff := hf_on.differentiableOn_iteratedDerivWithin hm_lt huniq
     exact hdiff.mono Ioo_subset_Icc_self
-  obtain ⟨ξ, hξ_mem, hLagrange⟩ := taylor_mean_remainder_lagrange hcx hf_on_m hf_diff
+  obtain ⟨ξ, hξ_mem, hLagrange⟩ := taylor_mean_remainder_lagrange_ordered hcx hf_on_m hf_diff
   have hξ_ab : ξ ∈ Icc a b := hI_sub (Ioo_subset_Icc_self hξ_mem)
   have hderiv_ξ : iteratedDerivWithin (m + 1) f (Icc c x) ξ = iteratedDeriv (m + 1) f ξ :=
     iteratedDerivWithin_Icc_interior_eq hcx hξ_mem
@@ -615,7 +620,7 @@ theorem taylor_remainder_bound_x_lt_c {f : ℝ → ℝ} {a b c : ℝ} {m : ℕ} 
       exact_mod_cast this
     have hdiff := hg_on.differentiableOn_iteratedDerivWithin hm_lt huniq
     exact hdiff.mono Ioo_subset_Icc_self
-  obtain ⟨ξ', hξ'_mem, hLagrange⟩ := taylor_mean_remainder_lagrange h_interval_lt hg_on_m hg_diff
+  obtain ⟨ξ', hξ'_mem, hLagrange⟩ := taylor_mean_remainder_lagrange_ordered h_interval_lt hg_on_m hg_diff
   -- ξ = 2c - ξ' ∈ (x, c)
   set ξ := 2 * c - ξ' with hξ_def
   have hξ'_lt_2cmx : ξ' < 2 * c - x := hξ'_mem.2

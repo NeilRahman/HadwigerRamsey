@@ -136,7 +136,7 @@ theorem weighted_density_lower {n k : ℕ} (hn : 0 < n)
     apply mul_le_mul_of_nonneg_left _ (by unfold classMass; positivity)
     by_cases hij : i = j
     · subst j
-      simpa only [blockDensity, if_pos rfl] using
+      simpa [blockDensity] using
         edgeDensity_le_internalDensity G (classVertices τ i) (hsizes i)
     · simp only [blockDensity, if_neg hij, le_refl]
   calc

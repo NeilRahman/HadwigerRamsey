@@ -23,8 +23,8 @@ lemma hasDerivAt_value {c x : ℝ} (hc : 0 ≤ c) (hx : x ≠ 0) :
   have hd := (hasDerivAt_const x (2 : ℝ)).sub he
   have hl := hd.log (by simpa using harg.ne')
   have hf := ((hasDerivAt_id x).pow 2).mul hl
-  convert hf using 1
-  all_goals dsimp [value,first]; field_simp [hx,harg.ne']; ring
+  convert! hf using 1
+  all_goals first | rfl | (dsimp [value,first]; field_simp [hx,harg.ne']; ring)
 
 lemma hasDerivAt_first {c x : ℝ} (hc : 0 ≤ c) (hx : x ≠ 0) :
     HasDerivAt (first c) (second c x) x := by
@@ -35,8 +35,8 @@ lemma hasDerivAt_first {c x : ℝ} (hc : 0 ≤ c) (hx : x ≠ 0) :
   have hl := hd.log (by simpa using harg.ne')
   have hfirst := ((hasDerivAt_const x (2 : ℝ)).mul (hasDerivAt_id x)).mul
     (hl.sub ((ht.mul he).div hd (by simpa using harg.ne')))
-  convert hfirst using 1
-  all_goals dsimp [first,second]; field_simp [hx,harg.ne']; ring
+  convert! hfirst using 1
+  all_goals first | rfl | (dsimp [first,second]; field_simp [hx,harg.ne']; ring)
 
 noncomputable def gap (x : ℝ) : ℝ := cubic F a x - value c x
 noncomputable def gapFirst (x : ℝ) : ℝ := F + a*(-3*x^2+3*x-1/2) - first c x
@@ -47,8 +47,8 @@ lemma hasDerivAt_gap {x : ℝ} (hx : x ≠ 0) : HasDerivAt gap (gapFirst x) x :=
       ((((hasDerivAt_const x a).mul (hasDerivAt_id x)).mul
         ((hasDerivAt_id x).sub_const (1/2))).mul
         ((hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)))
-    convert h using 1
-    all_goals dsimp; ring
+    convert! h using 1
+    all_goals first | rfl | (dsimp; ring)
   exact hp.sub (hasDerivAt_value c_pos.le hx)
 
 lemma hasDerivAt_gapFirst {x : ℝ} (hx : x ≠ 0) :
@@ -57,7 +57,8 @@ lemma hasDerivAt_gapFirst {x : ℝ} (hx : x ≠ 0) :
     ((hasDerivAt_const x a).mul
       (((((hasDerivAt_id x).pow 2).const_mul (-3)).add
         ((hasDerivAt_id x).const_mul 3)).sub_const (1/2)))
-  convert hp.sub (hasDerivAt_first c_pos.le hx) using 1 <;> dsimp [gapFirst] <;> ring
+  convert! hp.sub (hasDerivAt_first c_pos.le hx) using 1
+  all_goals first | rfl | (dsimp [gapFirst]; ring)
 
 lemma gap_half : gap (1/2) = 0 := by rw [gap,value_half]; dsimp [cubic]; ring
 

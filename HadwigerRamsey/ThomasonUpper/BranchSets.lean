@@ -14,7 +14,7 @@ theorem connected_of_dominated_core {V : Type*} {G : SimpleGraph V}
   rcases hv with hv | hv
   · obtain ⟨w, hw, hvw⟩ := hdom v hv
     have hpair := G.induce_pair_connected_of_adj hvw
-    have hconn := G.induce_union_connected hK hpair ⟨w, hw, by simp⟩
+    have hconn := G.induce_union_connected hK.preconnected hpair.preconnected ⟨w, hw, by simp⟩
     refine ⟨K ∪ {v, w}, ?_, Or.inl hu, Or.inr (by simp), hconn _ _⟩
     intro x hx
     rcases hx with hx | hx

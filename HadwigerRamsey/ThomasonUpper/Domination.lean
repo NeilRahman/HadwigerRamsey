@@ -56,7 +56,7 @@ theorem greedy_domination {V U : Type*} [DecidableEq V] [DecidableEq U]
       ext a
       simp only [A', mem_filter, mem_insert, forall_eq_or_imp]
       tauto
-    have hsplit := Finset.filter_card_add_filter_neg_card_eq_card (s := A') (fun a => R a b)
+    have hsplit := Finset.card_filter_add_card_filter_not (s := A') (fun a => R a b)
     have hstep : ((A'.filter fun a => ¬R a b).card : ℝ) ≤ (1-θ) * A'.card := by
       have hsplit' : ((A'.filter fun a => R a b).card : ℝ) +
           ((A'.filter fun a => ¬R a b).card : ℝ) = A'.card := by exact_mod_cast hsplit

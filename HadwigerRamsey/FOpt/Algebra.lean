@@ -26,8 +26,11 @@ lemma sum_cubic_le {ι : Type*} (s : Finset ι) (α : ι → ℝ) {F a : ℝ}
       rw [sum_insert hi] at hs
       linarith [hα i (mem_insert_self _ _)]
     rw [sum_insert hi, sum_insert hi]
-    exact (add_le_add_left (ih (fun j hj => hα j (mem_insert_of_mem hj)) hsum) _).trans
-      (cubic_add ha (hα i (mem_insert_self _ _)) hnonneg (by simpa [sum_insert hi] using hs))
+    calc
+      _ ≤ cubic F a (α i) + cubic F a (∑ j ∈ s, α j) :=
+        add_le_add le_rfl (ih (fun j hj => hα j (mem_insert_of_mem hj)) hsum)
+      _ ≤ _ := cubic_add ha (hα i (mem_insert_self _ _)) hnonneg
+        (by simpa [sum_insert hi] using hs)
 
 /-- Any function below this cubic has the required partition-of-one inequality. -/
 theorem sum_le_of_cubic_envelope {ι : Type*} (s : Finset ι) (α : ι → ℝ)

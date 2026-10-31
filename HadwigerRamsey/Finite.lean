@@ -35,12 +35,12 @@ theorem fixed_partition_bound {s : ℕ} (hs : 2 ≤ s) (f : Fin n → Fin s)
     have hcompl : ∀ e, 1 - μ.real (edgeEvent G e) = exp (-w e) := by
       intro e
       have := measureReal_add_measureReal_compl (μ := μ) (hA e)
-      simp only [measureReal_univ_eq_one] at this
+      simp only [probReal_univ] at this
       linarith [hp e]
     simp_rw [hcompl] at hno
     rw [← Real.exp_sum, Finset.sum_neg_distrib] at hno
     have hc := measureReal_add_measureReal_compl (μ := μ) (measurableSet_hit hA (S a))
-    simp only [measureReal_univ_eq_one] at hc
+    simp only [probReal_univ] at hc
     dsimp [W]
     linarith
   have heq : {ω | Permissible (G ω) f} = ⋂ a, Hit (edgeEvent G) (S a) := by

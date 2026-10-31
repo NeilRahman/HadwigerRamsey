@@ -10,7 +10,7 @@ private def dependencyPath (env : Environment) (target : Name) : Nat → Name �
     else if !name.toString.startsWith "HadwigerRamsey" then none
     else do
       let info ← env.find? name
-      let value ← info.value?
+      let value ← info.value? (allowOpaque := true)
       value.getUsedConstants.toList.findSome? (fun dep =>
         (dependencyPath env target fuel dep).map (name :: ·))
 

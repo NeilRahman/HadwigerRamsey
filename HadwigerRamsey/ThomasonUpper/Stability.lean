@@ -107,8 +107,8 @@ theorem lambda_stability {I : Type*} [Fintype I]
       sum_le_sum fun i _ => sum_le_sum fun j _ => hterms i j
     _ = d/a + (∑ i, ∑ j, |α i*α j-β i*β j|)*log (1/a) := by
       simp_rw [sum_add_distrib, mul_assoc, ← mul_sum, ← sum_mul, hαsum, one_mul]
-    _ ≤ _ := add_le_add_left (by
+    _ ≤ _ := add_le_add le_rfl (by
       nlinarith [mul_le_mul_of_nonneg_right
-        (product_mass_stability α β hα hβ hαsum hβsum) hlogB]) _
+        (product_mass_stability α β hα hβ hαsum hβsum) hlogB])
 
 end HadwigerRamsey.ThomasonUpper
