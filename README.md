@@ -4,6 +4,9 @@ Lean formalization of results from the local research manuscript
 `hadramoct30.tex`. That manuscript and local counterexample notes are
 excluded from version control.
 
+The project uses Lean **4.33.0** and the matching Mathlib release. Both local
+builds and GitHub Actions read the version from `lean-toolchain`.
+
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
 

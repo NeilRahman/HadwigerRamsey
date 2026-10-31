@@ -7,7 +7,7 @@ import LeanCert.Core.IntervalRat.Basic
 import LeanCert.Core.IntervalRat.LogReduction
 import LeanCert.Core.Taylor
 import LeanCert.Core.Expr
-import Mathlib.Data.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 
@@ -565,6 +565,7 @@ theorem mem_evalTaylorSeries_sin {x : ℝ} {I : IntervalRat} (hx : x ∈ I) (n :
     convert zipIdx_range_map
       (fun a b => ((if a % 2 = 1 then (-1 : ℚ) ^ ((a - 1) / 2) / a.factorial else 0 : ℚ) : ℝ) * x ^ b)
       (n + 1) using 2
+    rfl
   rw [h1]
   -- Step 2: Show term-by-term equality
   apply List.map_congr_left
@@ -662,6 +663,7 @@ theorem mem_evalTaylorSeries_cos {x : ℝ} {I : IntervalRat} (hx : x ∈ I) (n :
     convert zipIdx_range_map
       (fun a b => ((if a % 2 = 0 then (-1 : ℚ) ^ (a / 2) / a.factorial else 0 : ℚ) : ℝ) * x ^ b)
       (n + 1) using 2
+    rfl
   rw [h1]
   -- Step 2: Show term-by-term equality
   apply List.map_congr_left
@@ -1205,7 +1207,7 @@ theorem Real.atanh_hasSum' {x : ℝ} (hx : |x| < 1) :
   have h_eq : Real.atanh x = (1 / 2) * (Real.log (1 + x) - Real.log (1 - x)) := by
     rw [Real.atanh, Real.log_div (ne_of_gt h1) (ne_of_gt h2)]
   rw [h_eq]
-  convert hlog.mul_left (1 / 2) using 1
+  convert! hlog.mul_left (1 / 2) using 1
   funext k
   field_simp
 
@@ -1554,7 +1556,7 @@ theorem mem_ln2Computable (n : ℕ) : Real.log 2 ∈ ln2Computable n := by
       simp only [Rat.cast_ofNat]
       norm_num
     rw [h_arg] at h
-    convert h using 1
+    convert h using 1 <;> norm_num
   rw [hlog_eq]
   -- atanh(1/3) ∈ atanhPointComputable (1/3) n by mem_atanhPointComputable
   have h_third_lt : |(↑(1/3 : ℚ) : ℝ)| < 1 := by

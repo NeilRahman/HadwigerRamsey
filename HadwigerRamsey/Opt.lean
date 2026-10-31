@@ -71,7 +71,7 @@ lemma energy_average_lower {k : ℕ} (α p : Fin k → ℝ) (qB qG : Fin k → F
         rw [show 1-(1-p i)/2 = (1+p i)/2 by ring,
           log_div (by linarith [hp0 i]) (by norm_num)]
         ring
-      simpa only [if_pos rfl,he] using hm
+      simpa [he] using hm
     · have hm := logCost_mono (show (1/2 : ℝ) ≤ (qB i j+qG i j)/2 by linarith [hoff i j hij])
         (show (qB i j+qG i j)/2 < 1 by linarith [hB i j,hG i j])
       have he : logCost (1/2) = log 2 := by norm_num [logCost,log_div]

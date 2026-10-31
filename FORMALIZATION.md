@@ -69,9 +69,9 @@ inequality, including when R is an integer.
 
 ## Verification
 
-Pinned Lean: `leanprover/lean4:v4.24.0`.
-Pinned Mathlib: tag `v4.24.0`, commit
-`f897ebcf72cd16f89ab4577d0c826cd14afaafc7`.
+Pinned Lean: `leanprover/lean4:v4.33.0`.
+Pinned Mathlib: tag `v4.33.0`, commit
+`db584cd6d46c92f209a44c0f1c829460d327499d`.
 All transitive dependencies are recorded in `lake-manifest.json`.
 
 Run:
@@ -124,7 +124,7 @@ identity needed by this argument.
 A targeted public search and a search of the pinned Mathlib sources found
 finite-partition and pigeonhole infrastructure, rather than an existing
 copy of this exact lemma. The reusable partition API is
-[Mathlib.Order.Partition.Finpartition](https://github.com/leanprover-community/mathlib4/blob/v4.24.0/Mathlib/Order/Partition/Finpartition.lean)
+[Mathlib.Order.Partition.Finpartition](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Order/Partition/Finpartition.lean)
 (by Yaël Dillies and Bhavik Mehta). Mathlib's weighted pigeonhole results
 were also inspected; direct finite sums suffice here. `BigSet.lean` is new
 project code; the underlying finite-partition implementation is reused
@@ -152,13 +152,13 @@ result. This is a search outcome, not a claim that none exists.
   a related Lean formalization about coloring and clique minors. Its main
   result is different from this random-graph upper bound. It is not a
   dependency of this project.
-- [Mathlib finite Jensen](https://github.com/leanprover-community/mathlib4/blob/v4.24.0/Mathlib/Analysis/Convex/Jensen.lean):
+- [Mathlib finite Jensen](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/Convex/Jensen.lean):
   `convexOn_exp.map_sum_le` is reused directly.
-- [Mathlib independence](https://github.com/leanprover-community/mathlib4/blob/v4.24.0/Mathlib/Probability/Independence/Basic.lean):
+- [Mathlib independence](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Probability/Independence/Basic.lean):
   the proof reuses `iIndepSet_iff` and
   `iIndepSet.indep_generateFrom_of_disjoint`, along with measurable
   generated events and the measure-of-intersection product identity.
-- [Mathlib power/logarithm asymptotics](https://github.com/leanprover-community/mathlib4/blob/v4.24.0/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean):
+- [Mathlib power/logarithm asymptotics](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean):
   `isLittleO_log_rpow_rpow_atTop` supplies the growth estimates.
 - Mathlib also provides finite union bounds, exponential/logarithm and
   square-root identities, ceilings, finite sums, and graph connectivity.
@@ -408,3 +408,44 @@ audit module. No further external library is added.
 The root module includes `#print axioms HadwigerRamsey.optapprox`.
 Its only foundational dependencies are `propext`, `Classical.choice`,
 and `Quot.sound`. The source guard and full build cover the new files.
+
+## Migration to Lean 4.33.0
+
+The project and GitHub workflow now use Lean 4.33.0 and Mathlib v4.33.0
+(commit `db584cd6d46c92f209a44c0f1c829460d327499d`). Lake regenerated
+`lake-manifest.json` for this release, including its transitive dependencies.
+GitHub Actions explicitly prints the selected Lean version before checking
+all proofs.
+
+Theorem 1.4's endpoint remains `HadwigerRamsey.thomasonlower` in
+`HadwigerRamsey/ThomasonLower.lean`. Its full declaration, including all
+quantifiers, independence/measurability hypotheses, the condition L > epsilon,
+and the real-valued probability conclusion, is unchanged from the previous
+version and agrees with the October 31 manuscript. The proof and its supporting
+`Probability.lean` and `Finite.lean` use Mathlib's renamed `probReal_univ`
+in place of `measureReal_univ_eq_one`. There is no change to the mathematical
+argument, and no new hypothesis, unproved assumption, or numerical evaluation
+is introduced into Theorem 1.4.
+
+The rest of the existing project is also migrated so that the shared toolchain
+continues to support the earlier completed proofs. The cubic-sum proof makes
+its addition inequality explicit for the new elaborator, and the derivative
+proofs use `convert!` to unfold equivalent algebra instances. The vendored LeanCert
+subset adapts renamed imports/casts, the smoothness interface, and the generalized
+Taylor theorem; its README records these edits. The interval algorithms and
+certificate values are unchanged. Expression evaluation and the convex minimum
+argument use explicit definitional conversions in `FOpt/Envelope.lean`.
+The dependency audit explicitly requests theorem bodies with
+`ConstantInfo.value? (allowOpaque := true)`, as required by Lean 4.33's API;
+it still checks the actual proof-expression path from `optapprox` to `opt`.
+
+The unfinished Theorem 1.5 development is preserved separately on
+`codex/thomasonupper`; this migration starts from `main` and does not present
+that unfinished theorem as proved.
+
+Validation on the migration: the full Lean 4.33 build passed (8737 jobs),
+the source guard passed for all 32 Lean source files, and the dependency audit
+confirmed the path from `optapprox` to public `opt`. The root axiom reports for
+all completed endpoints contain only `propext`, `Classical.choice`, and
+`Quot.sound`. The five public endpoint declarations were compared against the
+previous version and are unchanged.

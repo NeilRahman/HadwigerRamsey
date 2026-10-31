@@ -35,7 +35,7 @@ lemma probability_noHit (hA : ∀ e, MeasurableSet (A e))
   apply Finset.prod_congr rfl
   intro e he
   have hc := measureReal_add_measureReal_compl (μ := μ) (hA e)
-  simp only [measureReal_univ_eq_one] at hc
+  simp only [probReal_univ] at hc
   change μ.real (A e)ᶜ = 1 - μ.real (A e)
   linarith
 

@@ -61,7 +61,7 @@ theorem thomasonlower (ε : ℝ) (hε : 0 < ε) :
     have hprob : ∀ e : Edge n, μ.real (edgeEvent G e)ᶜ = exp (-w e.val.1 e.val.2) := by
       intro e
       have hc := measureReal_add_measureReal_compl (μ := μ) (hA e)
-      simp only [measureReal_univ_eq_one, hp e] at hc
+      simp only [probReal_univ, hp e] at hc
       have hpos : 0 < 1-p (τ e.val.1) (τ e.val.2) := by linarith [hpe (τ e.val.1) (τ e.val.2)]
       dsimp [w]
       rw [neg_neg, exp_log hpos]
@@ -87,7 +87,7 @@ theorem thomasonlower (ε : ℝ) (hε : 0 < ε) :
       exact htail
     have hmeas := measurableSet_graph_property G hA (fun H => HasCliqueMinor H s)
     have hc := measureReal_add_measureReal_compl (μ := μ) hmeas
-    simp only [measureReal_univ_eq_one] at hc
+    simp only [probReal_univ] at hc
     have hgood : {ω | HasCliqueMinor (G ω) s}ᶜ ⊆
         {ω | (hadwigerNumber (G ω) : ℝ) ≤ (1+ε)*sqrt (blockLambda τ p)*(n : ℝ)/sqrt (log n)} := by
       intro ω hω

@@ -28,9 +28,10 @@ lemma env_mem {x : ℝ} {I : IntervalRat} (hx : x ∈ I) :
   · simpa only [realEnv,certificateEnv,Rat.cast_zero] using IntervalRat.mem_singleton 0
 
 lemma gapE_real (x : ℝ) : gapE.real (realEnv x) = gap x := by
-  dsimp only [gapE,fE,aE,xE,dE,eE,tE,cE,RExpr.real,realEnv]
-  norm_num only [Rat.cast_div,Rat.cast_one,Rat.cast_ofNat]
-  simp only [gap,cubic,value,pow_two,div_eq_mul_inv,sub_eq_add_neg]
+  change F*x + a*x*(x-((1/2 : ℚ) : ℝ))*(((1 : ℚ) : ℝ)-x) -
+    x*x*log (((2 : ℚ) : ℝ)-exp (-(c/(x*x)))) = _
+  norm_num only [Rat.cast_div, Rat.cast_one, Rat.cast_ofNat]
+  simp only [gap,cubic,value,pow_two]
 
 lemma curvatureE_real (x : ℝ) : curvatureE.real (realEnv x) = a*(3-6*x)-second c x := by
   change a*(3-6*x) - (2*log (2-exp (-(c/(x*x)))) -
@@ -95,6 +96,7 @@ lemma gap_nonneg_middle {x : ℝ} (hx : x ∈ Icc (400/1000 : ℝ) (600/1000)) :
     rw [(hasDerivAt_gap (by norm_num : (1/2 : ℝ) ≠ 0)).hasDerivWithinAt.derivWithin
       (uniqueDiffWithinAt_Ioi _),gapFirst_half]
   have hm := hc.isMinOn_of_rightDeriv_eq_zero hhalf hd hx
+  change gap (1/2) ≤ gap x at hm
   simpa only [gap_half] using hm
 
 lemma gap_nonneg_small {x : ℝ} (hx : x ∈ Icc (0 : ℝ) (350/1000)) : 0 ≤ gap x := by
