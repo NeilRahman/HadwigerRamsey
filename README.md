@@ -1,7 +1,7 @@
 # Hadwiger–Ramsey
 
 Research manuscript and Lean formalization. The original manuscript is
-`hadramoct30.tex`; `thomasonupper-counterexample/` is preserved separately.
+`hadramoct30.tex`. Local counterexample notes are excluded from version control.
 
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.

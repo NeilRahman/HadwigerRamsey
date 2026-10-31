@@ -10,3 +10,6 @@
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Local research notes, excluded from the repository.
+/thomasonupper-counterexample/
