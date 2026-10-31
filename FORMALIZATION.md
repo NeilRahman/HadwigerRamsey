@@ -88,8 +88,8 @@ expected list is exactly `propext`, `Classical.choice`, and `Quot.sound`.
 There are no proof placeholders or project-defined axioms. GitHub Actions
 repeats the build and source guard on pushes and pull requests.
 
-The original manuscript is preserved without edits. Local counterexample
-notes are excluded from version control. The mathematical correspondence above is documented for
+The original manuscript stays local and is preserved without edits. It and
+local counterexample notes are excluded from version control. The mathematical correspondence above is documented for
 human review; kernel checking establishes the Lean statement.
 
 ## Lemma 3.1: two partitions (`bigset`)

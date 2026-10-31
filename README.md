@@ -1,7 +1,8 @@
 # Hadwiger–Ramsey
 
-Research manuscript and Lean formalization. The original manuscript is
-`hadramoct30.tex`. Local counterexample notes are excluded from version control.
+Lean formalization of results from the local research manuscript
+`hadramoct30.tex`. That manuscript and local counterexample notes are
+excluded from version control.
 
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
@@ -37,5 +38,5 @@ lake build
 ```
 
 Lean, Mathlib, and transitive dependencies are pinned. GitHub Actions
-checks the proofs on pushes and pull requests. The manuscript is preserved
-without edits. Other manuscript results have not yet been formalized.
+checks the proofs on pushes and pull requests. The manuscript stays local
+and is preserved without edits. Other manuscript results have not yet been formalized.

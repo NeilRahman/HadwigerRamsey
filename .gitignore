@@ -13,3 +13,6 @@
 
 # Local research notes, excluded from the repository.
 /thomasonupper-counterexample/
+
+# This manuscript stays local; other TeX files may be tracked explicitly.
+/hadramoct30.tex
