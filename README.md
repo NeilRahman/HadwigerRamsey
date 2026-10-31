@@ -6,7 +6,10 @@ Research manuscript and Lean formalization. The original manuscript is
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
 
-The endpoint is `HadwigerRamsey.thomasonlower`. The kernel reports only
+Lemma 3.1 (`bigset`), for a nonempty ground set, is also proved as
+`HadwigerRamsey.bigset`; see the guide for the empty-set boundary condition.
+
+The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.
 See [FORMALIZATION.md](FORMALIZATION.md) for the exact statement and paper-to-Lean map.
 

@@ -4,6 +4,9 @@ Theorem 1.4 (`thomasonlower`) of `hadramoct30.tex` is proved in Lean 4.
 The endpoint is `HadwigerRamsey.thomasonlower` in
 `HadwigerRamsey/ThomasonLower.lean`.
 
+Lemma 3.1 (`bigset`) is also proved, for a nonempty ground set, as
+`HadwigerRamsey.bigset` in `HadwigerRamsey/BigSet.lean`.
+
 ## Exact meaning of the endpoint
 
 For each positive real ε, the theorem supplies a natural cutoff n₀ before
@@ -55,6 +58,7 @@ by nonnegativity of probability.
 | Block average equals vertex-pair average | `blockLambda_identity`, `Blocks.lean` |
 | Measurability of finite graph properties | `measurableSet_graph_property`, `Measurability.lean` |
 | Theorem 1.4 (`thomasonlower`) | `thomasonlower`, `ThomasonLower.lean` |
+| Lemma 3.1 (`bigset`), nonempty ground set | `bigset`, `BigSet.lean` |
 
 The finite probability result is slightly more general: logarithmic
 weights may vary independently on every potential edge. The final
@@ -87,6 +91,47 @@ repeats the build and source guard on pushes and pull requests.
 The original manuscript and existing counterexample notes are preserved
 without edits. The mathematical correspondence above is documented for
 human review; kernel checking establishes the Lean statement.
+
+## Lemma 3.1: two partitions (`bigset`)
+
+The endpoint `HadwigerRamsey.bigset` uses Mathlib's existing
+`Finpartition s` directly, for a finite set `s`. It assumes `s.Nonempty`,
+that each partition has at most k parts, and ε > 0. It proves exactly the
+stated alternatives: a part of either partition has size at least
+(1−ε)|s|, or there are A and B of size at least ε|s|/k² lying in distinct
+parts of both partitions. The subsets are chosen as intersections of
+parts; no new partition notion is introduced.
+
+**Boundary condition:** the manuscript does not explicitly require n > 0.
+With the usual definition of partitions into nonempty parts, its literal
+statement fails for n = 0: both partitions are empty, so neither outcome
+can supply the required parts. The Lean theorem makes the nonemptiness
+condition explicit. It implies k > 0 from the partition-size bound, so
+no separate positivity assumption on k is needed. This is the version
+used by the later application to a large vertex set. The manuscript has
+not been edited.
+
+The proof follows the manuscript. Large intersection cells cannot differ
+in both their row and column if the second outcome fails. A short logical
+helper, `supported_on_row_or_column`, shows that all such cells then lie
+in one row or one column, also handling the case of no large cells.
+`large_part_of_small_other_intersections` bounds the total size outside
+that row/column. It reuses Mathlib's partition disjointness and coverage,
+`Finpartition.sum_card_parts`, `Finset.card_biUnion`, and finite sum/cardinality
+inequalities. `sum_card_inter_parts` packages the intersection-counting
+identity needed by this argument.
+
+A targeted public search and a search of the pinned Mathlib sources found
+finite-partition and pigeonhole infrastructure, rather than an existing
+copy of this exact lemma. The reusable partition API is
+[Mathlib.Order.Partition.Finpartition](https://github.com/leanprover-community/mathlib4/blob/v4.24.0/Mathlib/Order/Partition/Finpartition.lean)
+(by Yaël Dillies and Bhavik Mehta). Mathlib's weighted pigeonhole results
+were also inspected; direct finite sums suffice here. `BigSet.lean` is new
+project code; the underlying finite-partition implementation is reused
+without modification.
+
+Both endpoints have an axiom report in the root module and are included
+in the same build and source guard.
 
 ## Related formalizations and reused results
 
