@@ -22,6 +22,10 @@ parameter bounds and δ > 0. Its proof explicitly depends on `opt` through
 positive-support restriction and probability rescaling, followed by
 compactness. The build checks that theorem dependency.
 
+Theorem 1.5 (`thomasonupper`), using the October 31 manuscript, is in progress.
+Its exact target proposition and checked preliminary lemmas are in
+`HadwigerRamsey/ThomasonUpper/`. The theorem itself is not yet proved.
+
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.
 See [FORMALIZATION.md](FORMALIZATION.md) for the exact statement and paper-to-Lean map.

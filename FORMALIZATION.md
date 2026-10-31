@@ -1,5 +1,10 @@
 # Formalization status
 
+Theorem 1.5 (`thomasonupper`) from the October 31 manuscript is **in progress,
+not proved in Lean**. The checked ingredients and exact target are described
+in the final section of this document. Earlier completed endpoints retain
+their status below.
+
 Theorem 1.4 (`thomasonlower`) of `hadramoct30.tex` is proved in Lean 4.
 The endpoint is `HadwigerRamsey.thomasonlower` in
 `HadwigerRamsey/ThomasonLower.lean`.
@@ -408,3 +413,104 @@ audit module. No further external library is added.
 The root module includes `#print axioms HadwigerRamsey.optapprox`.
 Its only foundational dependencies are `propext`, `Classical.choice`,
 and `Quot.sound`. The source guard and full build cover the new files.
+
+## Theorem 1.5 (`thomasonupper`): work in progress
+
+**Theorem 1.5 is not yet proved in Lean.** The source for this work is the
+local October 31 manuscript. Its TeX file remains ignored and is not part
+of this change. The module `ThomasonUpper/Progress.lean` collects checked
+ingredients; it is not an endpoint theorem.
+
+`ThomasonUpper.Statement` in `Definitions.lean` records the full target as
+a proposition. It has exactly the manuscript's uniform quantifier order,
+real epsilon greater than zero, vertex connectivity at least epsilon times
+the graph order, class masses at least epsilon, and real lower bound
+`n / sqrt(log n) * (sqrt(cappedLambda) - epsilon)`. This is a definition
+of a target, not a proof or an additional assumption used to prove it.
+
+The diagonal density is the number of edges in the induced class divided
+by `choose(class size, 2)`. Off-diagonal density reuses Mathlib's
+`SimpleGraph.edgeDensity`. The matrix is computed from the actual graph,
+not supplied as independent numerical data. `cappedLambda` reuses the
+existing `blockLambda`, so the sum is over ordered pairs and the cap is
+exactly `min(p, 1-epsilon)`. Zero-denominator densities are totalized by
+Lean's division convention, but `class_size_two` proves those cases do
+not occur under the theorem's hypotheses once epsilon times n is at least
+two. Vertices use `Fin n`, as for Theorem 1.4; the conclusion uses the
+existing branch-set definition of the Hadwiger number.
+
+Vertex connectivity is defined by the usual cut characterization, with
+value zero on the empty or disconnected graph and n-1 for a complete
+graph. `vertexConnectedAtLeast_iff` proves the exact maximum/cut
+equivalence for positive n. It does not assume internally disjoint paths
+in place of proving a Menger theorem. Its degree bound and the empty
+large-epsilon regime are proved.
+
+Checked results so far:
+
+| Appendix step | Checked Lean declaration / module |
+| --- | --- |
+| Density bounds, symmetry, exact diagonal incidence conversion | `Density.lean` |
+| Ordered block incidence sum equals twice the edge count | `sum_card_block_interedges` |
+| Uniform upper bound on Lambda-star | `cappedLambda_le` |
+| Connectivity implies the required degree-sum bound | `connectivity_mul_order_le_twice_edges` |
+| Uniform lower bound epsilon(1-epsilon) on Lambda-star | `cappedLambda_lower`, `DensityLower.lean` |
+| Positive class masses make diagonal densities well-defined | `class_size_two` |
+| Greedy domination with the manuscript's exact logarithmic budget | `exists_dominating_set`, `Domination.lean` |
+| Disjoint finite allocations from a reservoir | `disjoint_reservoir_selection`, `Selection.lean` |
+| Allocation of all dominating sets M-a with epsilon/8 and epsilon R/4 constants | `reservoir_dominating_sets`, `ReservoirDomination.lean` |
+| Discarding defective ordered pairs costs at most their number | `discard_defective_pairs`, `Deletion.lean` |
+| Connected dominating cores turn a complete family into a clique minor | `cliqueMinor_of_complete_dominated`, `BranchSets.lean` |
+| Uniform logarithm and product-mass perturbation bounds | `log_lipschitz`, `product_mass_stability`, `lambda_stability`, `Stability.lean` |
+| Multiplicative accuracy gives the exact additive error outside the square root | `additive_accuracy` |
+
+The following substantial ingredients remain unproved: the random
+multitype complete-equipartition lemma (including its sampling and
+expectation estimates); the full graph-deletion density stability lemma;
+integer rounding and the uniform asymptotic corollary; the existence of
+the random reservoirs and their short disjoint path families; and the
+final assembly and uniform choice of n-zero. The checked selection lemma
+does not assert that the reservoirs themselves exist.
+
+Mathlib reuse includes induced-graph connectedness, connected unions and
+walk supports, interedge counts, rational edge densities, the handshaking
+lemma, the maximum possible edge count, finite fiber sums, and logarithm
+inequalities. Mathlib also contains general Chernoff/Markov tools, but the
+reservoir probability argument has not yet been formalized.
+
+The literature search identified Thomason's *The Extremal Function for
+Complete Minors* (2001), cited in the manuscript as MR1814910. No ready
+Lean formalization of its complete-equipartition or dense-minor theorem
+was located. A public finite vertex-Menger proof was located in
+[Edouard Bonnet's polynomial-grid-minor-theorem project](https://github.com/EdouardBonnet/polynomial-grid-minor-theorem/blob/69d1714f3daa5ac49924b99950b4f4e283107cbe/proofs/Lax17Proofs/Source/Menger.lean).
+That snapshot uses Lean 4.33.0 and Mathlib commit
+`db584cd6d46c92f209a44c0f1c829460d327499d`; this project uses 4.24.0.
+A temporary compatibility trial exposed missing newer walk/list APIs in
+its supporting path library. It is not imported, vendored, or counted as
+an established dependency of this project. The upstream source and
+temporary trial remain outside the repository. Reusing it would require
+a checked compatibility port or a separately assessed toolchain update.
+
+Logical correspondence of the work completed so far:
+
+1. No theorem hypothesis or conclusion has been changed. There is no
+   finished theorem proof from which to claim full proof correspondence.
+2. The standalone domination lemma explicitly assumes both finite sides
+   are nonempty. Those qualifications make the manuscript's logarithm
+   and greedy choices meaningful. In the actual reservoir allocation,
+   nonemptiness of the unused reservoir is proved from the positive
+   remaining neighbor bound; complete-equipartition parts are nonempty.
+   Thus this does not strengthen Theorem 1.5.
+3. Domination is proved for a finite relation rather than a bundled
+   bipartite graph, by the same double-counting and greedy iteration.
+4. Analytic stability is expressed with the total absolute change in the
+   class masses. The manuscript's maximum-coordinate estimate follows
+   after the separate bounded-number-of-classes argument, which remains
+   to be assembled with the graph-deletion estimates.
+5. The final connected-core lemma is slightly more general than the
+   appendix: any disjoint connected dominating enlargements suffice.
+   It preserves the same branch-set argument. No new assertion about
+   finding those enlargements is assumed to establish Theorem 1.5.
+
+The root build covers all current first-party modules and prints the
+standard-foundation dependency reports for the main new helper results.
