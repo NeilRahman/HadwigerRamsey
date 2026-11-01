@@ -987,7 +987,7 @@ build.
 The public endpoint is `HadwigerRamsey.bipMinor` in
 `HadwigerRamsey/BipMinor.lean`. For every K > 0 it supplies gamma > 0
 and a positive integer cutoff n-zero. For a simple graph H on Fin n
-with bipartition (A,B), |A| = |B| > n-zero, and at least
+with bipartition (A,B), |A| = |B| >= n-zero, and at least
 `(1-gamma)*|A|^2` edges, it proves
 `K*|A|/sqrt(log |A|) <= hadwigerNumber H`.
 The statement is unchanged. Mathlib's `IsBipartiteWith` describes the
@@ -1013,7 +1013,7 @@ minor monotonicity under restriction, and the logarithmic order comparison.
 
 Logical correspondence and differences from the manuscript:
 
-1. The endpoint has exactly the manuscript's hypotheses, strict size
+1. The endpoint has exactly the manuscript's hypotheses, non-strict size
    threshold, and conclusion. Vertices use Fin n as in the other endpoints.
    A vertex-to-class map is used internally, with two fibers of equal
    size a. The public wrapper proves equivalence with the given sets A,B.
@@ -1040,7 +1040,7 @@ Logical correspondence and differences from the manuscript:
    loose uniform bounds with sufficient slack.
 5. One possible choice is
    `epsilon = min(1/100, exp(-((32*(K+1))^2)))`,
-   `gamma = epsilon/4096`, and `n-zero = max(N_1.5(epsilon),100)`.
+   `gamma = epsilon/4096`, and `n-zero = max(N_1.5(epsilon),100)+1`.
    These replace the manuscript's factor 8, gamma = epsilon/2, and
    reduction to K >= 1. They work directly for every K > 0 and ensure
    all pruning, density-cap, class-mass, and connectivity requirements.
@@ -1055,8 +1055,17 @@ Logical correspondence and differences from the manuscript:
    K follows. The core's clique minor is transferred back to H by the
    previously proved injective-homomorphism minor transport.
 
-Verification: `lake build` passes for the full project on Lean/Mathlib
-4.33.0 (8823 jobs). The source guard checks all 119 Lean files. The root
+8. The updated manuscript allows equality at the size cutoff:
+   `|A| = |B| >= n-zero`. The internal class-map helper retains its strict
+   cutoff N; the public endpoint chooses n-zero = N+1. Thus the equality
+   case at the public cutoff also satisfies the existing helper's hypothesis.
+   This only shifts the existential cutoff by one, without changing the
+   density parameter or mathematical argument. The application in Lemma 3.4
+   passes its existing strict bound via `.le`; its statement is unchanged.
+
+Verification of the non-strict-cutoff update: `lake build` passes for the
+full project on Lean/Mathlib 4.33.0 (8825 jobs). The source guard checks
+all 121 Lean files. The root
 report for `HadwigerRamsey.bipMinor` lists only `propext`, `Classical.choice`,
 and `Quot.sound`. All earlier formalized results remain in the root build.
 

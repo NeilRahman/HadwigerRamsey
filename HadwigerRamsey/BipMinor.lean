@@ -11,11 +11,11 @@ theorem bipMinor (K : ℝ) (hK : 0 < K) :
     ∃ gamma : ℝ, 0 < gamma ∧ ∃ n₀ : ℕ, 0 < n₀ ∧
       ∀ n : ℕ, ∀ H : SimpleGraph (Fin n), ∀ A B : Finset (Fin n),
       H.IsBipartiteWith (A : Set (Fin n)) (B : Set (Fin n)) →
-      A ∪ B = univ → A.card = B.card → n₀ < A.card →
+      A ∪ B = univ → A.card = B.card → n₀ ≤ A.card →
       (1-gamma)*(A.card : ℝ)^2 ≤ H.edgeFinset.card →
       K*(A.card : ℝ)/sqrt (log (A.card : ℝ)) ≤ (hadwigerNumber H : ℝ) := by
   obtain ⟨gamma,hg,N,hN,hminor⟩ := BipMinor.balanced_dense_minor K hK
-  refine ⟨gamma,hg,N,hN,?_⟩
+  refine ⟨gamma,hg,N+1,by omega,?_⟩
   intro n H A B hbip hcover hAB hA hedges
   have hd : Disjoint A B := disjoint_coe.mp hbip.disjoint
   have hB : ∀ v, v ∈ B ↔ v ∉ A := by
@@ -41,7 +41,7 @@ theorem bipMinor (K : ℝ) (hK : 0 < K) :
       have hu' := (hB u).mp hu
       simp only [c,if_neg hu',if_pos hv]
       decide
-  apply hminor n A.card hA H c hp ?_ hedges
+  apply hminor n A.card (by omega) H c hp ?_ hedges
   intro i
   fin_cases i
   · change (classVertices c 0).card = A.card

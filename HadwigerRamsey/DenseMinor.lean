@@ -52,7 +52,7 @@ theorem denseMinor (K : ℝ) (hK : 0 < K) :
   have hbound := hbip (2*a) C (ThomasonUpper.classVertices c 0) (ThomasonUpper.classVertices c 1)
     (DenseMinor.cut_bipartite G c) (DenseMinor.classes_cover c)
     (by rw [hcard 0,hcard 1])
-    (by rw [hcard 0]; exact haN)
+    (by rw [hcard 0]; exact haN.le)
     (by simpa only [hcard] using hcross)
   have hCG : hadwigerNumber C ≤ hadwigerNumber G := by
     apply cliqueMinor_le_hadwigerNumber
