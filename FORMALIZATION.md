@@ -528,18 +528,27 @@ Checked results so far:
 | A.1 random-part probability at most rho^ell and equation block-expectation | `random_part_nonneighbor_probability`, `expected_block_nonneighbors`, `BlockAMGM.lean`, `NonneighborSampling.lean` |
 | Rejection and unacceptable-part probability, and simultaneous four-times-expectation bounds | `rejected_block_probability`, `unacceptable_probability`, `exists_simultaneous_four_bounds`, `FiniteExpectations.lean` |
 | Exactly k ineligible final blocks, acceptability's missing-block count, and the 2*omega factor | `eligibleBlocks_card`, `acceptable_missing_blocks`, `acceptable_pair_product_bound`, `SelectedBlocks.lean` |
+| Full appendix A.1 with its exact P, part-count bounds, and complete-equipartition conclusion | `multitype_complete_equipartition`, `MultitypeFinite.lean`, `FiniteBlockTheorem.lean` |
+| Expected ordered defect count, simultaneous outcome, endpoint deletion, and balanced extension | `RandomEquipartition.lean`, `CompleteEquipartition.lean`, `BalancedExtension.lean` |
+| Exact finite total-probability calculation for the second random part | `ConditionalBlocks.lean`, `FiniteProbabilityFibers.lean`, `BlockNonneighbors.lean` |
+| Equipartition part sizes lie between floor(n/m) and floor(n/m)+1 | `IsCompleteEquipartition.card_part_bounds`, `CompleteEquipartition.lean` |
+| Exact log P formula, rounded quadratic margin, and uniform probability decay | `log_partitionFailure`, `rounded_quadratic_entropy_margin`, `eventually_partitionFailure_small`, `PartitionFailure.lean`, `PartitionFailureAsymptotic.lean` |
+| Uniform at-least-(1-eta)*s parts for exact-multiple classes under the entropy margin, explicitly using A.1 | `multitype_many_parts_of_entropy_margin`, `MultitypeAsymptotic.lean` |
+| Uniform auxiliary constants satisfying both strict gain/ratio inequalities and all three cost bounds in A.3 | `exists_multitype_asymptotic_parameters`, `AsymptoticParameters.lean` |
 
-The following substantial ingredients remain unproved: the complete
-multitype equipartition conclusion of A.1; the uniform asymptotic corollary
-beyond the checked rounding, trimming, and regularization ingredients;
-and the end-to-end assembly and uniform choice of n-zero. A.1 now has
-its sorting, block-maxima product, permutation sampling, block expectation,
-and rejection ingredients. The accepted-pair probability bound still needs
-to be assembled from those ingredients, followed by the expected defect
-count and the complete-equipartition deletion/redistribution argument. The reservoirs now have
-an unconditional existence theorem under the manuscript's connectivity
-hypothesis. The finite final construction and its allocation budgets are
-also proved, but do not supply the still-missing complete equipartition.
+The following substantial ingredients remain unproved: the full uniform
+asymptotic corollary A.3 and the end-to-end assembly and uniform choice of
+n-zero. A.1 is now proved as a complete theorem, including its sampling,
+expectation, rejection, accepted-pair probability, ordered defect count,
+deletions, and balanced redistribution. Its class-index set is explicitly
+nonempty. For A.3, finite rounding, trimming, regularization, the exact log P
+identity, and uniform decay once a fixed quadratic entropy margin is
+available are proved. The auxiliary constants have also been chosen uniformly. Establishing the
+margin and resulting number of parts from the rounded and trimmed graph
+parameters remains.
+The reservoirs have an unconditional existence theorem under the manuscript's
+connectivity hypothesis. The finite final construction and its allocation
+budgets are also proved.
 
 Mathlib reuse includes induced-graph connectedness, connected unions and
 walk supports, interedge counts, rational edge densities, the handshaking
@@ -700,7 +709,7 @@ Logical correspondence of the work completed so far:
     from Mathlib's `log x <= x-1`, and exponentiating gives the original
     product-form `rho-geomean` inequality with the same `ell_j/ell` weights.
     These estimates now feed the sorted-block and random-sampling results
-    below. The complete-equipartition conclusion is still unproved.
+    below and the full finite complete-equipartition conclusion.
 
 21. Sorting breaks equal rho-values by the existing vertex order. A block's
     final sorted vertex attains its maximum, so this is the manuscript's
@@ -731,14 +740,72 @@ Logical correspondence of the work completed so far:
     and pads (2*omega)^m to (2*omega)^ell, as in the manuscript.
     `acceptable_pair_product_bound` combines these numerical inequalities
     with the sorted-maxima estimate to obtain exactly the expression P;
-    its graph-dependent inputs and the expected defect count still need
-    to be assembled.
+    its graph-dependent inputs and the expected defect count are now
+    assembled in `multitype_complete_equipartition`.
 25. The helper choosing simultaneous U,Z bounds uses the expected value
     of U/A+Z/B, which is at most 2, and Mathlib's finite averaging
     principle. It returns the same U <= 4*A and Z <= 4*B conclusion as
     the manuscript's two Markov bounds and union bound. This alternative
-    choice argument is proved but not yet connected to a completed A.1
-    defect-count construction.
+    choice argument is now connected to the full A.1 defect-count
+    construction and complete-equipartition conclusion.
+
+26. The full A.1 statement explicitly assumes k > 0 and returns at least
+    one nonempty part. With ell_i >= 1 and s >= 2, the exact class sizes
+    then force a nonempty graph. This makes explicit the intended
+    nonempty partition convention: the k = 0 empty-graph case would need
+    a separate convention for a partition into positive parts. Theorem
+    1.5 is applied at positive large n, where a vertex-to-class map forces
+    k > 0. The expression P and both part-count bounds are unchanged.
+27. The accepted-pair calculation sums exact joint probabilities over
+    all possible first vectors. It bounds the event that both parts are
+    acceptable and have no joining edge by the larger event that the
+    first is acceptable and the second lies in its common nonneighbors,
+    exactly as used in the manuscript's calculation. Z counts ordered
+    distinct acceptable pairs. Lean uses E Z <= s^2*P, rather than the
+    manuscript's strict E Z < s^2*P; this weaker estimate gives the same
+    final deletion bound 4*s^2*P.
+28. Balanced redistribution preserves every surviving core. If there
+    are at least as many leftover vertices as surviving parts, Lean
+    reuses Mathlib's existing equipartition theorem for the leftovers.
+    Otherwise it injects the leftover vertices into the part indices,
+    adding zero or one vertex to each. This spells out the manuscript's
+    redistribution instruction without changing its conclusion. The
+    resulting indexed parts have sizes differing by at most one; Mathlib's
+    equitable-family estimate also gives floor(n/m) <= |W_i| <= floor(n/m)+1.
+29. The A.3 preliminary estimate keeps P exactly as defined in A.1. Its
+    logarithm is L*log(2*omega) - L*(k+phi*L)*log(tau)
+    - L^2*Lambda_reg, with the exact weights ell_i/L. The uniform-decay
+    helper assumes L <= C*sqrt(log n), k <= K, and a quadratic margin
+    L^2*(Lambda_reg+phi*log(tau)) >= (1+delta)*log n. Mathlib's growth
+    of sqrt(log n) then absorbs the linear term and proves
+    P <= n^(-(1+delta/2)) uniformly. Obtaining that margin from the actual
+    rounded graph parameters is still part of the unfinished A.3 proof.
+    The finite helper `rounded_quadratic_entropy_margin` proves that
+    L >= (1+gamma)*sqrt(log(n)/Lambda), R >= (1-2*xi)*Lambda,
+    phi*log(1/tau) <= xi*Lambda, and
+    (1+gamma)^2*(1-3*xi) >= 1+delta imply precisely that margin.
+    This retains the manuscript's factor 1-3*xi. Establishing R's bound
+    for the actual trimmed graph and the final rounding/trimming part-count
+    comparisons remain unfinished.
+    `eventually_defective_pair_loss_small` proves 4*s*P <= eta/2
+    uniformly from s <= n and P <= n^(-(1+xi)). Together with
+    4/(omega*phi) <= eta/2, the theorem
+    `multitype_many_parts_of_entropy_margin` explicitly applies A.1 and
+    returns at least (1-eta)*s parts. It still assumes exact-multiple
+    classes and the quadratic margin, so it is a checked intermediate
+    consequence, not the full manuscript A.3.
+
+30. The unspecified small/large constants in the start of A.3 are chosen
+    explicitly and uniformly. Lean takes gamma = min(eta,1)/8,
+    xi = gamma/(12*(1+gamma)^2), tau = min(1/2,a*xi*lambda/2),
+    phi = min(1/2,xi*lambda/(2*(log(1/tau)+1))), and
+    omega = max(1,4/(xi*phi)). It proves both manuscript inequalities
+    (1-2*xi)/(1+gamma) > 1-eta and
+    (1+gamma)^2*(1-3*xi) > 1+2*xi, together with the three cost bounds.
+    It also records phi < 1 and 3*xi <= 1, as satisfied by these choices
+    and needed by the finite and quadratic-margin helpers. This supplies
+    explicit witnesses for the manuscript's choices, without changing
+    the assumptions a > 0, lambda > 0, eta > 0.
 
 The root build covers all current first-party modules and prints the
 standard-foundation dependency reports for the main new helper results.

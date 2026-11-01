@@ -43,6 +43,17 @@ theorem expected_finset_event_count {V Ω : Type*} [Fintype Ω] [Nonempty Ω]
   simp_rw [hc,uniform_probability_eq_expect]
   exact expect_sum_comm _ _ _
 
+/-- A fixed finite-event counting function, with its membership
+predicate kept abstract to avoid recomputing finite decision procedures. -/
+noncomputable def occurringEvents {I Ω : Type*} (S : Finset I) (A : I → Set Ω)
+    (p : Ω) : Finset I := S.filter (fun i => p ∈ A i)
+
+theorem expected_occurringEvents {I Ω : Type*} [Fintype Ω] [Nonempty Ω]
+    (S : Finset I) (A : I → Set Ω) :
+    (𝔼 p, ((occurringEvents S A p).card : ℝ)) =
+      ∑ i ∈ S, ((PMF.uniformOfFintype Ω).toOuterMeasure (A i)).toReal :=
+  expected_finset_event_count S A
+
 /-- Markov's inequality for a finite uniform sample, in the strict
 threshold form used to define rejected blocks. -/
 theorem uniform_markov {Ω : Type*} [Fintype Ω] [Nonempty Ω]

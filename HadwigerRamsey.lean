@@ -55,3 +55,17 @@ import HadwigerRamsey.ThomasonUpper.Progress
 #print axioms HadwigerRamsey.ThomasonUpper.exists_simultaneous_four_bounds
 
 #print axioms HadwigerRamsey.ThomasonUpper.acceptable_pair_product_bound
+
+#print axioms HadwigerRamsey.ThomasonUpper.multitype_complete_equipartition
+#print axioms HadwigerRamsey.ThomasonUpper.complete_equipartition_of_probability_bounds
+#print axioms HadwigerRamsey.ThomasonUpper.IsCompleteEquipartition.card_part_bounds
+#print axioms HadwigerRamsey.ThomasonUpper.log_partitionFailure
+#print axioms HadwigerRamsey.ThomasonUpper.eventually_partitionFailure_small
+
+#print axioms HadwigerRamsey.ThomasonUpper.rounded_quadratic_entropy_margin
+
+#print axioms HadwigerRamsey.ThomasonUpper.eventually_defective_pair_loss_small
+
+#print axioms HadwigerRamsey.ThomasonUpper.multitype_many_parts_of_entropy_margin
+
+#print axioms HadwigerRamsey.ThomasonUpper.exists_multitype_asymptotic_parameters

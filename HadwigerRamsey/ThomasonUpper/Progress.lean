@@ -15,15 +15,22 @@ import HadwigerRamsey.ThomasonUpper.Capping
 import HadwigerRamsey.ThomasonUpper.NonneighborSampling
 import HadwigerRamsey.ThomasonUpper.SelectedBlocks
 
+import HadwigerRamsey.ThomasonUpper.MultitypeFinite
+import HadwigerRamsey.ThomasonUpper.MultitypeAsymptotic
+import HadwigerRamsey.ThomasonUpper.AsymptoticParameters
+
 /-!
 Checked ingredients toward Theorem 1.5 of the October 31 manuscript.
 
 `HadwigerRamsey.ThomasonUpper.Statement` records the target proposition.
-No proof of that proposition is supplied here. The complete-equipartition
-conclusion, the rest of its uniform asymptotic corollary, and the final
-uniform assembly remain to be formalized. The reservoirs, allocation budgets,
-capped spanning subgraph, and finite clique-minor assembly are proved.
-A.1 now has sorted blocks, the exact block-maxima product, uniform
-permutation sampling identities, block expectations, and rejection bounds.
-Its acceptable-pair defect count and final equipartition are still missing.
+No proof of that proposition is supplied here. Appendix A.1's complete
+multitype equipartition theorem is proved, with a nonempty class-index set.
+The uniform asymptotic corollary A.3 and final uniform assembly remain.
+The reservoirs, allocation budgets, capped spanning subgraph, and finite
+clique-minor assembly are proved. The exact log formula for A.1's P and
+a uniform probability estimate under a quadratic entropy margin are proved;
+a many-parts consequence for exact-multiple classes now explicitly uses A.1.
+The constants gamma, xi, tau, phi, omega have been chosen uniformly.
+The required margin still needs to be obtained from the rounded and trimmed
+graph parameters in A.3, followed by its final part-count comparisons.
 -/

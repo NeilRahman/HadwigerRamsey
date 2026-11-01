@@ -23,4 +23,14 @@ theorem uniform_block_event_of_fintype {I A : Type*} [Fintype I] [Fintype A]
   rw [uniform_fintype_irrel F (Pi.instFintype : Fintype (I → Equiv.Perm A)) inferInstance inferInstance]
   exact uniform_block_event t T
 
+/-- The real paired-block formula with an explicit sample enumeration. -/
+theorem uniform_block_pair_event_real_of_fintype {I : Type*} [Fintype I] {s : ℕ}
+    (F : Fintype (I → Equiv.Perm (Fin s))) (t u : Fin s) (htu : t ≠ u)
+    (x : I → Fin s) (T : I → Finset (Fin s)) (hx : ∀ i, x i ∉ T i) :
+    ((@PMF.uniformOfFintype (I → Equiv.Perm (Fin s)) F inferInstance).toOuterMeasure
+      {p | ∀ i, p i t = x i ∧ p i u ∈ T i}).toReal =
+      (1/(s : ℝ))^(Fintype.card I) * ∏ i, ((T i).card : ℝ)/((s : ℝ)-1) := by
+  rw [uniform_fintype_irrel F (Pi.instFintype : Fintype (I → Equiv.Perm (Fin s))) inferInstance inferInstance]
+  exact uniform_block_pair_event_real t u htu x T hx
+
 end HadwigerRamsey.ThomasonUpper
