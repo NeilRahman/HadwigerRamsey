@@ -980,3 +980,82 @@ foundation report for `HadwigerRamsey.existencethm` lists only `propext`,
 `Classical.choice`, and `Quot.sound`; there are no additional assumptions
 or proof placeholders. All earlier theorem endpoints remain in the root
 build.
+
+
+## Lemma 3.3 (`bipMinor`)
+
+The public endpoint is `HadwigerRamsey.bipMinor` in
+`HadwigerRamsey/BipMinor.lean`. For every K > 0 it supplies gamma > 0
+and a positive integer cutoff n-zero. For a simple graph H on Fin n
+with bipartition (A,B), |A| = |B| > n-zero, and at least
+`(1-gamma)*|A|^2` edges, it proves
+`K*|A|/sqrt(log |A|) <= hadwigerNumber H`.
+The statement is unchanged. Mathlib's `IsBipartiteWith` describes the
+bipartite edges and disjointness; `A union B = univ` explicitly states
+that (A,B) covers the vertex set, as required by the word bipartition.
+The updated October 31 source was reread and remains ignored by Git.
+
+The proof explicitly uses `HadwigerRamsey.thomasonupper`. Mathlib reuse
+includes the handshaking lemma, finite cardinality and intersection bounds,
+finite graph degrees and neighbour sets, walks/reachability, and logarithm
+and square-root inequalities. Earlier project results reused include
+vertex-deletion density stability, exact restriction/reindexing of graphs,
+minor monotonicity under restriction, and the logarithmic order comparison.
+
+| Step | Module |
+| --- | --- |
+| Balanced bipartition counts, missing-degree budget, degree loss, cross density | `BipMinor/Finite.lean` |
+| Connectivity from surviving common neighbours | `BipMinor/Connectivity.lean` |
+| Large induced core, class masses, and cross-density stability | `BipMinor/Core.lean` |
+| Capped entropy lower bound from one off-diagonal summand | `BipMinor/Entropy.lean` |
+| Uniform constants and application of Theorem 1.5 | `BipMinor/Asymptotic.lean` |
+| The manuscript's set-based bipartition statement | `BipMinor.lean` |
+
+Logical correspondence and differences from the manuscript:
+
+1. The endpoint has exactly the manuscript's hypotheses, strict size
+   threshold, and conclusion. Vertices use Fin n as in the other endpoints.
+   A vertex-to-class map is used internally, with two fibers of equal
+   size a. The public wrapper proves equivalence with the given sets A,B.
+2. Pruning is done in one pass instead of iteratively. Delete every vertex
+   whose original degree is less than 7*a/8. The sum of missing degrees is
+   `2*a^2-2*|E(H)| <= 2*gamma*a^2`; every deleted vertex contributes at
+   least a/8. Thus at most 16*gamma*a vertices are deleted. With
+   gamma <= 1/128 this is at most a/8, and every retained vertex has
+   induced degree at least 3*a/4. This replaces the manuscript's even
+   deletion counts, quadratic inequality, and process-stopping argument.
+3. Lean uses the weaker sufficient connectivity bound
+   `kappa(core) >= floor(a/4)` instead of proving kappa >= 3*a/4.
+   Before a cut of fewer than a/4 vertices, any two vertices in one side
+   have at least a/2 common neighbours, because their degrees are at
+   least 3*a/4 and the opposite side has at most a vertices. A common
+   neighbour survives the cut. Every retained vertex has a surviving
+   neighbour, so opposite-side vertices are connected as well.
+   With a >= 100 and epsilon <= 1/100, the bound is more than sufficient
+   for the hypothesis kappa(core) >= epsilon*|core| of Theorem 1.5.
+4. The existing vertex-deletion stability estimate replaces the direct
+   missing-edge estimate in the core. It gives cross density at least
+   `1-129*gamma`. Each retained class has mass at least 1/4, and the
+   retained order M satisfies `a <= M <= 2*a`. These are deliberately
+   loose uniform bounds with sufficient slack.
+5. One possible choice is
+   `epsilon = min(1/100, exp(-((32*(K+1))^2)))`,
+   `gamma = epsilon/4096`, and `n-zero = max(N_1.5(epsilon),100)`.
+   These replace the manuscript's factor 8, gamma = epsilon/2, and
+   reduction to K >= 1. They work directly for every K > 0 and ensure
+   all pruning, density-cap, class-mass, and connectivity requirements.
+6. Since the cross density reaches 1-epsilon, its capped value is exactly
+   1-epsilon. Lean keeps just one off-diagonal summand to obtain
+   `Lambda-star >= (-log epsilon)/16`, rather than evaluating the full
+   two-off-diagonal expression. All omitted summands are nonnegative.
+   The larger parameter factor above compensates for this weaker bound.
+7. Mathlib's square-root estimates and the earlier retained-order lemma
+   give `sqrt(log M) <= 2*sqrt(log a)` for a >= 2. Together with M >= a
+   and `sqrt(Lambda-star)-epsilon >= 2*K`, the exact desired coefficient
+   K follows. The core's clique minor is transferred back to H by the
+   previously proved injective-homomorphism minor transport.
+
+Verification: `lake build` passes for the full project on Lean/Mathlib
+4.33.0 (8823 jobs). The source guard checks all 119 Lean files. The root
+report for `HadwigerRamsey.bipMinor` lists only `propext`, `Classical.choice`,
+and `Quot.sound`. All earlier formalized results remain in the root build.

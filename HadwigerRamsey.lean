@@ -1,3 +1,4 @@
+import HadwigerRamsey.BipMinor
 import HadwigerRamsey.Existence
 import HadwigerRamsey.ThomasonLower
 import HadwigerRamsey.BigSet
@@ -83,3 +84,9 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.Existence.even_construction
 #print axioms HadwigerRamsey.hadwigerNumber_comap_le
 #print axioms HadwigerRamsey.hadwigerNumber_le_of_fibers
+
+#print axioms HadwigerRamsey.bipMinor
+#print axioms HadwigerRamsey.BipMinor.low_degree_vertices_small
+#print axioms HadwigerRamsey.BipMinor.connected_quarter
+#print axioms HadwigerRamsey.BipMinor.exists_core
+#print axioms HadwigerRamsey.BipMinor.balanced_dense_minor
