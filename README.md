@@ -25,20 +25,15 @@ parameter bounds and δ > 0. Its proof explicitly depends on `opt` through
 positive-support restriction and probability rescaling, followed by
 compactness. The build checks that theorem dependency.
 
-Theorem 1.5 (`thomasonupper`), using the October 31 manuscript, is in progress.
-Its exact target proposition and checked preliminary lemmas are in
-`HadwigerRamsey/ThomasonUpper/`. The theorem itself is not yet proved.
-Appendix A.4 (short internally disjoint paths) is proved using the public
-finite vertex-Menger proof vendored in `vendor/menger/`.
-The finite greedy allocation of globally disjoint path interiors is also proved.
-Appendix A.2 (vertex-deletion stability) is proved, together with the finite
-rounding, trimming, and logarithmic regularization steps used in A.3.
-Appendix A.5 (random reservoirs) is proved. The capped spanning subgraph,
-allocation budgets, and finite conversion of a complete family into a clique
-minor are also proved. Appendix A.1's multitype complete-equipartition
-theorem is proved, with a nonempty class-index set. Its exact logarithmic
-failure formula and a uniform probability estimate for A.3 are checked.
-The full uniform asymptotic corollary A.3 and final assembly are unfinished.
+Theorem 1.5 (`thomasonupper`), using the October 31 manuscript, is fully
+proved as `HadwigerRamsey.thomasonupper` in
+`HadwigerRamsey/ThomasonUpper.lean`. Its statement has the exact ordered
+double sum, capped densities, and additive error outside the square root.
+The appendix development is in `HadwigerRamsey/ThomasonUpper/`, including
+A.1, vertex-deletion stability, the uniform complete-family consequence
+of A.3, random reservoirs, and the final clique-minor construction.
+The Menger step uses the existing public finite vertex-Menger proof
+vendored in `vendor/menger/`.
 
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.

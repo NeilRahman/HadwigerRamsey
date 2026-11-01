@@ -46,8 +46,8 @@ noncomputable def vertexConnectivity {n : ℕ} (G : SimpleGraph (Fin n)) : ℕ :
   classical
   exact Nat.findGreatest (VertexConnectedAtLeast G) n
 
-/-- The precise target statement, recorded as a proposition while the appendix
-ingredients are developed. This definition does not assert that it is proved. -/
+/-- The precise statement of Theorem 1.5. It is proved by
+`HadwigerRamsey.thomasonupper` in the endpoint module. -/
 def Statement : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ n₀ : ℕ, ∀ n ≥ n₀,
     ∀ G : SimpleGraph (Fin n), (ε * n ≤ (vertexConnectivity G : ℝ)) →

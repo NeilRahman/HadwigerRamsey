@@ -4,7 +4,7 @@ import HadwigerRamsey.FOpt
 import HadwigerRamsey.Opt
 import HadwigerRamsey.OptApprox
 import HadwigerRamsey.OptApprox.DependencyAudit
-import HadwigerRamsey.ThomasonUpper.Progress
+import HadwigerRamsey.ThomasonUpper
 
 #print axioms HadwigerRamsey.thomasonlower
 
@@ -69,3 +69,11 @@ import HadwigerRamsey.ThomasonUpper.Progress
 #print axioms HadwigerRamsey.ThomasonUpper.multitype_many_parts_of_entropy_margin
 
 #print axioms HadwigerRamsey.ThomasonUpper.exists_multitype_asymptotic_parameters
+
+#print axioms HadwigerRamsey.ThomasonUpper.restrictedLambda
+#print axioms HadwigerRamsey.ThomasonUpper.eventually_rounded_scale
+#print axioms HadwigerRamsey.ThomasonUpper.rounded_deleted_entropy_error
+#print axioms HadwigerRamsey.ThomasonUpper.asymptotic_complete_family
+#print axioms HadwigerRamsey.ThomasonUpper.exists_capped_restriction
+#print axioms HadwigerRamsey.ThomasonUpper.final_entropy_accuracy
+#print axioms HadwigerRamsey.thomasonupper

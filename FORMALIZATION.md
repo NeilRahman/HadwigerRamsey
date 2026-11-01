@@ -1,9 +1,9 @@
 # Formalization status
 
-Theorem 1.5 (`thomasonupper`) from the October 31 manuscript is **in progress,
-not proved in Lean**. The checked ingredients and exact target are described
-in the final section of this document. Earlier completed endpoints retain
-their status below.
+Theorem 1.5 (`thomasonupper`) from the October 31 manuscript is **proved
+in Lean 4.33.0** as `HadwigerRamsey.thomasonupper` in
+`HadwigerRamsey/ThomasonUpper.lean`. The exact statement and all logical
+differences from the manuscript argument are recorded in its section below.
 
 Theorem 1.4 (`thomasonlower`) of `hadramoct30.tex` is proved in Lean 4.
 The endpoint is `HadwigerRamsey.thomasonlower` in
@@ -447,7 +447,8 @@ it still checks the actual proof-expression path from `optapprox` to `opt`.
 The first migration started from `main` and preserved the unfinished
 Theorem 1.5 development separately on `codex/thomasonupper`. That branch
 now also incorporates the upgrade for its existing checked ingredients.
-Theorem 1.5 itself remains unproved.
+That migration was limited to existing ingredients; the theorem has since
+been completed as described below.
 
 Validation on the migration: the full Lean 4.33 build passed (8737 jobs),
 the source guard passed for all 32 Lean source files, and the dependency audit
@@ -456,19 +457,20 @@ all completed endpoints contain only `propext`, `Classical.choice`, and
 `Quot.sound`. The five public endpoint declarations were compared against the
 previous version and are unchanged.
 
-## Theorem 1.5 (`thomasonupper`): work in progress
+## Theorem 1.5 (`thomasonupper`): complete
 
-**Theorem 1.5 is not yet proved in Lean.** The source for this work is the
-local October 31 manuscript. Its TeX file remains ignored and is not part
-of this change. The module `ThomasonUpper/Progress.lean` collects checked
-ingredients; it is not an endpoint theorem.
+**Theorem 1.5 is proved in Lean.** The public endpoint is
+`HadwigerRamsey.thomasonupper` in `HadwigerRamsey/ThomasonUpper.lean`;
+its proof is `ThomasonUpper.thomasonupper` in `ThomasonUpper/Final.lean`.
+The October 31 TeX source remains ignored and is not part of the repository.
+`ThomasonUpper/Progress.lean` collects the previously checked ingredients.
 
-`ThomasonUpper.Statement` in `Definitions.lean` records the full target as
-a proposition. It has exactly the manuscript's uniform quantifier order,
-real epsilon greater than zero, vertex connectivity at least epsilon times
-the graph order, class masses at least epsilon, and real lower bound
-`n / sqrt(log n) * (sqrt(cappedLambda) - epsilon)`. This is a definition
-of a target, not a proof or an additional assumption used to prove it.
+`ThomasonUpper.Statement` in `Definitions.lean` records the full statement.
+It has exactly the manuscript's uniform quantifier order, real epsilon
+greater than zero, vertex connectivity at least epsilon times the graph
+order, class masses at least epsilon, and real lower bound
+`n / sqrt(log n) * (sqrt(cappedLambda) - epsilon)`. The endpoint proves
+this proposition with no additional assumptions.
 
 The diagonal density is the number of edges in the induced class divided
 by `choose(class size, 2)`. Off-diagonal density reuses Mathlib's
@@ -488,7 +490,7 @@ equivalence for positive n. It does not assume internally disjoint paths
 in place of proving a Menger theorem. Its degree bound and the empty
 large-epsilon regime are proved.
 
-Checked results so far:
+Checked components:
 
 | Appendix step | Checked Lean declaration / module |
 | --- | --- |
@@ -535,20 +537,23 @@ Checked results so far:
 | Exact log P formula, rounded quadratic margin, and uniform probability decay | `log_partitionFailure`, `rounded_quadratic_entropy_margin`, `eventually_partitionFailure_small`, `PartitionFailure.lean`, `PartitionFailureAsymptotic.lean` |
 | Uniform at-least-(1-eta)*s parts for exact-multiple classes under the entropy margin, explicitly using A.1 | `multitype_many_parts_of_entropy_margin`, `MultitypeAsymptotic.lean` |
 | Uniform auxiliary constants satisfying both strict gain/ratio inequalities and all three cost bounds in A.3 | `exists_multitype_asymptotic_parameters`, `AsymptoticParameters.lean` |
+| Exact transport of deletion data to an actual graph on Fin (n-|Z|) | `Restriction.lean`, `restrictedLambda` |
+| Uniform rounded scale, entropy error, and part count/size comparisons | `RoundedScale.lean`, `TrimmedEntropy.lean`, `AsymptoticFiniteBounds.lean` |
+| Uniform complete-family consequence of A.3, explicitly using A.1 | `asymptotic_complete_family`, `AsymptoticFamily.lean` |
+| Capping followed by reservoir deletion, with exact total entropy error | `exists_capped_restriction`, `CappedRestriction.lean` |
+| Final uniform cutoffs, logarithmic order comparison, and additive accuracy | `FinalEventually.lean`, `FinalScale.lean` |
+| Theorem 1.5 with the exact target statement | `HadwigerRamsey.thomasonupper`, `ThomasonUpper.lean`, `Final.lean` |
 
-The following substantial ingredients remain unproved: the full uniform
-asymptotic corollary A.3 and the end-to-end assembly and uniform choice of
-n-zero. A.1 is now proved as a complete theorem, including its sampling,
-expectation, rejection, accepted-pair probability, ordered defect count,
-deletions, and balanced redistribution. Its class-index set is explicitly
-nonempty. For A.3, finite rounding, trimming, regularization, the exact log P
-identity, and uniform decay once a fixed quadratic entropy margin is
-available are proved. The auxiliary constants have also been chosen uniformly. Establishing the
-margin and resulting number of parts from the rounded and trimmed graph
-parameters remains.
-The reservoirs have an unconditional existence theorem under the manuscript's
-connectivity hypothesis. The finite final construction and its allocation
-budgets are also proved.
+All ingredients needed for the target theorem are proved and assembled.
+`asymptotic_complete_family` proves the uniform complete-family consequence
+of A.3 from the actual rounded and trimmed graph parameters, explicitly
+using A.1. It returns pairwise disjoint nonempty mutually joined parts
+with the required count and size bounds, without requiring them to cover
+the discarded vertices. This is all the final minor construction uses;
+see difference 35 below. The final theorem caps the graph, removes the
+reservoirs, applies this result, and converts the family into a clique minor.
+All size cutoffs and approximation errors are uniform over the graph,
+number of classes, and partition, depending only on epsilon.
 
 Mathlib reuse includes induced-graph connectedness, connected unions and
 walk supports, interedge counts, rational edge densities, the handshaking
@@ -575,10 +580,11 @@ included in the root build. The upstream concept/contract files are not
 imported. The local bridge derives internally disjoint endpoint paths from
 the public set-to-set theorem and this project's cut definition of connectivity.
 
-Logical correspondence of the work completed so far:
+Logical correspondence and every change from the manuscript argument:
 
-1. No theorem hypothesis or conclusion has been changed. There is no
-   finished theorem proof from which to claim full proof correspondence.
+1. No hypothesis or conclusion of Theorem 1.5 has been changed. The
+   endpoint proves the original target proposition. Changes to intermediate
+   statements and arguments are recorded individually below.
 2. The standalone domination lemma explicitly assumes both finite sides
    are nonempty. Those qualifications make the manuscript's logarithm
    and greedy choices meaningful. In the actual reservoir allocation,
@@ -589,8 +595,8 @@ Logical correspondence of the work completed so far:
    bipartite graph, by the same double-counting and greedy iteration.
 4. Analytic stability is expressed with the total absolute change in the
    class masses. The manuscript's maximum-coordinate estimate follows
-   after the separate bounded-number-of-classes argument, which remains
-   to be assembled with the graph-deletion estimates.
+   after the bounded-number-of-classes argument. This is now assembled
+   with the graph-deletion estimates and the uniform asymptotic application.
 5. The final connected-core lemma is slightly more general than the
    appendix: any disjoint connected dominating enlargements suffice.
    It preserves the same branch-set argument. No new assertion about
@@ -648,16 +654,18 @@ Logical correspondence of the work completed so far:
     quotients and subsets of size `s*m_i`. Its uniform finite deletion
     bound is `n/(a*ell) + ell`, or fraction `1/(a*ell) + ell/n`.
     The combined endpoint assumes `a*ell >= 2` and `4*ell <= n` to
-    guarantee `s > 0`. Establishing these conditions and the vanishing
-    deletion fraction for the manuscript's eventual choice of `ell`
-    remains part of the unfinished asymptotic corollary.
+    guarantee `s > 0`. These conditions and the vanishing deletion
+    fraction for the manuscript's eventual choice of `ell` are now
+    proved uniformly in `eventually_rounded_scale` and used in
+    `asymptotic_complete_family`.
 14. The regularization estimates use the same function
     `-log(min(1,q+tau))`. Mathlib's bound for the minimum function and the
     existing logarithmic stability theorem replace the manuscript's
     informal Lipschitz argument. They allow any `tau >= 0`, a harmless
     generalization of the manuscript's `0 < tau < 1`; the loss bound
     remains exactly `tau/a`. They do not assert the probabilistic
-    complete-equipartition result or finish the asymptotic corollary.
+    complete-equipartition result by themselves; the assembled
+    `asymptotic_complete_family` now explicitly applies A.1.
 15. A.5 uses exactly the manuscript's independent three-label experiment,
     with probabilities `r`, `r`, and `1-2*r`. Mathlib's Hoeffding inequality
     replaces the quoted multiplicative Chernoff bounds. The resulting
@@ -779,21 +787,21 @@ Logical correspondence of the work completed so far:
     L^2*(Lambda_reg+phi*log(tau)) >= (1+delta)*log n. Mathlib's growth
     of sqrt(log n) then absorbs the linear term and proves
     P <= n^(-(1+delta/2)) uniformly. Obtaining that margin from the actual
-    rounded graph parameters is still part of the unfinished A.3 proof.
+    rounded graph parameters is now completed in `AsymptoticFamily.lean`.
     The finite helper `rounded_quadratic_entropy_margin` proves that
     L >= (1+gamma)*sqrt(log(n)/Lambda), R >= (1-2*xi)*Lambda,
     phi*log(1/tau) <= xi*Lambda, and
     (1+gamma)^2*(1-3*xi) >= 1+delta imply precisely that margin.
     This retains the manuscript's factor 1-3*xi. Establishing R's bound
     for the actual trimmed graph and the final rounding/trimming part-count
-    comparisons remain unfinished.
+    comparisons are now proved in `AsymptoticFamily.lean`.
     `eventually_defective_pair_loss_small` proves 4*s*P <= eta/2
     uniformly from s <= n and P <= n^(-(1+xi)). Together with
     4/(omega*phi) <= eta/2, the theorem
     `multitype_many_parts_of_entropy_margin` explicitly applies A.1 and
     returns at least (1-eta)*s parts. It still assumes exact-multiple
     classes and the quadratic margin, so it is a checked intermediate
-    consequence, not the full manuscript A.3.
+    consequence used by the assembled complete-family endpoint below.
 
 30. The unspecified small/large constants in the start of A.3 are chosen
     explicitly and uniformly. Lean takes gamma = min(eta,1)/8,
@@ -807,10 +815,66 @@ Logical correspondence of the work completed so far:
     explicit witnesses for the manuscript's choices, without changing
     the assumptions a > 0, lambda > 0, eta > 0.
 
-The root build covers all current first-party modules and prints the
-standard-foundation dependency reports for the main new helper results.
+31. Actual induced graphs are reindexed by a finite equivalence with
+    `Fin (n-|Z|)`. Injectivity proves that class cardinalities, diagonal
+    unordered densities, off-diagonal densities, and entropy agree exactly
+    with the earlier deletion definitions. No graph data or density matrix
+    is replaced by independent numerical assumptions.
+32. The ceiling scale is controlled uniformly for
+    `lambda <= Lambda <= log(1/a)+1`. The harmless added one makes the
+    upper-bound constant positive even at a = 1. Explicit fixed lower bounds
+    on ell and upper bounds on ell/n discharge every rounding, positivity,
+    trimming, and floor-error condition. Auxiliary helpers assume
+    `a <= 1` and `0 < eta < 1`; the final application satisfies both.
+33. The rounded, deleted, regularized entropy error is explicitly at most
+    `tau/a + 16*delta/a^2 + 2*log(2/a)/(a*ell)`. The last two terms are each
+    at most xi*lambda/2, and tau/a <= xi*lambda. Hence the same manuscript
+    inequality `Lambda0_tau >= (1-2*xi)*Lambda` follows. The same
+    `(1-3*xi)` quadratic margin then feeds the already proved A.1 estimate.
+34. An ambient-order variant of the many-parts theorem allows the actual
+    graph to have order N <= n while using log n in the scale and failure
+    bound. Here n is the original order before the rounding deletion,
+    exactly as in the manuscript A.3 calculation. The quantity P, weights,
+    ordered double sums, and density conventions remain unchanged.
+35. Instead of redistributing A.3's discarded vertices back into its parts,
+    `asymptotic_complete_family` keeps the complete equipartition of the
+    trimmed graph as a family in the original graph. It proves the same
+    lower and upper part counts and the required upper part-size bound.
+    Thus its standalone conclusion omits coverage and global balance on
+    the original vertex set. Theorem 1.5 only uses a disjoint complete
+    family outside the reservoirs, so these omissions require no change
+    to its statement. The finite A.1 endpoint still has its full complete
+    equipartition conclusion, including coverage and balance.
+36. The final accuracy choice is
+    `eta = min(1/4, epsilon/(8*(sqrt(log(1/epsilon)+1)+1)))`.
+    Rather than introducing epsilon-prime and splitting off its >= 1 case,
+    Lean bounds the total entropy error by `(epsilon/4)^2`, the deleted
+    fraction by eta, and uses `4*eta*sqrt(B) <= epsilon`. A square-root
+    inequality gives the required additive error directly. This changes
+    the auxiliary constants and the final error-bookkeeping argument,
+    not the theorem's error term, quantifiers, or uniformity.
+37. The final proof explicitly compares the retained order N with n:
+    N >= n/2, sqrt(log N) <= sqrt(log n) <= 2*sqrt(log N).
+    A single larger size constant `2*C+2` handles both the integer ceiling
+    on part sizes and the reservoir allocation theorem. Capping is used
+    only to construct the complete family; connectivity is always that of
+    the original G, where the final branch sets are connected. The case
+    epsilon >= 1 is excluded by kappa(G) < n for positive n.
 
-### Existing Theorem 1.5 ingredients on Lean 4.33.0
+38. Lean selects the reservoirs in G before selecting the capped spanning
+    subgraph H; the manuscript makes these independent choices in the
+    opposite order. The reservoir theorem uses only G and its connectivity,
+    while the capping theorem works uniformly for every eligible partition.
+    Both required conclusions therefore hold together in either order.
+
+The completed project passes `lake build` on Lean/Mathlib 4.33.0
+(8807 jobs). The source guard passes for all 103 Lean source files.
+The root build includes every earlier formalized result and reports that
+`HadwigerRamsey.thomasonupper` depends only on `propext`,
+`Classical.choice`, and `Quot.sound`. No theorem or unproved appendix
+statement is assumed as an extra premise.
+
+### Historical upgrade of the existing Theorem 1.5 ingredients to Lean 4.33.0
 
 The progress branch incorporates the checked upgrade from `main` and uses
 Lean/Mathlib 4.33.0. This update only ports the ingredients already present:
@@ -822,7 +886,8 @@ passes `.preconnected`, the filter-cardinality lemma is renamed to
 `Finset.card_filter_add_card_filter_not`, a reflexive conditional is simplified
 explicitly in the density proof, and the stability proof supplies both summands
 of its final addition inequality explicitly. These edits change no mathematical
-statement or argument. The unresolved ingredients listed above remain future work.
+statement or argument. This paragraph records the earlier port only; the
+subsequent work described above completes the theorem.
 
 The full combined build passed on Lean 4.33.0 (8748 jobs), the source guard
 passed for all 43 Lean files, and the root dependency reports use only
