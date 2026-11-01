@@ -35,7 +35,10 @@ Appendix A.2 (vertex-deletion stability) is proved, together with the finite
 rounding, trimming, and logarithmic regularization steps used in A.3.
 Appendix A.5 (random reservoirs) is proved. The capped spanning subgraph,
 allocation budgets, and finite conversion of a complete family into a clique
-minor are also proved. A.1 and the remaining asymptotic assembly are unfinished.
+minor are also proved. For A.1, sorted blocks, the block-maxima product,
+uniform permutation sampling, block expectations, and rejection bounds are
+checked. Its complete-equipartition conclusion and the remaining asymptotic
+assembly are unfinished.
 
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.

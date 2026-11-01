@@ -522,12 +522,21 @@ Checked results so far:
 | Both allocation budgets with the manuscript's actual logarithmic ceiling | `eventually_reservoir_allocation_budgets`, `AllocationBudgets.lean` |
 | Exact floor counts in a capped spanning subgraph and uniform entropy rounding error | `exists_capped_subgraph_entropy`, `EdgeSelection.lean`, `Capping.lean` |
 | A.1 nonneighbor averages, tau <= rho <= 1, and equation rho-geomean, including diagonal blocks | `rho_bounds`, `rho_geomean_bound`, `NonneighborWeights.lean` |
+| A.1 sorted class blocks and exact equation block-max-product-all | `exists_sorted_nonneighbor_blocks`, `sorted_nonneighbor_max_product`, `SortedBlocks.lean`, `BlockMaxProducts.lean`, `SortedNonneighbors.lean` |
+| Random parts form an exact equal-size partition and preserve the block/class enumeration | `BlockPartitions.lean`, `ClassBlocks.lean` |
+| Uniform single and paired images, across every block; exact second-part remaining-vertex factorization | `UniformPermutations.lean`, `PermutationPairs.lean`, `BlockSampling.lean` |
+| A.1 random-part probability at most rho^ell and equation block-expectation | `random_part_nonneighbor_probability`, `expected_block_nonneighbors`, `BlockAMGM.lean`, `NonneighborSampling.lean` |
+| Rejection and unacceptable-part probability, and simultaneous four-times-expectation bounds | `rejected_block_probability`, `unacceptable_probability`, `exists_simultaneous_four_bounds`, `FiniteExpectations.lean` |
+| Exactly k ineligible final blocks, acceptability's missing-block count, and the 2*omega factor | `eligibleBlocks_card`, `acceptable_missing_blocks`, `acceptable_pair_product_bound`, `SelectedBlocks.lean` |
 
-The following substantial ingredients remain unproved: the random
-multitype complete-equipartition lemma (including its sampling and
-expectation estimates); the uniform asymptotic corollary (beyond its now
-checked finite rounding, trimming, and regularization ingredients); and the
-end-to-end assembly and uniform choice of n-zero. The reservoirs now have
+The following substantial ingredients remain unproved: the complete
+multitype equipartition conclusion of A.1; the uniform asymptotic corollary
+beyond the checked rounding, trimming, and regularization ingredients;
+and the end-to-end assembly and uniform choice of n-zero. A.1 now has
+its sorting, block-maxima product, permutation sampling, block expectation,
+and rejection ingredients. The accepted-pair probability bound still needs
+to be assembled from those ingredients, followed by the expected defect
+count and the complete-equipartition deletion/redistribution argument. The reservoirs now have
 an unconditional existence theorem under the manuscript's connectivity
 hypothesis. The finite final construction and its allocation budgets are
 also proved, but do not supply the still-missing complete equipartition.
@@ -537,7 +546,10 @@ walk supports, interedge counts, rational edge densities, the handshaking
 lemma, the maximum possible edge count, finite fiber sums, and logarithm
 inequalities. The reservoir argument now reuses Mathlib's independent
 product measures, bounded-variable sub-Gaussian theorem, and Hoeffding
-inequality. No new concentration inequality is assumed.
+inequality. The A.1 ingredients additionally reuse Mathlib's sorted finite
+orders, permutation decomposition and finite permutation-extension theorem,
+uniform probability mass functions, and finite expectation linearity and
+averaging principles. No new concentration inequality is assumed.
 
 The literature search identified Thomason's *The Extremal Function for
 Complete Minors* (2001), cited in the manuscript as MR1814910. No ready
@@ -687,9 +699,46 @@ Logical correspondence of the work completed so far:
     exact extra factor `(n_i-1)/n_i`. The logarithmic form of AM-GM follows
     from Mathlib's `log x <= x-1`, and exponentiating gives the original
     product-form `rho-geomean` inequality with the same `ell_j/ell` weights.
-    These are preliminary estimates only:
-    sorting into blocks, random permutations, the conditional second-part
-    bound, and the complete-equipartition conclusion remain unproved.
+    These estimates now feed the sorted-block and random-sampling results
+    below. The complete-equipartition conclusion is still unproved.
+
+21. Sorting breaks equal rho-values by the existing vertex order. A block's
+    final sorted vertex attains its maximum, so this is the manuscript's
+    theta, not a different bound. The block-shift calculation uses sums of
+    logarithms and then exponentiates. Its product form keeps precisely
+    the ordered double product with powers ell_i*ell_j and the factor
+    tau^(-ell*(ell-m)); no density or factor-two convention changes.
+22. Random orderings are sampled uniformly from the finite space of all
+    block-permutation functions. This is exactly independent uniform
+    orderings in each block. Mathlib's permutation decomposition and
+    extension of an injective pair supply the uniform marginal laws.
+    Instead of invoking conditional probability, Lean proves the exact
+    joint identity: the fixed first vector contributes (1/s)^ell and the
+    second vector contributes the product of |T minus x|/(s-1). Thus the
+    exclusion of each first image is explicit; distinct positions in one
+    block are never treated as independent.
+23. The random-part AM-GM estimate goes directly to the regularized
+    nonneighbor fractions, combining the manuscript's last two
+    inequalities into one. Zero block proportions are handled before
+    applying the logarithmic estimate. The result is the same rho^ell
+    bound and the same |B|*theta^ell block expectation. The helpers make
+    ell > 0 explicit, as used for nonempty classes in the application.
+24. Expectations use Mathlib's finite uniform average, with a proved
+    identity to the uniform event probability. The rejection estimate is
+    Markov's inequality in its strict-threshold form. Counting eligible
+    blocks omits exactly one block per class and gives exactly
+    ell-m <= k+phi*ell. The second-part product estimate uses s/(s-1) <= 2
+    and pads (2*omega)^m to (2*omega)^ell, as in the manuscript.
+    `acceptable_pair_product_bound` combines these numerical inequalities
+    with the sorted-maxima estimate to obtain exactly the expression P;
+    its graph-dependent inputs and the expected defect count still need
+    to be assembled.
+25. The helper choosing simultaneous U,Z bounds uses the expected value
+    of U/A+Z/B, which is at most 2, and Mathlib's finite averaging
+    principle. It returns the same U <= 4*A and Z <= 4*B conclusion as
+    the manuscript's two Markov bounds and union bound. This alternative
+    choice argument is proved but not yet connected to a completed A.1
+    defect-count construction.
 
 The root build covers all current first-party modules and prints the
 standard-foundation dependency reports for the main new helper results.

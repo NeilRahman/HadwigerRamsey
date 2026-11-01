@@ -44,3 +44,14 @@ import HadwigerRamsey.ThomasonUpper.Progress
 #print axioms HadwigerRamsey.ThomasonUpper.rho_geomean_bound
 #print axioms HadwigerRamsey.ThomasonUpper.reservoirs_complete_family_to_minor
 #print axioms HadwigerRamsey.ThomasonUpper.rho_bounds
+
+#print axioms HadwigerRamsey.ThomasonUpper.exists_sorted_nonneighbor_blocks
+#print axioms HadwigerRamsey.ThomasonUpper.sorted_nonneighbor_max_product
+#print axioms HadwigerRamsey.ThomasonUpper.uniform_block_pair_event_real
+#print axioms HadwigerRamsey.ThomasonUpper.expected_block_nonneighbors
+#print axioms HadwigerRamsey.ThomasonUpper.unacceptable_probability
+#print axioms HadwigerRamsey.ThomasonUpper.selected_block_product_bound
+#print axioms HadwigerRamsey.ThomasonUpper.acceptable_missing_blocks
+#print axioms HadwigerRamsey.ThomasonUpper.exists_simultaneous_four_bounds
+
+#print axioms HadwigerRamsey.ThomasonUpper.acceptable_pair_product_bound
