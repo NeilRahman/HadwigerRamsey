@@ -1059,3 +1059,60 @@ Verification: `lake build` passes for the full project on Lean/Mathlib
 4.33.0 (8823 jobs). The source guard checks all 119 Lean files. The root
 report for `HadwigerRamsey.bipMinor` lists only `propext`, `Classical.choice`,
 and `Quot.sound`. All earlier formalized results remain in the root build.
+
+
+## Lemma 3.4 (`denseMinor`)
+
+The endpoint is `HadwigerRamsey.denseMinor` in
+`HadwigerRamsey/DenseMinor.lean`. For every K > 0 it supplies gamma > 0
+and a positive integer n-zero. For all n >= n-zero and all simple graphs
+H on Fin n with at least `(1-gamma)*choose(n,2)` edges, it proves
+`K*n/sqrt(log n) <= hadwigerNumber H`. This is the updated manuscript's
+statement, unchanged. The TeX source was reread and remains ignored.
+
+The proof explicitly calls `HadwigerRamsey.bipMinor` with coefficient 3*K.
+Mathlib reuse includes finite relation-interedge counts and their complement
+identity, the handshaking/ordered-incidence identity, injective finite-set
+counting, logarithm monotonicity, and square-root inequalities. Earlier
+project lemmas supply balanced half classes, graph restriction monotonicity,
+and injective-homomorphism transport of branch-set minors.
+
+`DenseMinor/Cut.lean` defines the graph obtained by retaining only edges
+between two classes, proves its exact cross-edge count and bipartition,
+and bounds its missing cross edges. `DenseMinor.lean` makes the uniform
+parameter choices, applies Lemma 3.3, and transfers the minor back to H.
+
+Logical correspondence and differences from the manuscript:
+
+1. The statement and coefficient K are unchanged, and the proof still
+   finds a dense balanced bipartite subgraph and applies Lemma 3.3 with
+   coefficient 3*K. The half-size is a = floor(n/2), as in the updated text.
+2. A deterministic choice replaces random averaging. Retain the first 2*a
+   vertices and split them into two consecutive halves. The number of
+   missing edges across these fixed halves is at most the number of
+   ordered nonadjacent pairs in the whole graph. Thus no random choice,
+   expectation argument, or balanced-cut probability law is needed.
+3. The convenient global count includes both orientations and the diagonal:
+   there are exactly `n^2-2*|E(H)|` ordered nonadjacent pairs. The graph's
+   density hypothesis bounds this by `gamma*n^2+n`. Including the diagonal
+   is harmless; the n term is absorbed by the larger cutoff. The actual
+   edges of the bipartite subgraph remain ordinary unordered edges, counted
+   once each, as proved by `cut_card`.
+4. If delta and N are the witnesses from Lemma 3.3 for 3*K, take
+   `gamma = delta/16`,
+   `L = max(N+1, max(2, ceil(16/delta)))`, and `n-zero = 3*L`.
+   These replace the manuscript's gamma = delta/2 and its extra ratio
+   condition. They ensure `a >= L > N`, `delta*a >= 16`, and `n <= 3*a`.
+   Consequently `gamma*n^2+n <= (12/16)*delta*a^2 <= delta*a^2`,
+   which supplies the exact density hypothesis for Lemma 3.3.
+5. The final comparison is written in two monotone steps: n <= 3*a and
+   sqrt(log a) <= sqrt(log n), with positive denominators because a >= 2.
+   The bipartite graph is a subgraph of a restriction of H; the earlier
+   injective-homomorphism minor theorem proves both transfers explicitly.
+   The construction discards at most one vertex, handling odd n as well.
+
+Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
+(8825 jobs). The source guard checks all 121 Lean files. The root foundation
+report for `HadwigerRamsey.denseMinor` lists only `propext`,
+`Classical.choice`, and `Quot.sound`. Earlier endpoints remain in the
+root build.

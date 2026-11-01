@@ -1,3 +1,4 @@
+import HadwigerRamsey.DenseMinor
 import HadwigerRamsey.BipMinor
 import HadwigerRamsey.Existence
 import HadwigerRamsey.ThomasonLower
@@ -90,3 +91,6 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.BipMinor.connected_quarter
 #print axioms HadwigerRamsey.BipMinor.exists_core
 #print axioms HadwigerRamsey.BipMinor.balanced_dense_minor
+
+#print axioms HadwigerRamsey.denseMinor
+#print axioms HadwigerRamsey.DenseMinor.cross_missing_bound

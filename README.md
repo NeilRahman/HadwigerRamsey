@@ -16,6 +16,11 @@ The entry module is `HadwigerRamsey/Existence.lean`.
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
 
+Lemma 3.4 (`denseMinor`) is proved as `HadwigerRamsey.denseMinor` in
+`HadwigerRamsey/DenseMinor.lean`, explicitly using `bipMinor`.
+A deterministic missing-edge estimate replaces the random balanced-cut
+argument, with a smaller auxiliary density error and a larger cutoff.
+
 Lemma 3.3 (`bipMinor`) is proved as `HadwigerRamsey.bipMinor` in
 `HadwigerRamsey/BipMinor.lean`. It explicitly applies Theorem 1.5 to a
 large core of a dense balanced bipartite graph; the statement matches the
