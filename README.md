@@ -7,6 +7,12 @@ excluded from version control.
 The project uses Lean **4.33.0** and the matching Mathlib release. Both local
 builds and GitHub Actions read the version from `lean-toolchain`.
 
+Theorem 1.2 (`existencethm`) is proved as `HadwigerRamsey.existencethm`,
+for every sufficiently large integer order, including odd orders.
+It constructs a three-colour decomposition with each Hadwiger number at
+most `(1+epsilon)*beta*n/sqrt(log n)`, using Theorem 1.4 explicitly.
+The entry module is `HadwigerRamsey/Existence.lean`.
+
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
 

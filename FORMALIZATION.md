@@ -892,3 +892,91 @@ subsequent work described above completes the theorem.
 The full combined build passed on Lean 4.33.0 (8748 jobs), the source guard
 passed for all 43 Lean files, and the root dependency reports use only
 `propext`, `Classical.choice`, and `Quot.sound`.
+
+
+## Theorem 1.2 (`existencethm`)
+
+The public endpoint `HadwigerRamsey.existencethm` is exported by
+`HadwigerRamsey/Existence.lean` and proved in `Existence/Final.lean`.
+For every real epsilon > 0 it supplies a uniform natural cutoff N, and
+for every integer n >= N, three simple graphs on Fin n such that each
+potential edge belongs to exactly one graph and all three satisfy
+`hadwigerNumber <= (1+epsilon)*beta*n/sqrt(log n)`.
+`IsThreeDecomposition` expresses the exact unique-colour condition for
+every pair of distinct vertices. The constant beta is the same previously
+formalized constant `sqrt(-log(10-4*sqrt(6)))/2`.
+The source is the updated local October 31 manuscript; it stays ignored.
+
+The proof uses `HadwigerRamsey.thomasonlower` explicitly. It reuses the
+existing three-label finite probability measure from `RandomLabels.lean`,
+Mathlib's finite product measure and coordinate independence, graph
+homomorphism transport of connectedness, finite union bounds, and the
+growth of log n. The exact algebraic identities for the two entropy
+values follow from the earlier `FOpt` constants. No numerical graphing
+or additional concentration theorem is used.
+
+| Step | Module |
+| --- | --- |
+| Injective minor transport, restriction monotonicity, and component bound | `Existence/MinorTools.lean` |
+| Independent edge labels and exact graph edge marginals | `Existence/Sampling.lean` |
+| p bounds and the exact two beta identities | `Existence/Constants.lean` |
+| Equal halves, class masses, and mixed entropy | `Existence/Blocks.lean` |
+| Half-order logarithmic correction | `Existence/Scale.lean` |
+| Four-event union bound and exclusion of null events | `Existence/Outcome.lean` |
+| Even-order random construction using Theorem 1.4 | `Existence/Even.lean` |
+| Exact three-colour decomposition and restriction | `Decomposition.lean` |
+| All sufficiently large orders, including odd ones | `Existence/Final.lean` |
+
+Logical correspondence and differences from the manuscript:
+
+1. The target statement is unchanged. The colour graphs are indexed by
+   Fin 3, and their edge partition is expressed by existence of exactly
+   one colour for each pair of distinct vertices. This is the manuscript's
+   three-decomposition of the complete graph.
+2. The even-order argument uses one auxiliary error
+   `d = min(eta/4, min(p/4, min(beta/4, 1/16)))` for all four applications
+   of Theorem 1.4. Each of the two halves of colour 1 and each of colours
+   2 and 3 has failure probability at most d. Their union has probability
+   at most 4*d < 1. Thus Lean uses a single four-event union bound, rather
+   than first combining the two halves and then bounding three colour
+   failures by 1/3. It does not require independence between these four
+   events. The target accuracy is still eta for the even-order result.
+3. Using the same d for both graph orders avoids any need for monotonicity
+   of Theorem 1.4's cutoff in its error argument. If its cutoff is N(d),
+   Lean ensures that the half-order m and full order 2*m both exceed it.
+   This discharges the cutoff issue identified by the user without making
+   an unproved monotonicity assumption or needing two different cutoffs.
+4. The sampling space assigns an independent Option Bool label to each
+   unordered edge. Its probabilities are `1-2*p, p, p` within a half and
+   `0, 1/2, 1/2` between halves, exactly as in the manuscript. The common
+   finite sample space contains some zero-probability labelings with a
+   colour-1 crossing edge. A finite union of null events is explicitly
+   excluded when choosing the successful sample. This is a representation
+   detail and leaves the specified distribution unchanged.
+5. Lean proves the upper-bound direction of the disjoint-union Hadwiger
+   identity: the first graph's Hadwiger number is at most the maximum
+   allowed for its halves. A connected branch set has constant half-label;
+   the joining edges of a clique minor force every branch set into that
+   same half. The reverse direction of the equality is not needed.
+6. The identities `sqrt(-log(2*p)) = 2*beta` and the mixed two-class
+   entropy equal to beta squared are exact symbolic consequences of the
+   existing constants. The half-order logarithmic correction is proved
+   using an explicit fixed lower bound on log m. The order threshold is
+   uniform and depends only on the requested accuracy.
+7. To cover odd n, Lean applies the even-order result with accuracy
+   epsilon/2 to order `2*((n+1)/2)`, which equals n or n+1. It then
+   restricts each colour graph to Fin n. Injective graph homomorphisms
+   preserve clique minors, so restriction cannot increase a Hadwiger
+   number. This implements the user's authorized parity repair.
+8. The parity error is absorbed by the elementary cutoff
+   `n >= ceil((2+epsilon)/epsilon)`: it implies
+   `(1+epsilon/2)*(n+1) <= (1+epsilon)*n`. Also
+   `sqrt(log n) <= sqrt(log(2*((n+1)/2)))`. Thus the final statement has
+   exactly the original accuracy epsilon, for all sufficiently large n.
+
+Verification: the complete project passes `lake build` on Lean/Mathlib
+4.33.0 (8817 jobs). The source guard checks all 113 Lean files. The root
+foundation report for `HadwigerRamsey.existencethm` lists only `propext`,
+`Classical.choice`, and `Quot.sound`; there are no additional assumptions
+or proof placeholders. All earlier theorem endpoints remain in the root
+build.

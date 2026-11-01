@@ -1,3 +1,4 @@
+import HadwigerRamsey.Existence
 import HadwigerRamsey.ThomasonLower
 import HadwigerRamsey.BigSet
 import HadwigerRamsey.FOpt
@@ -77,3 +78,8 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.ThomasonUpper.exists_capped_restriction
 #print axioms HadwigerRamsey.ThomasonUpper.final_entropy_accuracy
 #print axioms HadwigerRamsey.thomasonupper
+
+#print axioms HadwigerRamsey.existencethm
+#print axioms HadwigerRamsey.Existence.even_construction
+#print axioms HadwigerRamsey.hadwigerNumber_comap_le
+#print axioms HadwigerRamsey.hadwigerNumber_le_of_fibers
