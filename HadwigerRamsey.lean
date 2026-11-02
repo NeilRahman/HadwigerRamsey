@@ -1,3 +1,5 @@
+import HadwigerRamsey.ConnectedSets
+import HadwigerRamsey.ControlledPartition.Interpretation
 import HadwigerRamsey.DenseMinor
 import HadwigerRamsey.BipMinor
 import HadwigerRamsey.Existence
@@ -94,3 +96,10 @@ import HadwigerRamsey.ThomasonUpper
 
 #print axioms HadwigerRamsey.denseMinor
 #print axioms HadwigerRamsey.DenseMinor.cross_missing_bound
+
+#print axioms HadwigerRamsey.connectedsets
+#print axioms HadwigerRamsey.ControlledPartition.preliminary
+#print axioms HadwigerRamsey.ControlledPartition.extremal_partition
+#print axioms HadwigerRamsey.ControlledPartition.prune
+#print axioms HadwigerRamsey.ControlledPartition.realConnected_iff_vertexConnectivity
+#print axioms HadwigerRamsey.ControlledPartition.Controlled.card_parts_le

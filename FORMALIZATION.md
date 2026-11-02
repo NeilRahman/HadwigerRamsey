@@ -1125,3 +1125,107 @@ Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
 report for `HadwigerRamsey.denseMinor` lists only `propext`,
 `Classical.choice`, and `Quot.sound`. Earlier endpoints remain in the
 root build.
+
+
+## Lemma 3.2 (`connectedsets`), revised controlled partitions
+
+The endpoint is `HadwigerRamsey.connectedsets` in
+`HadwigerRamsey/ConnectedSets.lean`. For every epsilon > 0 and eta > 0,
+it supplies delta > 0, uniformly for every finite graph on Fin n, and a
+partition satisfying all six conditions of the revised definition in the
+local October 31 manuscript. There is no sufficiently-large-order
+hypothesis. The manuscript was reread and has not been edited or uploaded.
+
+`ControlledPartition.Decomposition` contains a finite family of nonempty
+pieces and the two distinguished classes X and Y. The family is pairwise
+disjoint, disjoint from X and Y, and covers the vertex set together with
+them. X and Y may be empty, and the family may have zero pieces.
+`ControlledPartition.Controlled` states, in order, the bound on X,
+connectivity of every piece, degeneracy on Y, the neighbour bound from Y,
+the minimum piece size, and absence of edges between distinct pieces.
+
+`DegenerateOn G Y d` uses the standard definition: every nonempty subset
+of Y has a vertex with induced degree at most d. `RealConnected G S t`
+states t <= |S|-1 and connectedness after deleting any set of fewer than t
+vertices. Integer vertex-deletion counts therefore implement the usual
+real lower bound on the integer vertex connectivity. In particular, the
+order condition for complete graphs is included explicitly.
+
+The construction is new project code. Mathlib provides finite extremum
+selection (`Set.exists_max_image` and `Set.exists_min_image`), finite-set
+partition/counting operations, connectedness and reachability of induced
+graphs, and `SimpleGraph.connected_induce_union`. A search of the installed
+Mathlib graph library did not find a ready-made controlled-partition or
+degeneracy theorem. No external graph-minor theorem is used in this proof.
+
+The modules follow the manuscript stages:
+
+- `Definitions.lean`: the graph and partition predicates.
+- `Basic.lean` and `Decomposition.lean`: neighbour counts, degree loss,
+  hereditary degeneracy, and splitting/absorption/merging/trimming operations.
+- `Connectivity.lean`: small separators, adding a vertex, deletion stability,
+  and the separator between two pieces that cannot be merged.
+- `Preliminary.lean`: maximum-order minimum-degree core, maximum number of
+  preliminary pieces, and splitting a piece if its connectivity is too low.
+- `Parameters.lean`: the manuscript's factorial parameter and size bounds.
+- `Extremal.lean`: minimize |Y|, then minimize the number of pieces.
+- `Pruning.lean`: symmetric pair separators and the final trimming.
+- `Interpretation.lean`: equivalence with the earlier vertex-connectivity
+  definition after enumerating an induced graph, and the bound k <= epsilon^(-1).
+
+Logical correspondence and differences from the written proof:
+
+1. A finite family of subsets replaces the indexed list U_1,...,U_k.
+   Its cardinality is k. This changes representation only. All six
+   controlled-partition conditions are retained.
+2. The initial maximum-order induced subgraph of minimum degree at least
+   3*epsilon*n is allowed to be empty. This handles the already-degenerate
+   case with k = 0 in the same construction. For nonempty cores it is the
+   manuscript's initial partition. Maximum order is a concrete choice of
+   the maximal subgraph requested in the manuscript; considering induced
+   subgraphs suffices since adding their missing internal edges preserves
+   the minimum-degree bound.
+3. The split step proves explicitly that each surviving vertex loses at
+   most |Z| neighbours. It also proves the count reserve from
+   k*epsilon <= 1/2, so the split still satisfies k+1 <= epsilon^(-1).
+   The usual connectivity order bound follows from degree+1 <= |U_i|.
+   A failed connectivity condition supplies |Z| < epsilon^3*n; the text
+   only needs the weaker non-strict bound.
+4. The parameter is unchanged:
+   delta = min(epsilon^3/M!, epsilon*eta/M!),
+   where M = floor(epsilon^(-1)). Factorial monotonicity gives both
+   k!*delta <= epsilon^3 and k!*delta <= epsilon*eta.
+   The absorption step uses a strict violation of the desired neighbour
+   upper bound. Counting neighbours over the disjoint pieces then supplies
+   a piece with more than epsilon*eta*n neighbours, sufficient to add the
+   vertex while preserving k!*delta*n connectivity. Degeneracy is hereditary
+   when that vertex is removed from Y.
+5. The merging argument keeps the same union of all pieces, so the
+   neighbour bound from Y is preserved exactly. Decreasing k weakens the
+   required factorial connectivity threshold for all other pieces.
+   If the union of a pair fails the smaller connectivity bound, its small
+   separating set leaves each original piece internally connected. Any
+   edge between their surviving vertices would connect their whole union,
+   giving the required absence of cross edges. This fills in the implicit
+   inference producing Z_ij in the manuscript.
+6. Separators are chosen symmetrically by a fixed ordering of the finite
+   collection of subsets. A piece loses only the portions of its incident
+   pair separators lying inside it. Thus each piece loses at most
+   (k-1)*(k-1)!*delta*n vertices, and the total new exceptional set has size
+   at most k*(k-1)*(k-1)!*delta*n. This slightly sharper count replaces the
+   text's k^2*(k-1)! bound. Since k!*delta <= epsilon^3 and
+   k*epsilon <= 1, the new deletions total at most epsilon^2*n.
+   Together with the old exceptional set, |X| <= 2*epsilon^2*n <= epsilon*n
+   for epsilon <= 1/3. The retained connectivity is at least delta*n,
+   and every retained piece has size at least epsilon*n.
+7. The empty graph and epsilon > 1/3 are handled explicitly by the empty
+   family, X empty, Y the entire vertex set. In the latter case every
+   induced degree is at most n <= 3*epsilon*n. These boundary cases do
+   not alter the statement or the positive choice of delta.
+
+Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
+(8835 jobs). The source guard checks all 131 Lean files. All 74 root
+foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
+including `connectedsets` and its preliminary, extremal, pruning, and
+connectivity-interpretation theorems. All earlier endpoints remain in the
+root build.

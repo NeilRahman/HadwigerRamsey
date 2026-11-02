@@ -30,6 +30,12 @@ argument differ as detailed in the guide.
 Lemma 3.1 (`bigset`), for a nonempty ground set, is also proved as
 `HadwigerRamsey.bigset`; see the guide for the empty-set boundary condition.
 
+Lemma 3.2 (`connectedsets`) is proved as `HadwigerRamsey.connectedsets` in
+`HadwigerRamsey/ConnectedSets.lean`, following the revised October 31
+manuscript's splitting, absorption, merging, and separator-trimming argument.
+The six controlled-partition conditions are explicit in
+`ControlledPartition.Controlled`.
+
 Lemma 3.6 (`fopt`) is proved as `HadwigerRamsey.fopt`; its alternative
 cubic-bound proof and endpoint convention are described in the guide.
 
