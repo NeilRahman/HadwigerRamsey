@@ -1229,3 +1229,107 @@ foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
 including `connectedsets` and its preliminary, extremal, pruning, and
 connectivity-interpretation theorems. All earlier endpoints remain in the
 root build.
+
+
+## Lemma 3.5 (`twobigsets`)
+
+The endpoint is `HadwigerRamsey.twobigsets` in
+`HadwigerRamsey/TwoBigSets.lean`, following the revised local October 31
+manuscript. For epsilon,C > 0, it supplies a positive integer n-zero and
+delta > 0. For every three-colour decomposition of the complete graph on
+n >= n-zero vertices, either two distinct colours each satisfy the sparse
+or large-connected-set alternative, or some colour has Hadwiger number at
+least C*n/sqrt(log n).
+
+`TwoBigSets.Good G epsilon delta` abbreviates exactly the individual-colour
+alternative: at most 3*epsilon*n^2 edges, or a subset of size at least
+(1-epsilon)*n inducing a delta*n-connected graph. Connectivity uses the
+same `RealConnected` predicate as Lemma 3.2, already proved equivalent to
+the earlier integer vertex-connectivity definition. There are no additional
+assumptions on epsilon or C in the public statement.
+
+The actual proof of `twobigsets` calls the public theorem `connectedsets`
+to obtain delta and both controlled partitions; its dependency is not
+merely an import. The proof also calls `bipMinor` to obtain its parameters.
+`TwoBigSets.large_separated_sets` calls the public theorem `bigset`.
+`TwoBigSets/DependencyAudit.lean` inspects the stored proof terms and makes
+the build fail if any of these required dependency edges is absent.
+
+The modules divide the manuscript argument as follows:
+
+- `Finite.lean`: degree-sum counting, the edge bound for a degenerate
+  remainder, the resulting size bound on Y, and the cross-edge bounds
+  between distinct controlled-partition classes.
+- `Partitions.lean`: restrict both partitions to the common ground set,
+  apply Lemma 3.1, and trim its sets to equal size.
+- `Minor.lean`: count cross edges in the three colours, construct the
+  balanced bipartite graph in the remaining colour, invoke the Lemma 3.3
+  bound, and transport its minor back to the original graph.
+- `Parameters.lean`: the small error parameter, the three-colour case
+  split, and the final logarithmic comparison.
+- `TwoBigSets.lean`: the public statement and assembly, including the
+  explicit invocation of Lemma 3.2.
+
+Existing project code reused includes the controlled-partition definitions
+and cardinality bound, `bigset`, the inclusive-cutoff `bipMinor`, the
+balanced cut graph and its exact edge count, and injective transport of
+clique minors. Mathlib supplies finite partitions with empty parts erased,
+finite-set restriction/cardinality and subset selection, interedge counts,
+logarithm monotonicity, square-root monotonicity, and natural ceilings.
+
+Logical correspondence and differences from the manuscript:
+
+1. Choose r = min(epsilon/8, 1/20), where r is the manuscript's epsilon'.
+   This is a specific permitted choice: r > 0, r < 1/10,
+   r <= 2*epsilon/3, and (1-r)*(1-2*r) > 1-epsilon. The proof uses
+   K = 2*C/r^3 and eta = r^3*gamma/4 exactly as written.
+2. The failure of the first alternative is handled by an explicit finite
+   case split selecting two bad colours and the distinct remaining colour,
+   rather than a without-loss-of-generality relabelling. Since sparse is
+   stated with <=, a bad colour has strictly more than 3*epsilon*n^2
+   edges. Its controlled connected pieces and its Y class are consequently
+   strictly smaller than (1-epsilon)*n; the proof can use their weaker
+   non-strict upper bounds when applying Lemma 3.1.
+3. The edge bound for a d-degenerate induced remainder is proved by
+   repeatedly removing a vertex of degree at most d. The internal ordered
+   count is at most 2*d*|Y|; dividing the whole-graph ordered count by two
+   gives the ordinary unordered-edge bound
+   |E(G)| <= d*n + (n-|Y|)*n.
+   With d=3*r*n this is the manuscript's estimate. Ordered pairs occur
+   only in the supporting count; all final edge and cross-edge quantities
+   are ordinary edges, with a cross edge counted once from A to B.
+4. Restricted classes are represented by S intersect W, where
+   W=V(G) minus X_1 minus X_2. This equals the manuscript's restriction
+   by the other exceptional set, because S already avoids its own X.
+   Empty restricted classes are erased to obtain Mathlib finite partitions;
+   this can only decrease their number. Use k=max(k_1,k_2)+1 as written.
+   The Lean proof retains Lemma 3.1's denominator k^2 directly, rather
+   than weakening it to (k+1)^2 in the manuscript's subsequent display.
+   The same lower bound |A|,|B| >= r^3*n/2 follows, with no change to K.
+5. Trim both sets to the smaller cardinality (so at most one is actually
+   shortened), spelling out the text's equal-size reduction. Inclusions
+   in the original distinct partition classes and disjointness are
+   preserved. If neither class is Y, their crossing edges are zero;
+   otherwise count from the subset of Y using the controlled neighbour
+   bound. Equal cardinalities permit either orientation and give exactly
+   eta*n*a for each of the two bad colours.
+6. The third-colour cross-edge identity is exact because every pair from
+   the disjoint A and B has a unique colour. Hence its cross graph has at
+   least a^2-2*eta*n*a >= (1-gamma)*a^2 edges. Enumerating A union B by
+   Fin |A union B| only relabels this graph; the earlier cut-graph edge
+   count and minor-transport lemmas justify the application and transfer.
+7. Use n-zero = ceil(2*(N+2)/r^3)+1, where N is the inclusive integer cutoff
+   supplied by Lemma 3.3. This is a larger integer version of the
+   manuscript's real expression 2*r^(-3)*N. It ensures a >= N+2 >= 2,
+   making both logarithmic denominators positive and the final comparison
+   by a <= n explicit. It changes only the existential cutoff, not the
+   statement, coefficient C, or density parameter.
+
+The local manuscript has not been edited or uploaded.
+
+Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
+(8841 jobs). The source guard checks all 137 Lean files. All 80 root
+foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
+including `twobigsets` and its supporting theorems. The proof-term
+dependency audit confirms the required uses of `connectedsets`, `bigset`,
+and `bipMinor`. All earlier endpoints remain in the root build.

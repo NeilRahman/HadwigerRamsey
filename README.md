@@ -36,6 +36,11 @@ manuscript's splitting, absorption, merging, and separator-trimming argument.
 The six controlled-partition conditions are explicit in
 `ControlledPartition.Controlled`.
 
+Lemma 3.5 (`twobigsets`) is proved as `HadwigerRamsey.twobigsets` in
+`HadwigerRamsey/TwoBigSets.lean`. Its proof explicitly obtains controlled
+partitions from `connectedsets`, applies `bigset`, and applies `bipMinor`
+to the remaining colour. The build checks these theorem dependencies.
+
 Lemma 3.6 (`fopt`) is proved as `HadwigerRamsey.fopt`; its alternative
 cubic-bound proof and endpoint convention are described in the guide.
 

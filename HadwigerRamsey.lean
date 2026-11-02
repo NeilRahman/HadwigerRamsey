@@ -1,3 +1,5 @@
+import HadwigerRamsey.TwoBigSets
+import HadwigerRamsey.TwoBigSets.DependencyAudit
 import HadwigerRamsey.ConnectedSets
 import HadwigerRamsey.ControlledPartition.Interpretation
 import HadwigerRamsey.DenseMinor
@@ -103,3 +105,10 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.ControlledPartition.prune
 #print axioms HadwigerRamsey.ControlledPartition.realConnected_iff_vertexConnectivity
 #print axioms HadwigerRamsey.ControlledPartition.Controlled.card_parts_le
+
+#print axioms HadwigerRamsey.twobigsets
+#print axioms HadwigerRamsey.TwoBigSets.large_separated_sets
+#print axioms HadwigerRamsey.TwoBigSets.edges_le_of_degenerate
+#print axioms HadwigerRamsey.TwoBigSets.cross_le_controlled
+#print axioms HadwigerRamsey.TwoBigSets.third_cross_lower
+#print axioms HadwigerRamsey.TwoBigSets.cross_minor
