@@ -1,11 +1,46 @@
 # Hadwiger–Ramsey
 
-Lean formalization of results from the local research manuscript
-`hadramoct30.tex`. That manuscript and local counterexample notes are
-excluded from version control.
+Lean formalization of the local research manuscript
+`hadramoct31.tex`, including its subsequent revisions. The manuscript and
+local counterexample notes are excluded from version control.
 
 The project uses Lean **4.33.0** and the matching Mathlib release. Both local
 builds and GitHub Actions read the version from `lean-toolchain`.
+
+## The main result
+
+**Theorem 1.1.** The three-colour Hadwiger–Ramsey number satisfies
+
+$$
+R_h(k;3)=\bigl(\beta^{-1}+o(1)\bigr)k\sqrt{\ln k},
+\qquad
+\beta=\frac12\sqrt{-\ln(10-4\sqrt6)}.
+$$
+
+Here $R_h(k;3)$ is the least integer $n$ such that every colouring of the
+edges of $K_n$ with three colours has a monochromatic $K_k$ minor.
+A $K_k$ minor consists of $k$ nonempty, connected, pairwise disjoint
+vertex sets with an edge between every two distinct sets.
+
+In the namespace `HadwigerRamsey`, the public Lean statement is:
+
+```lean
+theorem theorem1_1 :
+    Filter.Tendsto
+      (fun k : ℕ => (hadwigerRamsey k : ℝ) /
+        ((k : ℝ) * Real.sqrt (Real.log (k : ℝ))))
+      Filter.atTop (nhds beta⁻¹)
+```
+
+`hadwigerRamsey k` is the least vertex count with the stated forcing
+property. `Filter.Tendsto` says that its ratio to $k\sqrt{\ln k}$ tends to
+$\beta^{-1}$ as the integer $k$ tends to infinity; this is exactly the
+meaning of the displayed asymptotic formula. The proof in
+[Ramsey.lean](HadwigerRamsey/Ramsey.lean) deduces this limit from the
+checked Theorems 1.2 and 1.3, with integer rounding and the change from
+$\ln n$ to $\ln k$ made explicit.
+
+## Supporting results and scope
 
 Theorem 1.2 (`existencethm`) is proved as `HadwigerRamsey.existencethm`,
 for every sufficiently large integer order, including odd orders.
@@ -68,6 +103,14 @@ of A.3, random reservoirs, and the final clique-minor construction.
 The Menger step uses the existing public finite vertex-Menger proof
 vendored in `vendor/menger/`.
 
+**Appendix A.3 has a weaker standalone conclusion in Lean:** the proved
+complete-family result supplies the required disjoint sets, edges between
+distinct sets, part-count bounds, and maximum part-size bound, but does
+not assert that they cover the original graph or have globally balanced
+sizes. Theorem 1.5 uses only the proved properties and has its full stated
+conclusion. All numbered main-text claims are formalized; see the guide
+for this appendix distinction and the other stated technical conventions.
+
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.
 See [FORMALIZATION.md](FORMALIZATION.md) for the exact statement and paper-to-Lean map.
@@ -85,4 +128,4 @@ lake build
 
 Lean, Mathlib, and transitive dependencies are pinned. GitHub Actions
 checks the proofs on pushes and pull requests. The manuscript stays local
-and is preserved without edits. Other manuscript results have not yet been formalized.
+and is preserved without edits.

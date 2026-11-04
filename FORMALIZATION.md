@@ -1,5 +1,11 @@
 # Formalization status
 
+Theorem 1.1 (`t:main`) is proved as `HadwigerRamsey.theorem1_1` in
+`HadwigerRamsey/Ramsey.lean`. It defines the three-colour Hadwiger--Ramsey
+number as the least forcing order and derives its exact asymptotic
+coefficient from the checked Theorems 1.2 and 1.3. The README displays
+the public Lean statement; the final section below documents this deduction.
+
 Theorem 1.5 (`thomasonupper`) from the October 31 manuscript is **proved
 in Lean 4.33.0** as `HadwigerRamsey.thomasonupper` in
 `HadwigerRamsey/ThomasonUpper.lean`. The exact statement and all logical
@@ -1471,3 +1477,80 @@ foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
 including the public `mainthm` and all reported supporting theorems. The
 proof-term audit confirms direct use of all six earlier manuscript results
 listed above. All earlier endpoints remain included in the root build.
+
+## Theorem 1.1 (`t:main`): three-colour Hadwiger--Ramsey asymptotics
+
+The public endpoint `HadwigerRamsey.theorem1_1` states
+
+```lean
+theorem theorem1_1 :
+    Filter.Tendsto
+      (fun k : ℕ => (hadwigerRamsey k : ℝ) /
+        ((k : ℝ) * Real.sqrt (Real.log (k : ℝ))))
+      Filter.atTop (nhds beta⁻¹)
+```
+
+This is exactly the ratio-limit meaning of
+`R_h(k;3) = (beta^-1 + o(1))*k*sqrt(log k)`, with natural logarithms and
+the existing exact manuscript constant `beta`. There are no additional
+mathematical hypotheses or changes to the coefficient.
+
+`ForcesMinor n k` says that every `IsThreeDecomposition` on `Fin n` has
+a colour with `HasCliqueMinor` of order k. Thus the definition quantifies
+over actual three-colourings of the complete graph and actual connected,
+nonempty, disjoint branch sets. `hadwigerRamsey k` is `Nat.find` of the
+proved existence of such an n. `hadwigerRamsey_spec` proves the forcing
+property, and `hadwigerRamsey_le_iff` proves that an order n is forcing
+exactly when `hadwigerRamsey k <= n`; this certifies leastness.
+
+The manuscript leaves the deduction from Theorems 1.2 and 1.3 implicit.
+Lean makes the following details explicit, without changing its argument:
+
+1. Theorem 1.3 with error one-half, and the divergence of
+   `n/sqrt(log n)`, prove that every k has a finite forcing order.
+   Restricting a colouring to any smaller vertex set proves monotonicity
+   of the forcing property, using the existing injective minor transport.
+   The function is defined also at k=0, an irrelevant boundary convention
+   for the limit as k tends to infinity.
+2. For each fixed positive c, round `c*k*sqrt(log k)` down or up to an
+   integer. Mathlib's existing floor/ceiling limits show that the rounded
+   order divided by `k*sqrt(log k)` tends to c. Its logarithm divided by
+   `log k` tends to one: expand the logarithm into the logarithm of that
+   ratio, `log k`, and `log(log k)/2`, and use Mathlib's existing
+   `isLittleO_log_id_atTop`. Consequently the rounded order divided by
+   `k*sqrt(log(rounded order))` also tends to c. All these statements hold
+   eventually at positive orders, so the small logarithm cases do not
+   impose extra hypotheses on the final theorem.
+3. If `0 < c < beta^-1`, use Theorem 1.2 with
+   `epsilon = (1-beta*c)/(2*beta*c)`. At the rounded-down order, every
+   colour's Hadwiger number is strictly below k for all sufficiently
+   large k. Hence that order is strictly below `hadwigerRamsey k`.
+4. If `beta^-1 < c`, use Theorem 1.3 with
+   `epsilon = (beta*c-1)/(2*beta*c)`. At the rounded-up order, every
+   colouring has a colour's Hadwiger number at least k for all sufficiently
+   large k. Hence `hadwigerRamsey k` is at most that rounded order.
+5. Insert c between each proposed lower or upper bound and `beta^-1`.
+   The two rounded-order limits and inequalities then give the public
+   limit by Mathlib's order-topology characterization of convergence.
+
+Files:
+
+- `Ramsey/Definition.lean`: forcing, finiteness, monotonicity and leastness.
+- `Ramsey/Scaling.lean`: rounded orders and logarithmic asymptotics.
+- `Ramsey/Bounds.lean`: explicit applications of `existencethm` and `mainthm`.
+- `Ramsey.lean`: public Theorem 1.1.
+- `Ramsey/DependencyAudit.lean`: checks stored proof terms for the two
+  earlier theorem applications and their use in the final limit.
+
+All previously recorded manuscript-to-Lean differences in the inputs
+remain as documented in their respective sections. In particular, this
+does not strengthen the separate A.3 complete-family endpoint to its
+full original-vertex equipartition statement.
+
+Verification on November 4, 2026: the full `lake build` passes on
+Lean/Mathlib 4.33.0 (8867 jobs). The source guard checks all 163 Lean
+files. All 95 root foundation reports use only `propext`,
+`Classical.choice`, and `Quot.sound`, including `theorem1_1`, the
+leastness statements, and both rounded bounds. The proof-term audit
+confirms both explicit dependencies on Theorems 1.2 and 1.3 and their
+use in the final limit. All earlier endpoints remain in the root build.

@@ -1,3 +1,5 @@
+import HadwigerRamsey.Ramsey
+import HadwigerRamsey.Ramsey.DependencyAudit
 import HadwigerRamsey.Main
 import HadwigerRamsey.Main.DependencyAudit
 import HadwigerRamsey.TwoBigSets
@@ -124,3 +126,10 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.Main.nearspanning_entropy_upper
 #print axioms HadwigerRamsey.Main.colour_energy_gap
 #print axioms HadwigerRamsey.Main.configuration_contradiction
+
+#print axioms HadwigerRamsey.theorem1_1
+#print axioms HadwigerRamsey.hadwigerRamsey_spec
+#print axioms HadwigerRamsey.hadwigerRamsey_le_iff
+#print axioms HadwigerRamsey.Ramsey.eventually_floor_lt_ramsey
+#print axioms HadwigerRamsey.Ramsey.eventually_ramsey_le_ceil
+#print axioms HadwigerRamsey.Ramsey.inverse_scale_limit
