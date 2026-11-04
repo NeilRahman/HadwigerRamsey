@@ -13,6 +13,11 @@ It constructs a three-colour decomposition with each Hadwiger number at
 most `(1+epsilon)*beta*n/sqrt(log n)`, using Theorem 1.4 explicitly.
 The entry module is `HadwigerRamsey/Existence.lean`.
 
+Theorem 1.3 (`mainthm`) is proved as `HadwigerRamsey.mainthm` in
+`HadwigerRamsey/Main.lean`, following the revised November 4 proof in the
+local October 31 manuscript. Its proof explicitly uses Lemmas 3.2--3.5,
+Theorem 1.5, and Corollary 3.8; the build checks those dependencies.
+
 Theorem 1.4 (`thomasonlower`), the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
 

@@ -1333,3 +1333,141 @@ foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
 including `twobigsets` and its supporting theorems. The proof-term
 dependency audit confirms the required uses of `connectedsets`, `bigset`,
 and `bipMinor`. All earlier endpoints remain in the root build.
+
+
+## Theorem 1.3 (`mainthm`), revised November 4 argument
+
+The public endpoint is `HadwigerRamsey.mainthm` in
+`HadwigerRamsey/Main.lean`. Its statement is the manuscript's exact
+asymptotic lower bound: for every epsilon > 0, every sufficiently large
+three-colour decomposition of K_n has some colour with Hadwiger number at
+least `(1-epsilon)*beta*n/sqrt(log n)`. The local October 31 TeX file was
+reread after its substantial November 4 revisions, and remains ignored.
+
+`Main.mainthm_small` invokes the actual public theorems `twobigsets`,
+`connectedsets`, `bipMinor`, `denseMinor`, `thomasonupper`, and `optapprox`.
+Their conclusions supply the parameters and partitions used by the
+construction. No manuscript claim referenced in this proof is supplied
+as an additional unproved premise. `Main/DependencyAudit.lean` inspects
+these proof dependencies as part of the root build. The completed proof
+of Theorem 1.5 is used as its public theorem; the previously documented
+weaker standalone A.3 helper needs no further assertion here.
+
+The manuscript's contradiction argument is followed in order: two good
+colours from Lemma 3.5; a controlled partition of the remaining colour;
+a final exceptional class; density caps from Lemmas 3.3 and 3.4;
+conditions (a)--(e) of Corollary 3.8; and the optimization contradiction.
+The code separates these steps into the following modules:
+
+- `Partition.lean`: index the controlled pieces, optionally retaining the
+  large degenerate Y class, and keep the final exceptional class last.
+- `Trimming.lean`, `DensityCaps.lean`, `GraphCaps.lean`: balance unequal
+  bipartite sides without losing density, then apply the earlier minor
+  results to cap all densities on sufficiently large vertex sets.
+- `DensityLoss.lean`, `Conservation.lean`, `Feasibility.lean`: exact
+  three-colour density identities and the restricted density inequalities.
+- `Sparse.lean`: weighted density at most `2*E/n^2+1/n`, including the
+  exact correction for diagonal unordered-edge densities.
+- `Entropy.lean`, `Restriction.lean`, `ColourEnergy.lean`: the singleton
+  and multitype applications of Theorem 1.5, including the revised
+  retain-or-delete choice for the final class, and the sparse-colour case.
+- `Analytic.lean`, `Numerics.lean`, `Parameters.lean`: logarithmic bounds,
+  fixed numerical margins, and positive choices of all auxiliary errors.
+- `OptimizationData.lean`, `Configuration.lean`: fill the last row and
+  column by one-half, fill its p coordinate by zero, and use `optapprox`.
+- `LocalCosts.lean`, `Contradiction.lean`, `Final.lean`: assemble the
+  classwise, global, and uniform-order bounds into the target theorem.
+
+Logical correspondence and all variations from the written argument:
+
+1. Colours use Fin 3 and an explicit choice of the distinct third colour,
+   replacing the manuscript's without-loss-of-generality relabelling.
+   If a colour is sparse, its selected P is the entire vertex set exactly
+   as in the text; otherwise P is the near-spanning connected set supplied
+   by the public Lemma 3.5.
+2. The controlled pieces are a finite family and are enumerated
+   arbitrarily. The retained large Y class need not be penultimate.
+   Each active class carries either its robust-connectivity property or
+   its degenerate-remainder property; the exceptional class is always last.
+   The threshold 20*lambda*n, exceptional-size bound 21*lambda*n, and
+   part-count bound 2/lambda are unchanged. An empty exceptional class is
+   retained, giving it zero mass, which `optapprox` permits.
+3. Choose
+   `lambda = min(1/1000, min(epsilon*beta/1000, epsilon*beta^2/10000))`.
+   This smaller explicit choice supplies the manuscript's required smallness
+   and the convenient inequalities `lambda <= epsilon*beta/100` and
+   `42*lambda*log 2 <= epsilon*beta^2/10`. The definitions
+   `K = 2*beta/lambda`,
+   `zeta = min(gamma-B, min(gamma-D, min(lambda/2, beta/100)))`, and
+   `epsilon-zero = min(lambda*xi, min(lambda*epsilon, zeta*beta^2))/100`
+   agree with the manuscript. Select `eta = lambda*xi/4`, satisfying its
+   strict inequality `eta < lambda*xi/2`. The connectivity error is exactly
+   `theta = min(delta-zero/2, min(delta,zeta))` from the revised proof.
+4. For the omitted balancing step in the bipartite application, repeatedly
+   remove a vertex of weight at most the current average from the larger
+   side, where weight is its degree into the other side. A subset of any
+   required smaller cardinality retains at least the original average.
+   Trim to the smaller side's size; the cross-edge density does not decrease.
+   The actual public `bipMinor` bound is applied to this balanced graph and
+   transferred back by the earlier injective minor-transport result.
+5. The diagonal restriction estimate reuses the existing A.2 bound
+   `8*epsilon-zero/lambda` instead of reproving the manuscript's sharper
+   one-sided bound `2*epsilon-zero/lambda`. For both colours the total
+   diagonal error is at most `16*epsilon-zero/lambda <= xi`. The off-diagonal
+   error stays `2*epsilon-zero/lambda` per colour, and
+   `eta/lambda + 4*epsilon-zero/lambda <= xi`. Thus the existing choice
+   of epsilon-zero suffices for exactly the same conditions (a) and (b).
+6. For the large degenerate Y class, Lean uses the weighted incidence
+   inequality `s^2*p <= ordered_internal_edges+s` to obtain the concrete
+   bound `p <= 31/100` once `lambda*n >= 10`. This spells out the text's
+   `3/10+o(1)` estimate with a harmless larger size cutoff. A rational
+   logarithm certificate gives `-log(69/100) <= 38/100`; the existing FOpt
+   certificate for beta squared then proves `sqrt(-log(1-p)) <= 99*beta/100`.
+   Together with `zeta <= beta/100` and class mass at most one, this is the
+   manuscript's condition (c), with the same numerical margin.
+7. The singleton and connected-colour applications of Theorem 1.5 use
+   its actual returned uniform cutoff, transported to the induced graphs
+   by enumeration. The near-spanning restriction keeps the exceptional
+   intersection if its size is at least delta-zero*n/2, and otherwise
+   deletes it, exactly as in the revised text. Existing deletion stability
+   preserves the required connectivity. Every actual class in that
+   application has sufficient mass; unused nonnegative entropy summands
+   can be dropped.
+8. The graph-to-entropy inequalities are arranged as normalized upper
+   bounds involving `had(G)*sqrt(log n)/n`. This permits logarithm
+   monotonicity using the nonnegative Hadwiger number, without imposing
+   a sign assumption on an intermediate entropy-minus-theta expression.
+   It is an algebraic reorganization of the manuscript's lower-bound
+   argument. The active-energy bounds use <= where the manuscript proves
+   <; the closed inequalities in `optapprox` require only <=.
+9. In the sparse-colour case, concavity of logarithm proves the same chord
+   inequality `-log(1-q) <= (-log zeta)/(1-zeta)*q`; no separate derivative
+   proof of the monotonicity of the ratio is needed. Mathlib's elementary
+   `log x <= x-1` also gives `zeta*(-log zeta)/(1-zeta) <= 1`, so
+   epsilon-zero <= zeta*beta^2/100 implies the needed energy gap directly.
+   The weighted-density correction `+1/n` is exactly the manuscript's.
+10. The filled last row and column contribute exactly
+    `(2*alpha-last-alpha-last^2)*log 2`. Lean proves this identity and uses
+    the same bound by `42*lambda*log 2`. The active energy and this error
+    give the closed bounds `sqrt(full energy) <= beta-zeta` required by
+    `optapprox`, with all final probability caps and symmetries checked.
+11. Let NB,ND,NT be the cutoffs supplied by `bipMinor`, `denseMinor`, and
+    `thomasonupper`, and put M=max(max(ND,NB),NT). The final size cutoff
+    is the maximum of the Lemma 3.5 cutoff, 2*NT, 4,
+    `ceil(2*(M+2)/lambda)`, `ceil(10/lambda)`, and `ceil(1/epsilon-zero)`.
+    These make every smaller graph large enough for the invoked result,
+    keep logarithmic denominators positive, and absorb the sparse 1/n
+    term. This makes the manuscript's unspecified sufficiently large n-zero
+    explicit. The case epsilon > 1 is proved separately by nonnegativity
+    of Hadwiger numbers; epsilon = 1 is also covered by the main construction.
+
+All differences concern auxiliary constants, representations, estimates,
+or omitted supporting arguments. The public Theorem 1.3 statement is
+unchanged.
+
+Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
+(8862 jobs). The source guard checks all 158 Lean files. All 89 root
+foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
+including the public `mainthm` and all reported supporting theorems. The
+proof-term audit confirms direct use of all six earlier manuscript results
+listed above. All earlier endpoints remain included in the root build.

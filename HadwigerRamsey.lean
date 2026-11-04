@@ -1,3 +1,5 @@
+import HadwigerRamsey.Main
+import HadwigerRamsey.Main.DependencyAudit
 import HadwigerRamsey.TwoBigSets
 import HadwigerRamsey.TwoBigSets.DependencyAudit
 import HadwigerRamsey.ConnectedSets
@@ -112,3 +114,13 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.TwoBigSets.cross_le_controlled
 #print axioms HadwigerRamsey.TwoBigSets.third_cross_lower
 #print axioms HadwigerRamsey.TwoBigSets.cross_minor
+
+#print axioms HadwigerRamsey.mainthm
+#print axioms HadwigerRamsey.Main.mainthm_small
+#print axioms HadwigerRamsey.Main.optimization_contradiction
+#print axioms HadwigerRamsey.Main.balanced_dense_subsets
+#print axioms HadwigerRamsey.Main.partitionData_exists
+#print axioms HadwigerRamsey.Main.density_feasibility
+#print axioms HadwigerRamsey.Main.nearspanning_entropy_upper
+#print axioms HadwigerRamsey.Main.colour_energy_gap
+#print axioms HadwigerRamsey.Main.configuration_contradiction
