@@ -1,21 +1,21 @@
 # Formalization status
 
-Theorem 1.1 (`t:main`) is proved as `HadwigerRamsey.theorem1_1` in
+Theorem 1.1 is proved as `HadwigerRamsey.theorem1_1` in
 `HadwigerRamsey/Ramsey.lean`. It defines the three-colour Hadwiger--Ramsey
 number as the least forcing order and derives its exact asymptotic
 coefficient from the checked Theorems 1.2 and 1.3. The README displays
 the public Lean statement; the final section below documents this deduction.
 
-Theorem 1.5 (`thomasonupper`) from the October 31 manuscript is **proved
+Theorem 1.5 from the October 31 manuscript is **proved
 in Lean 4.33.0** as `HadwigerRamsey.thomasonupper` in
 `HadwigerRamsey/ThomasonUpper.lean`. The exact statement and all logical
 differences from the manuscript argument are recorded in its section below.
 
-Theorem 1.4 (`thomasonlower`) of `hadramoct30.tex` is proved in Lean 4.
+Theorem 1.4 of `hadramoct30.tex` is proved in Lean 4.
 The endpoint is `HadwigerRamsey.thomasonlower` in
 `HadwigerRamsey/ThomasonLower.lean`.
 
-Lemma 3.1 (`bigset`) is also proved, for a nonempty ground set, as
+Lemma 3.1 is also proved, for a nonempty ground set, as
 `HadwigerRamsey.bigset` in `HadwigerRamsey/BigSet.lean`.
 
 ## Exact meaning of the endpoint
@@ -57,19 +57,19 @@ by nonnegativity of probability.
 
 | Manuscript ingredient | Lean declaration / module |
 | --- | --- |
-| Minor gives permissible partition (`obs:minor-partition`) | `HasCliqueMinor.permissible`, `Graph.lean` |
+| Observation B.1: minor gives permissible partition | `HasCliqueMinor.permissible`, `Graph.lean` |
 | Hadwiger number and branch-set meaning | `hadwigerNumber`, `hasCliqueMinor_iff_le_hadwigerNumber`, `Graph.lean` |
-| Total-weight identity (`lem:total-weight`) | `total_weight_identity`, `Weights.lean` |
+| Lemma B.2: total-weight identity | `total_weight_identity`, `Weights.lean` |
 | Disjoint block pairs use independent edges | `probability_allHits`, `Probability.lean` |
 | Probability of no edge across a block pair | `probability_noHit`, `Probability.lean` |
 | Finite Jensen and exponential product estimate | `sum_exp_neg_ge`, `permissible_product_bound`, `Analytic.lean` |
-| Fixed-partition bound (`lem:fixed-partition`) | `fixed_partition_bound`, `Finite.lean` |
-| Union bound (`cor:finite`) | `finite_minor_bound`, `Finite.lean` |
-| Uniform asymptotics (`lem:uniform-decay`) | `uniform_tail_bound`, `Asymptotic.lean` |
+| Lemma B.3: fixed-partition bound | `fixed_partition_bound`, `Finite.lean` |
+| Corollary B.4: union bound | `finite_minor_bound`, `Finite.lean` |
+| Lemma B.5: uniform asymptotics | `uniform_tail_bound`, `Asymptotic.lean` |
 | Block average equals vertex-pair average | `blockLambda_identity`, `Blocks.lean` |
 | Measurability of finite graph properties | `measurableSet_graph_property`, `Measurability.lean` |
-| Theorem 1.4 (`thomasonlower`) | `thomasonlower`, `ThomasonLower.lean` |
-| Lemma 3.1 (`bigset`), nonempty ground set | `bigset`, `BigSet.lean` |
+| Theorem 1.4 | `thomasonlower`, `ThomasonLower.lean` |
+| Lemma 3.1, nonempty ground set | `bigset`, `BigSet.lean` |
 
 The finite probability result is slightly more general: logarithmic
 weights may vary independently on every potential edge. The final
@@ -103,7 +103,7 @@ The original manuscript stays local and is preserved without edits. It and
 local counterexample notes are excluded from version control. The mathematical correspondence above is documented for
 human review; kernel checking establishes the Lean statement.
 
-## Lemma 3.1: two partitions (`bigset`)
+## Lemma 3.1: two partitions
 
 The endpoint `HadwigerRamsey.bigset` uses Mathlib's existing
 `Finpartition s` directly, for a finite set `s`. It assumes `s.Nonempty`,
@@ -178,7 +178,7 @@ The earlier two formalizations use Mathlib directly. Lemma 3.6 additionally
 uses the vendored LeanCert interval-analysis subset described below.
 
 
-## Lemma 3.6: optimization (`fopt`)
+## Lemma 3.6: optimization
 
 The endpoint is `HadwigerRamsey.fopt` in `HadwigerRamsey/FOpt.lean`.
 It quantifies over every natural k and α : Fin k → ℝ, assumes αᵢ ≥ 0
@@ -251,7 +251,7 @@ supplies the rational interval and Taylor/logarithm enclosure theorems.
 The exact source, notices and compatibility changes are recorded in
 `vendor/lean-cert/README.md`. This is reused analytic infrastructure,
 not an existing formalization of this particular optimization inequality.
-A targeted public search for the Hadwiger–Ramsey optimization lemma did
+A targeted public search for the optimization inequality in Lemma 3.6 did
 not locate a pre-existing proof of the exact inequality.
 
 The new first-party modules are:
@@ -269,22 +269,22 @@ The new first-party modules are:
 
 The three endpoints above are imported and their dependency reports
 printed in `HadwigerRamsey.lean`. The source guard also checks vendored
-Lean sources. The fopt endpoint requires only `propext`,
+Lean sources. The Lemma 3.6 endpoint requires only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 
-## Optimization lemma (`opt`)
+## Lemma 3.7: optimization
 
 `HadwigerRamsey.opt` in `HadwigerRamsey/Opt.lean` proves the manuscript's
 three-way alternative with positive weights summing to one, probabilities
 in [0,1), the exact diagonal/off-diagonal sum conditions, and the same β.
 The conclusion writes out the manuscript's negative double sums explicitly.
-Matrix symmetry is not required, consistently with the statement of `opt`.
+Matrix symmetry is not required, consistently with the statement of Lemma 3.7.
 No additional hypotheses or numerical approximations are introduced.
 
 The argument follows the manuscript: negate the alternatives, square the
 three strict inequalities, average the two matrix costs, use logarithm
-concavity, bound the diagonal terms by f(αᵢ), and contradict `fopt`.
+concavity, bound the diagonal terms by f(αᵢ), and contradict Lemma 3.6.
 Mathlib's `Real.strictConcaveOn_log_Ioi.concaveOn` directly supplies the
 midpoint inequality, which is equivalent to convexity of −log(1−x).
 The other reused results include `Real.log_le_log`,
@@ -308,32 +308,34 @@ analytic library or vendored code for this lemma.
   replaces the exact mass equalities by pᵢ+qᴮᵢᵢ+qᴳᵢᵢ ≥ 1 and
   qᴮᵢⱼ+qᴳᵢⱼ ≥ 1 for i ≠ j. This is proved directly, using monotonicity
   of the logarithmic cost before the same midpoint inequality. It does
-  not require rescaling probabilities. The public `opt` theorem
+  not require rescaling probabilities. The public Lemma 3.7 declaration
   specializes the helper to the original positive-weight/equality
-  hypotheses. The stronger helper is available for reuse; the later `optapprox` proof
-  instead uses the explicitly requested reduction to the public `opt` theorem.
+  hypotheses. The stronger helper is available for reuse; the later
+  Corollary 3.8 proof instead uses the explicitly requested reduction
+  to Lemma 3.7.
 - In `diagonal_le_function`, a zero weight is handled directly before
   division by αᵢ². For a positive weight, the proof follows the
   manuscript's exponential comparison. The constant β is proved
   positive as `HadwigerRamsey.beta_pos`, and all logarithm domains and
   radicand nonnegativity are justified explicitly. These are consequences
   of the existing assumptions, not new conditions.
-- There are no other logical changes to the `opt` argument. The
-  `optapprox` corollary is treated separately below.
+- There are no other logical changes to the Lemma 3.7 argument.
+  Corollary 3.8 is treated separately below.
 
 The manuscript source remains unchanged; the preceding corrections are
-implemented in the Lean proof and recorded here. The `optapprox`
+implemented in the Lean proof and recorded here. The Corollary 3.8
 formalization below uses the agreed closed bounds and explicitly positive δ.
 
 The root module imports `Opt.lean` and prints dependency reports for both
-`opt` and `Optimization.opt_of_nonneg`. Both use only `propext`,
-`Classical.choice`, and `Quot.sound`, including their dependency on `fopt`.
+Lemma 3.7 and `Optimization.opt_of_nonneg`. Both use only
+`propext`, `Classical.choice`, and `Quot.sound`, including their dependency
+on Lemma 3.6.
 
 
-## Approximate optimization corollary (`optapprox`)
+## Corollary 3.8: approximate optimization
 
 `HadwigerRamsey.optapprox` in `HadwigerRamsey/OptApprox.lean` proves the
-agreed closed version of the corollary: for every ζ > 0 there is δ > 0,
+agreed closed version of Corollary 3.8: for every ζ > 0 there is δ > 0,
 uniform in every positive dimension k ≤ 1/ζ and every choice of data.
 Weights satisfy αᵢ ≥ 0 and ∑αᵢ = 1; probabilities satisfy
 0 ≤ pᵢ,qᴮᵢⱼ,qᴳᵢⱼ ≤ 1−ζ. Matrix symmetry is included as in the manuscript.
@@ -342,22 +344,22 @@ inequalities, cannot all hold. The negative double sums are written out
 explicitly in the public statement, with the same β as before.
 There is no additional restriction such as ζ < 1 or αᵢ > 0.
 
-### Explicit dependency on `opt`
+### Explicit dependency on Lemma 3.7
 
 The new proof does not directly invoke `Optimization.opt_of_nonneg`.
 Instead its checked proof dependencies follow this chain:
 
-`optapprox` → `OptApprox.bounded_dimensions` →
+Corollary 3.8 → `OptApprox.bounded_dimensions` →
 `OptApprox.fixed_dimension` → `OptApprox.defect_pos_on_bad` →
 `Optimization.opt_closed_from_opt` →
 `Optimization.opt_nonneg_equalities_from_opt` →
-`Optimization.opt_fintype` → **`HadwigerRamsey.opt`**.
+`Optimization.opt_fintype` → **Lemma 3.7**.
 
 `OptApprox/DependencyAudit.lean` inspects the elaborated proof expressions,
-checks that this endpoint reaches the public `opt` declaration, and prints
+checks that this endpoint reaches the public Lemma 3.7 declaration, and prints
 the path during the root build. This is a dependency audit, not a proof
-premise. The existing `opt` theorem itself still has its original proof
-through the earlier stronger helper and `fopt`.
+premise. Lemma 3.7 itself still has its original proof
+through the earlier stronger helper and Lemma 3.6.
 
 ### Complete proof details and manuscript correspondence
 
@@ -372,15 +374,15 @@ through the earlier stronger helper and `fopt`.
    are unchanged because every deleted row or column has zero weight.
    Mathlib's `Finset.sum_congr_set`, `Fintype.sum_equiv`, and
    `Fintype.equivFin` justify the restriction and reindexing needed to
-   apply the public `opt` theorem.
+   apply Lemma 3.7.
 3. **Convert mass inequalities to equalities:** for each diagonal index,
    divide pᵢ, qᴮᵢᵢ, qᴳᵢᵢ by their sum; for each off-diagonal pair,
    divide qᴮᵢⱼ, qᴳᵢⱼ by their sum. All denominators are at least one.
    The new probabilities stay nonnegative and strictly below one and
-   the required sums become one. Applying `opt` after positive-support
+   the required sums become one. Applying Lemma 3.7 after positive-support
    restriction gives an outcome for the reduced data. Monotonicity of
    −log(1−t), square root, and the weighted costs transfers that outcome
-   back to the original data. Symmetry is not needed for `opt`, so no
+   back to the original data. Symmetry is not needed for Lemma 3.7, so no
    symmetry condition is required by these reduction lemmas.
 4. **Make compactness concrete:** for fixed k, form the compact product
    box of weights in [0,1] and probabilities in [0,1−ζ]. The bound
@@ -392,7 +394,7 @@ through the earlier stronger helper and `fopt`.
    D = ∑ᵢ max(1−pᵢ−qᴮᵢᵢ−qᴳᵢᵢ,0)
    + ∑ᵢ≠ⱼ max(1−qᴮᵢⱼ−qᴳᵢⱼ,0).
    This is continuous and nonnegative. It is strictly positive on `Bad`:
-   otherwise all mass sums are at least one, and the reduction to `opt`
+   otherwise all mass sums are at least one, and the reduction to Lemma 3.7
    contradicts the gap ζ in (c)–(e). If `Bad` is nonempty, its minimum
    m is positive. Choose δ = m/(k+k²+1). Conditions (a)–(b) would give
    D ≤ (k+k²)δ < m, a contradiction. If `Bad` is empty, choose δ = 1.
@@ -448,7 +450,7 @@ certificate values are unchanged. Expression evaluation and the convex minimum
 argument use explicit definitional conversions in `FOpt/Envelope.lean`.
 The dependency audit explicitly requests theorem bodies with
 `ConstantInfo.value? (allowOpaque := true)`, as required by Lean 4.33's API;
-it still checks the actual proof-expression path from `optapprox` to `opt`.
+it still checks the actual proof-expression path from Corollary 3.8 to Lemma 3.7.
 
 The first migration started from `main` and preserved the unfinished
 Theorem 1.5 development separately on `codex/thomasonupper`. That branch
@@ -458,12 +460,12 @@ been completed as described below.
 
 Validation on the migration: the full Lean 4.33 build passed (8737 jobs),
 the source guard passed for all 32 Lean source files, and the dependency audit
-confirmed the path from `optapprox` to public `opt`. The root axiom reports for
+confirmed the path from Corollary 3.8 to Lemma 3.7. The root axiom reports for
 all completed endpoints contain only `propext`, `Classical.choice`, and
 `Quot.sound`. The five public endpoint declarations were compared against the
 previous version and are unchanged.
 
-## Theorem 1.5 (`thomasonupper`): complete
+## Theorem 1.5: complete
 
 **Theorem 1.5 is proved in Lean.** The public endpoint is
 `HadwigerRamsey.thomasonupper` in `HadwigerRamsey/ThomasonUpper.lean`;
@@ -506,7 +508,7 @@ Checked components:
 | Connectivity implies the required degree-sum bound | `connectivity_mul_order_le_twice_edges` |
 | Uniform lower bound epsilon(1-epsilon) on Lambda-star | `cappedLambda_lower`, `DensityLower.lean` |
 | Positive class masses make diagonal densities well-defined | `class_size_two` |
-| Greedy domination with the manuscript's exact logarithmic budget | `exists_dominating_set`, `Domination.lean` |
+| Lemma A.6: greedy domination with the manuscript's exact logarithmic budget | `exists_dominating_set`, `Domination.lean` |
 | Disjoint finite allocations from a reservoir | `disjoint_reservoir_selection`, `Selection.lean` |
 | Allocation of all dominating sets M-a with epsilon/8 and epsilon R/4 constants | `reservoir_dominating_sets`, `ReservoirDomination.lean` |
 | Discarding defective ordered pairs costs at most their number | `discard_defective_pairs`, `Deletion.lean` |
@@ -591,7 +593,7 @@ Logical correspondence and every change from the manuscript argument:
 1. No hypothesis or conclusion of Theorem 1.5 has been changed. The
    endpoint proves the original target proposition. Changes to intermediate
    statements and arguments are recorded individually below.
-2. The standalone domination lemma explicitly assumes both finite sides
+2. The standalone Lemma A.6 explicitly assumes both finite sides
    are nonempty. Those qualifications make the manuscript's logarithm
    and greedy choices meaningful. In the actual reservoir allocation,
    nonemptiness of the unused reservoir is proved from the positive
@@ -900,7 +902,7 @@ passed for all 43 Lean files, and the root dependency reports use only
 `propext`, `Classical.choice`, and `Quot.sound`.
 
 
-## Theorem 1.2 (`existencethm`)
+## Theorem 1.2
 
 The public endpoint `HadwigerRamsey.existencethm` is exported by
 `HadwigerRamsey/Existence.lean` and proved in `Existence/Final.lean`.
@@ -913,7 +915,7 @@ every pair of distinct vertices. The constant beta is the same previously
 formalized constant `sqrt(-log(10-4*sqrt(6)))/2`.
 The source is the updated local October 31 manuscript; it stays ignored.
 
-The proof uses `HadwigerRamsey.thomasonlower` explicitly. It reuses the
+The proof uses Theorem 1.4 explicitly. It reuses the
 existing three-label finite probability measure from `RandomLabels.lean`,
 Mathlib's finite product measure and coordinate independence, graph
 homomorphism transport of connectedness, finite union bounds, and the
@@ -988,7 +990,7 @@ or proof placeholders. All earlier theorem endpoints remain in the root
 build.
 
 
-## Lemma 3.3 (`bipMinor`)
+## Lemma 3.3
 
 The public endpoint is `HadwigerRamsey.bipMinor` in
 `HadwigerRamsey/BipMinor.lean`. For every K > 0 it supplies gamma > 0
@@ -1001,7 +1003,7 @@ bipartite edges and disjointness; `A union B = univ` explicitly states
 that (A,B) covers the vertex set, as required by the word bipartition.
 The updated October 31 source was reread and remains ignored by Git.
 
-The proof explicitly uses `HadwigerRamsey.thomasonupper`. Mathlib reuse
+The proof explicitly uses Theorem 1.5. Mathlib reuse
 includes the handshaking lemma, finite cardinality and intersection bounds,
 finite graph degrees and neighbour sets, walks/reachability, and logarithm
 and square-root inequalities. Earlier project results reused include
@@ -1076,7 +1078,7 @@ report for `HadwigerRamsey.bipMinor` lists only `propext`, `Classical.choice`,
 and `Quot.sound`. All earlier formalized results remain in the root build.
 
 
-## Lemma 3.4 (`denseMinor`)
+## Lemma 3.4
 
 The endpoint is `HadwigerRamsey.denseMinor` in
 `HadwigerRamsey/DenseMinor.lean`. For every K > 0 it supplies gamma > 0
@@ -1085,7 +1087,7 @@ H on Fin n with at least `(1-gamma)*choose(n,2)` edges, it proves
 `K*n/sqrt(log n) <= hadwigerNumber H`. This is the updated manuscript's
 statement, unchanged. The TeX source was reread and remains ignored.
 
-The proof explicitly calls `HadwigerRamsey.bipMinor` with coefficient 3*K.
+The proof explicitly calls Lemma 3.3 with coefficient 3*K.
 Mathlib reuse includes finite relation-interedge counts and their complement
 identity, the handshaking/ordered-incidence identity, injective finite-set
 counting, logarithm monotonicity, and square-root inequalities. Earlier
@@ -1133,7 +1135,7 @@ report for `HadwigerRamsey.denseMinor` lists only `propext`,
 root build.
 
 
-## Lemma 3.2 (`connectedsets`), revised controlled partitions
+## Lemma 3.2, revised controlled partitions
 
 The endpoint is `HadwigerRamsey.connectedsets` in
 `HadwigerRamsey/ConnectedSets.lean`. For every epsilon > 0 and eta > 0,
@@ -1232,12 +1234,12 @@ Logical correspondence and differences from the written proof:
 Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
 (8835 jobs). The source guard checks all 131 Lean files. All 74 root
 foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
-including `connectedsets` and its preliminary, extremal, pruning, and
+including Lemma 3.2 and its preliminary, extremal, pruning, and
 connectivity-interpretation theorems. All earlier endpoints remain in the
 root build.
 
 
-## Lemma 3.5 (`twobigsets`)
+## Lemma 3.5
 
 The endpoint is `HadwigerRamsey.twobigsets` in
 `HadwigerRamsey/TwoBigSets.lean`, following the revised local October 31
@@ -1254,10 +1256,10 @@ same `RealConnected` predicate as Lemma 3.2, already proved equivalent to
 the earlier integer vertex-connectivity definition. There are no additional
 assumptions on epsilon or C in the public statement.
 
-The actual proof of `twobigsets` calls the public theorem `connectedsets`
+The actual proof of Lemma 3.5 calls Lemma 3.2
 to obtain delta and both controlled partitions; its dependency is not
-merely an import. The proof also calls `bipMinor` to obtain its parameters.
-`TwoBigSets.large_separated_sets` calls the public theorem `bigset`.
+merely an import. The proof also calls Lemma 3.3 to obtain its parameters.
+`TwoBigSets.large_separated_sets` calls Lemma 3.1.
 `TwoBigSets/DependencyAudit.lean` inspects the stored proof terms and makes
 the build fail if any of these required dependency edges is absent.
 
@@ -1277,7 +1279,7 @@ The modules divide the manuscript argument as follows:
   explicit invocation of Lemma 3.2.
 
 Existing project code reused includes the controlled-partition definitions
-and cardinality bound, `bigset`, the inclusive-cutoff `bipMinor`, the
+and cardinality bound, Lemma 3.1, Lemma 3.3 with its inclusive cutoff, the
 balanced cut graph and its exact edge count, and injective transport of
 clique minors. Mathlib supplies finite partitions with empty parts erased,
 finite-set restriction/cardinality and subset selection, interedge counts,
@@ -1336,12 +1338,12 @@ The local manuscript has not been edited or uploaded.
 Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
 (8841 jobs). The source guard checks all 137 Lean files. All 80 root
 foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
-including `twobigsets` and its supporting theorems. The proof-term
-dependency audit confirms the required uses of `connectedsets`, `bigset`,
-and `bipMinor`. All earlier endpoints remain in the root build.
+including Lemma 3.5 and its supporting theorems. The proof-term
+dependency audit confirms the required uses of Lemmas 3.2, 3.1,
+and 3.3. All earlier endpoints remain in the root build.
 
 
-## Theorem 1.3 (`mainthm`), revised November 4 argument
+## Theorem 1.3, revised November 4 argument
 
 The public endpoint is `HadwigerRamsey.mainthm` in
 `HadwigerRamsey/Main.lean`. Its statement is the manuscript's exact
@@ -1350,8 +1352,8 @@ three-colour decomposition of K_n has some colour with Hadwiger number at
 least `(1-epsilon)*beta*n/sqrt(log n)`. The local October 31 TeX file was
 reread after its substantial November 4 revisions, and remains ignored.
 
-`Main.mainthm_small` invokes the actual public theorems `twobigsets`,
-`connectedsets`, `bipMinor`, `denseMinor`, `thomasonupper`, and `optapprox`.
+`Main.mainthm_small` invokes Lemmas 3.5, 3.2, 3.3, and 3.4,
+Theorem 1.5, and Corollary 3.8.
 Their conclusions supply the parameters and partitions used by the
 construction. No manuscript claim referenced in this proof is supplied
 as an additional unproved premise. `Main/DependencyAudit.lean` inspects
@@ -1380,7 +1382,7 @@ The code separates these steps into the following modules:
 - `Analytic.lean`, `Numerics.lean`, `Parameters.lean`: logarithmic bounds,
   fixed numerical margins, and positive choices of all auxiliary errors.
 - `OptimizationData.lean`, `Configuration.lean`: fill the last row and
-  column by one-half, fill its p coordinate by zero, and use `optapprox`.
+  column by one-half, fill its p coordinate by zero, and use Corollary 3.8.
 - `LocalCosts.lean`, `Contradiction.lean`, `Final.lean`: assemble the
   classwise, global, and uniform-order bounds into the target theorem.
 
@@ -1397,7 +1399,7 @@ Logical correspondence and all variations from the written argument:
    its degenerate-remainder property; the exceptional class is always last.
    The threshold 20*lambda*n, exceptional-size bound 21*lambda*n, and
    part-count bound 2/lambda are unchanged. An empty exceptional class is
-   retained, giving it zero mass, which `optapprox` permits.
+   retained, giving it zero mass, which Corollary 3.8 permits.
 3. Choose
    `lambda = min(1/1000, min(epsilon*beta/1000, epsilon*beta^2/10000))`.
    This smaller explicit choice supplies the manuscript's required smallness
@@ -1414,7 +1416,7 @@ Logical correspondence and all variations from the written argument:
    side, where weight is its degree into the other side. A subset of any
    required smaller cardinality retains at least the original average.
    Trim to the smaller side's size; the cross-edge density does not decrease.
-   The actual public `bipMinor` bound is applied to this balanced graph and
+   The actual public Lemma 3.3 bound is applied to this balanced graph and
    transferred back by the earlier injective minor-transport result.
 5. The diagonal restriction estimate reuses the existing A.2 bound
    `8*epsilon-zero/lambda` instead of reproving the manuscript's sharper
@@ -1445,7 +1447,7 @@ Logical correspondence and all variations from the written argument:
    a sign assumption on an intermediate entropy-minus-theta expression.
    It is an algebraic reorganization of the manuscript's lower-bound
    argument. The active-energy bounds use <= where the manuscript proves
-   <; the closed inequalities in `optapprox` require only <=.
+   <; the closed inequalities in Corollary 3.8 require only <=.
 9. In the sparse-colour case, concavity of logarithm proves the same chord
    inequality `-log(1-q) <= (-log zeta)/(1-zeta)*q`; no separate derivative
    proof of the monotonicity of the ratio is needed. Mathlib's elementary
@@ -1456,9 +1458,10 @@ Logical correspondence and all variations from the written argument:
     `(2*alpha-last-alpha-last^2)*log 2`. Lean proves this identity and uses
     the same bound by `42*lambda*log 2`. The active energy and this error
     give the closed bounds `sqrt(full energy) <= beta-zeta` required by
-    `optapprox`, with all final probability caps and symmetries checked.
-11. Let NB,ND,NT be the cutoffs supplied by `bipMinor`, `denseMinor`, and
-    `thomasonupper`, and put M=max(max(ND,NB),NT). The final size cutoff
+    Corollary 3.8, with all final probability caps and symmetries checked.
+11. Let NB,ND,NT be the cutoffs supplied by Lemmas 3.3 and 3.4 and
+    Theorem 1.5, respectively, and put M=max(max(ND,NB),NT). The final
+    size cutoff
     is the maximum of the Lemma 3.5 cutoff, 2*NT, 4,
     `ceil(2*(M+2)/lambda)`, `ceil(10/lambda)`, and `ceil(1/epsilon-zero)`.
     These make every smaller graph large enough for the invoked result,
@@ -1474,11 +1477,11 @@ unchanged.
 Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
 (8862 jobs). The source guard checks all 158 Lean files. All 89 root
 foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
-including the public `mainthm` and all reported supporting theorems. The
+including Theorem 1.3 and all reported supporting theorems. The
 proof-term audit confirms direct use of all six earlier manuscript results
 listed above. All earlier endpoints remain included in the root build.
 
-## Theorem 1.1 (`t:main`): three-colour Hadwiger--Ramsey asymptotics
+## Theorem 1.1: three-colour Hadwiger--Ramsey asymptotics
 
 The public endpoint `HadwigerRamsey.theorem1_1` states
 
@@ -1537,7 +1540,7 @@ Files:
 
 - `Ramsey/Definition.lean`: forcing, finiteness, monotonicity and leastness.
 - `Ramsey/Scaling.lean`: rounded orders and logarithmic asymptotics.
-- `Ramsey/Bounds.lean`: explicit applications of `existencethm` and `mainthm`.
+- `Ramsey/Bounds.lean`: explicit applications of Theorems 1.2 and 1.3.
 - `Ramsey.lean`: public Theorem 1.1.
 - `Ramsey/DependencyAudit.lean`: checks stored proof terms for the two
   earlier theorem applications and their use in the final limit.
