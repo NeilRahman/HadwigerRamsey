@@ -57,6 +57,11 @@ bound (Theorem 3) and construction upper bound (Theorem 4), together with
 the graphon realization and entropy lifting lemmas. Both developments are
 included in the default local and GitHub Actions build.
 
+The [four-colour optimization development](HadwigerRamsey4Col/README.md)
+builds on this program. It currently verifies the component-pattern
+classification and large-atom exclusion (Lemmas 2 and 3 of the local
+analytic manuscript).
+
 ## Supporting results and scope
 
 Theorem 1.2 is proved as `HadwigerRamsey.existencethm`,
