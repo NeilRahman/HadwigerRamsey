@@ -1,6 +1,6 @@
 # Four-colour component optimization
 
-This development formalizes **Lemmas 2–4 and Proposition 5** of the local manuscript
+This development formalizes **Lemmas 2–4, Proposition 5, and Lemma 6** of the local manuscript
 `four_colour_analytic.tex`. It builds on the general component program in
 `ComponentTransfer`. The manuscript is excluded from version control.
 
@@ -88,6 +88,21 @@ square-root objective.
   `lemma5_pairing_lower_bound` is its concluding assertion for feasible
   pairing patterns. `dualValue_eq_unordered` verifies that the code's
   ordered off-diagonal sum equals the manuscript's `2 * sum (i < j)`.
+- `CapacityNumerics.lean`: exact rational enclosures of the exponential at
+  `251/200` and `41/40`, and the logarithmic estimate at the second anchor.
+  These use Mathlib's checked exponential Taylor bounds and logarithm series.
+- `CapacityCalculus.lean`: a reusable anchor argument for square-root
+  normalization. The normalized function increases before the anchor;
+  after the anchor, its derivative bound controls the barrier `C * sqrt z`.
+  This avoids constructing a global maximizing critical point.
+- `CapacityFirst.lean`: `1 - exp(-z) <= (16/25) * sqrt z` for `z > 0`.
+  Convexity of the exponential supplies the head estimate at `251/200`.
+- `CapacityLog.lean` and `CapacitySecond.lean`: the derivative identities,
+  concavity of the logarithmic derivative test on `[0,41/40]`, and
+  `3 * log((3-exp(-z))/2) <= (413/500) * sqrt z` for `z > 0`.
+- `Capacity.lean` and `Lemma6.lean`: `capacityF` and `capacityG` with the
+  manuscript's zero-mass convention, the exact substitution `z = t/s^2`,
+  and `lemma6`, proving both capacity bounds for every `t > 0` and `s >= 0`.
 
 ## Reused public code and verification
 
@@ -103,6 +118,10 @@ reuses `convexOn_of_hasDerivWithinAt2_nonneg` and
 [`Convex.Deriv`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/Convex/Deriv.lean).
 The moment estimates reuse `Finset.sum_mul_sq_le_sq_mul_sq` from Mathlib's
 [`BigOperators.Ring.Finset`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Algebra/Order/BigOperators/Ring/Finset.lean).
+The capacity estimates reuse Mathlib's `Real.sum_le_exp_of_nonneg`,
+`Real.exp_bound'`, convexity of `exp`, and derivative monotonicity and
+concavity theorems. All transcendental numerical bounds are proved from
+these results with exact rational arithmetic.
 
 Run `lake build` and `python3 scripts/check_proofs.py` at the repository root.
 The default build includes this development; its root module prints the
