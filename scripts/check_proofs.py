@@ -2,7 +2,9 @@
 from pathlib import Path
 import re
 
-files = [Path('HadwigerRamsey.lean'), *Path('HadwigerRamsey').rglob('*.lean'), *Path('vendor').rglob('*.lean')]
+files = [Path('HadwigerRamsey.lean'), Path('HadwigerRamsey4Col.lean'),
+         *Path('HadwigerRamsey').rglob('*.lean'),
+         *Path('HadwigerRamsey4Col').rglob('*.lean'), *Path('vendor').rglob('*.lean')]
 failures = []
 for path in files:
     # These words are intentionally prohibited even in comments, to make this

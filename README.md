@@ -40,6 +40,23 @@ meaning of the displayed asymptotic formula. The proof in
 checked Theorems 1.2 and 1.3, with integer rounding and the change from
 $\ln n$ to $\ln k$ made explicit.
 
+## General number of colours
+
+The companion development in [HadwigerRamsey4Col](HadwigerRamsey4Col/README.md)
+proves the component transfer theorem and the general asymptotic for every
+fixed `r ≥ 2`:
+
+$$
+R_h(k;r)=\bigl(\beta_r^{-1}+o(1)\bigr)k\sqrt{\ln k}.
+$$
+
+Here `beta r` is the infimum of the finite component optimization program
+in that development. The unconditional endpoint is
+`HadwigerRamsey4Col.theorem5`; its proof supplies both the transfer lower
+bound (Theorem 3) and construction upper bound (Theorem 4), together with
+the graphon realization and entropy lifting lemmas. Both developments are
+included in the default local and GitHub Actions build.
+
 ## Supporting results and scope
 
 Theorem 1.2 is proved as `HadwigerRamsey.existencethm`,

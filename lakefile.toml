@@ -1,9 +1,16 @@
 name = "HadwigerRamsey"
 version = "0.1.0"
-defaultTargets = ["HadwigerRamsey"]
+defaultTargets = ["HadwigerRamsey", "HadwigerRamsey4Col"]
 
 [[lean_lib]]
 name = "HadwigerRamsey"
+
+[[lean_lib]]
+name = "HadwigerRamsey4Col"
+
+[[lean_lib]]
+name = "Graphon"
+srcDir = "vendor/graphon"
 
 [[require]]
 name = "mathlib"
