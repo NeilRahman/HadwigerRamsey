@@ -59,8 +59,8 @@ included in the default local and GitHub Actions build.
 
 The [four-colour optimization development](HadwigerRamsey4Col/README.md)
 builds on this program. It currently verifies the component-pattern
-classification and large-atom exclusion (Lemmas 2 and 3 of the local
-analytic manuscript).
+classification, large-atom exclusion, and entropy estimates (Lemmas 2–4
+of the local analytic manuscript).
 
 ## Supporting results and scope
 

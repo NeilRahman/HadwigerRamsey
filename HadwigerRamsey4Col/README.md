@@ -1,6 +1,6 @@
 # Four-colour component optimization
 
-This development formalizes **Lemmas 2 and 3** of the local manuscript
+This development formalizes **Lemmas 2–4** of the local manuscript
 `four_colour_analytic.tex`. It builds on the general component program in
 `ComponentTransfer`. The manuscript is excluded from version control.
 
@@ -52,6 +52,20 @@ square-root objective.
   analytic estimates as hypotheses. The stronger
   `PairingData.large_atom_of_threshold` proves the conclusion even if all
   seven energies are merely bounded by `2213/10000`.
+- `Entropy.lean`: defines `entropy = H`, its derivative `entropySlope`,
+  `weight = (1-parameter)/parameter`, and the manuscript's coefficients.
+  It proves the derivative identities and `1/3 < weight < 11/32`.
+- `Coefficients.lean`: the strict inequalities `alphaCoefficient > 5/4`
+  and `gammaCoefficient > -1`, using rational logarithm estimates directly.
+- `EntropyQuadratic.lean`: the bound
+  `entropy (w+d) >= entropy w + entropySlope w*d - 2*d^2` whenever
+  `w >= 1/3` and `abs d <= 3/20`. A polynomial correction makes the entropy
+  remainder convex on this interval, so Mathlib's stationary-point minimum
+  theorem supplies the bound. This replaces the manuscript's integral
+  Taylor-remainder calculation and proves the estimate uniformly for all
+  `w >= 1/3`.
+- `Lemma4.lean`: `lemma4` combines every inequality of Lemma 4, with the
+  manuscript's uniquely defined algebraic parameter and no extra hypotheses.
 
 ## Reused public code and verification
 
@@ -61,7 +75,10 @@ The numerical logarithm estimates use the already-proved partial-sum bounds
 `Real.sum_range_le_log_div` and `Real.log_div_le_sum_range_add` in
 [`Log.Deriv`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/SpecialFunctions/Log/Deriv.lean).
 The tangent estimates use `Real.log_le_sub_one_of_pos`. No separate graphon
-or minor theory is needed for these two lemmas.
+or minor theory is needed for these lemmas. The quadratic entropy bound
+reuses `convexOn_of_hasDerivWithinAt2_nonneg` and
+`ConvexOn.isMinOn_of_rightDeriv_eq_zero` from Mathlib's
+[`Convex.Deriv`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/Convex/Deriv.lean).
 
 Run `lake build` and `python3 scripts/check_proofs.py` at the repository root.
 The default build includes this development; its root module prints the
