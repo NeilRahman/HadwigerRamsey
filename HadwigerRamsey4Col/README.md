@@ -1,6 +1,6 @@
 # Four-colour component optimization
 
-This development formalizes **Lemmas 2–4** of the local manuscript
+This development formalizes **Lemmas 2–4 and Proposition 5** of the local manuscript
 `four_colour_analytic.tex`. It builds on the general component program in
 `ComponentTransfer`. The manuscript is excluded from version control.
 
@@ -66,6 +66,28 @@ square-root objective.
   `w >= 1/3`.
 - `Lemma4.lean`: `lemma4` combines every inequality of Lemma 4, with the
   manuscript's uniquely defined algebraic parameter and no extra hypotheses.
+- `StabilityData.lean`: the weights `pairWeight = w_ij`, row sums
+  `rowWeight = S_i`, logarithmic terms `diagonalDual = D_i`, and
+  `dualValue = N(a)`. It proves the exact row and variance identities.
+- `StabilityMoments.lean`: bounds on the second through fourth moments,
+  including `sum a_i^2 <= 9/25`, and the final stability polynomial bound.
+  The square-sum cap uses a finite pair-merging argument and algebraic
+  inequalities; Cauchy–Schwarz supplies the centered fourth-moment bound.
+- `StabilityIdentities.lean`: the exact moment expansions and the baseline
+  identity `uniformValue = (1+6*weight)*tStar parameter`.
+- `StabilityEntropy.lean`: diagonal logarithm and off-diagonal entropy
+  estimates, combined into `four_atom_stability` with the manuscript's
+  exact coefficient `3/100`.
+- `WeightedCosts.lean` and `PairingDual.lean`: the general weighted
+  two-colour inequality, diagonal tangents at possibly negative formal
+  densities, and the weighted dual bound relating `N(a)` to actual feasible
+  component energies. The theorem `PairingData.optimum_lower_bound` proves
+  that any common upper bound on the seven component energies is at least
+  `tStar parameter`, without an atom-size assumption.
+- `Lemma5.lean`: `lemma5` is the stability assertion of Proposition 5;
+  `lemma5_pairing_lower_bound` is its concluding assertion for feasible
+  pairing patterns. `dualValue_eq_unordered` verifies that the code's
+  ordered off-diagonal sum equals the manuscript's `2 * sum (i < j)`.
 
 ## Reused public code and verification
 
@@ -79,6 +101,8 @@ or minor theory is needed for these lemmas. The quadratic entropy bound
 reuses `convexOn_of_hasDerivWithinAt2_nonneg` and
 `ConvexOn.isMinOn_of_rightDeriv_eq_zero` from Mathlib's
 [`Convex.Deriv`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/Convex/Deriv.lean).
+The moment estimates reuse `Finset.sum_mul_sq_le_sq_mul_sq` from Mathlib's
+[`BigOperators.Ring.Finset`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Algebra/Order/BigOperators/Ring/Finset.lean).
 
 Run `lake build` and `python3 scripts/check_proofs.py` at the repository root.
 The default build includes this development; its root module prints the
