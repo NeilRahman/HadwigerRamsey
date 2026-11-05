@@ -1,8 +1,31 @@
 # Four-colour component optimization
 
-This development formalizes **Lemmas 2–4, Proposition 5, and Lemma 6** of the local manuscript
+This development formalizes **Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6** of the local manuscript
 `four_colour_analytic.tex`. It builds on the general component program in
 `ComponentTransfer`. The manuscript is excluded from version control.
+
+## Exact optimum and attainment
+
+`Theorem1.lean` proves the full finite-program optimum. For every `p` with
+`0 < p < 1` and `3*p^6 + 2*p - 2 = 0`, its public theorem is:
+
+```lean
+theorem theorem1 {p : ℝ} (hp : 0<p ∧ p<1 ∧ 3*p^6+2*p-2=0) :
+    beta4^2=-(3/4 : ℝ)*Real.log p ∧ attainingInstance.objective=beta4
+```
+
+`AttainingConstruction.lean` specifies `attainingInstance` explicitly:
+four masses `1/4`; partitions `{01,23}`, `{02,13}`, `{03,12}`, and
+`{0123}`; diagonal densities `(1/3,1/3,1/3,0)`; and off-diagonal densities
+`parameter` in the unique pairing colour and `1-parameter` in the spanning
+colour. Its feasibility and all component entropies are checked directly.
+The unique root is named `parameter`; `beta4_eq` also gives the square-root
+form of the optimum.
+
+The lower bound applies to every original `ComponentInstance 4` via
+`instance_lower_bound`, with no assumption on its number of atoms or
+component pattern. `FiniteProgram.lower_bound` is the corresponding result
+for arbitrary finite atom and label types.
 
 ## Program and coordinates
 
@@ -104,8 +127,38 @@ square-root objective.
   manuscript's zero-mass convention, the exact substitution `z = t/s^2`,
   and `lemma6`, proving both capacity bounds for every `t > 0` and `s >= 0`.
 
+## Completing the classification argument
+
+- `FiniteProgram.lean` expresses the same program with arbitrary finite
+  atom and label types and a common entropy bound.
+- `BlockAverages.lean`, `Merging.lean`, and `MergingEntropy.lean` merge equal
+  full component-label words. Mathlib's finite Jensen inequality for the
+  concave logarithm proves that no component entropy increases; the merged
+  words are distinct.
+- `ComponentCapacity.lean` derives component density capacities by the same
+  logarithmic Jensen bound, and proves monotonicity in component mass.
+- `ThresholdBounds.lean` proves the strict numerical estimates at
+  `2213/10000` with rational exponential and logarithm bounds.
+  `FixedPattern.lean` excludes the two-fixed-coordinate case.
+- `BallGeometry.lean`, `BallEntropyBasic.lean`, `BallAggregation.lean`,
+  `BallNumerics.lean`, and `BallExclusion.lean` exclude a radius-one ball.
+  The class masses include the possible centre and the four arms. The
+  entropy estimate forces an arm of mass greater than `33/50`; its main
+  component then has mass below `17/50`, contradicting the density capacity
+  bounds. Individual singleton components are kept separate throughout.
+- `ReindexProgram.lean`, `PairingReduction.lean`, and `TriangleReduction.lean`
+  connect the surviving pattern to `PairingData`. A missing triangle word
+  puts the other three words in a radius-one ball, so all four words must
+  occur below the threshold. This avoids extending the densities to absent
+  atoms. The finite relabelling preserves all constraints and entropies.
+- `Theorem1.lean` applies the classification, proves the lower bound for the
+  original program, and combines it with the attaining construction.
+
 ## Reused public code and verification
 
+The merging and component-capacity steps reuse `ConcaveOn.le_map_sum`
+from Mathlib's `Analysis.Convex.Jensen`, applied to `Real.strictConcaveOn_log_Ioi`.
+Finite sums are regrouped using `Finset.sum_fiberwise`.
 The Hamming metric comes from Mathlib's
 [`InformationTheory.Hamming`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/InformationTheory/Hamming.lean).
 The numerical logarithm estimates use the already-proved partial-sum bounds

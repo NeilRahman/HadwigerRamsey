@@ -58,9 +58,12 @@ the graphon realization and entropy lifting lemmas. Both developments are
 included in the default local and GitHub Actions build.
 
 The [four-colour optimization development](HadwigerRamsey4Col/README.md)
-builds on this program. It currently verifies the component-pattern
-classification, large-atom exclusion, entropy estimates, four-atom
-stability, and capacity bounds (numbered results 2–6 of the local analytic manuscript).
+builds on this program and proves its exact optimum at four colours:
+`beta4^2 = -(3/4) * log p`, where `p` is the unique root in `(0,1)` of
+`3*p^6 + 2*p - 2 = 0`. Theorem 1 also proves attainment by four equal
+masses with three pairing partitions and one spanning partition. The
+classification, stability, and capacity results (numbered results 2–6)
+are included in the proof.
 
 ## Supporting results and scope
 

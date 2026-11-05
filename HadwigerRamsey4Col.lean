@@ -3,8 +3,9 @@ import HadwigerRamsey4Col.LargeAtom
 import HadwigerRamsey4Col.Lemma4
 import HadwigerRamsey4Col.Lemma5
 import HadwigerRamsey4Col.Lemma6
+import HadwigerRamsey4Col.Theorem1
 
-/-! Four-colour component optimization: numbered results 2–6 of the local
+/-! Four-colour component optimization: Theorem 1 and numbered results 2–6 of the local
 analytic manuscript. The program itself reuses `ComponentTransfer`. -/
 
 #print axioms HadwigerRamsey4Col.lemma2
@@ -24,3 +25,11 @@ analytic manuscript. The program itself reuses `ComponentTransfer`. -/
 #print axioms HadwigerRamsey4Col.first_normalized_capacity
 #print axioms HadwigerRamsey4Col.second_normalized_capacity
 #print axioms HadwigerRamsey4Col.lemma6
+
+#print axioms HadwigerRamsey4Col.FiniteProgram.merge
+#print axioms HadwigerRamsey4Col.FiniteProgram.no_ball
+#print axioms HadwigerRamsey4Col.FiniteProgram.lower_bound
+#print axioms HadwigerRamsey4Col.attaining_objective
+#print axioms HadwigerRamsey4Col.instance_lower_bound
+#print axioms HadwigerRamsey4Col.beta4_eq
+#print axioms HadwigerRamsey4Col.theorem1
