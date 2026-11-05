@@ -42,7 +42,7 @@ $\ln n$ to $\ln k$ made explicit.
 
 ## General number of colours
 
-The companion development in [HadwigerRamsey4Col](HadwigerRamsey4Col/README.md)
+The companion development in [ComponentTransfer](ComponentTransfer/README.md)
 proves the component transfer theorem and the general asymptotic for every
 fixed `r ≥ 2`:
 
@@ -52,7 +52,7 @@ $$
 
 Here `beta r` is the infimum of the finite component optimization program
 in that development. The unconditional endpoint is
-`HadwigerRamsey4Col.theorem5`; its proof supplies both the transfer lower
+`ComponentTransfer.theorem5`; its proof supplies both the transfer lower
 bound (Theorem 3) and construction upper bound (Theorem 4), together with
 the graphon realization and entropy lifting lemmas. Both developments are
 included in the default local and GitHub Actions build.

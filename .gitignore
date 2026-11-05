@@ -17,4 +17,5 @@
 # These manuscripts stay local; other TeX files may be tracked explicitly.
 /hadramoct30.tex
 /hadramoct31.tex
-/HadwigerRamsey4Col/comptransfer.tex
+/ComponentTransfer/comptransfer.tex
+/ComponentTransfer/comptransfer_lemma7_second_moment.tex

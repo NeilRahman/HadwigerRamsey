@@ -1,12 +1,12 @@
 name = "HadwigerRamsey"
 version = "0.1.0"
-defaultTargets = ["HadwigerRamsey", "HadwigerRamsey4Col"]
+defaultTargets = ["HadwigerRamsey", "ComponentTransfer"]
 
 [[lean_lib]]
 name = "HadwigerRamsey"
 
 [[lean_lib]]
-name = "HadwigerRamsey4Col"
+name = "ComponentTransfer"
 
 [[lean_lib]]
 name = "Graphon"
