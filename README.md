@@ -57,13 +57,18 @@ bound (Theorem 3) and construction upper bound (Theorem 4), together with
 the graphon realization and entropy lifting lemmas. Both developments are
 included in the default local and GitHub Actions build.
 
-The [four-colour optimization development](HadwigerRamsey4Col/README.md)
-builds on this program and proves its exact optimum at four colours:
-`beta4^2 = -(3/4) * log p`, where `p` is the unique root in `(0,1)` of
-`3*p^6 + 2*p - 2 = 0`. Theorem 1 also proves attainment by four equal
-masses with three pairing partitions and one spanning partition. The
-classification, stability, and capacity results (numbered results 2–6)
-are included in the proof.
+The [four-colour development](HadwigerRamsey4Col/README.md) proves
+
+$$
+R_h(k;4)=\bigl(\beta_4^{-1}+o(1)\bigr)k\sqrt{\ln k},
+\qquad
+\beta_4=\sqrt{-\frac34\ln p},
+$$
+
+where $p\in(0,1)$ is the unique root of $3p^6+2p-2=0$. Its main theorem is
+`HadwigerRamsey4Col.theorem1_1`. The proof combines the general component
+transfer theorem with the exact four-colour component optimum, attained
+by four equal masses with three pairing partitions and one spanning partition.
 
 ## Supporting results and scope
 

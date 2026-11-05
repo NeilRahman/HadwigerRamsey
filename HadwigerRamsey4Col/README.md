@@ -1,181 +1,110 @@
-# Four-colour component optimization
+# Four-colour Hadwiger–Ramsey asymptotic
 
-This development formalizes **Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6** of the local manuscript
-`four_colour_analytic.tex`. It builds on the general component program in
-`ComponentTransfer`. The manuscript is excluded from version control.
+This development proves the four-colour analogue of Theorem 1.1 of the
+Hadwiger–Ramsey manuscript, with an explicit leading constant.
 
-## Exact optimum and attainment
+## Main result
 
-`Theorem1.lean` proves the full finite-program optimum. For every `p` with
-`0 < p < 1` and `3*p^6 + 2*p - 2 = 0`, its public theorem is:
+As the integer $k$ tends to infinity,
+
+$$
+R_h(k;4)=\bigl(\beta_4^{-1}+o(1)\bigr)k\sqrt{\ln k},
+\qquad
+\beta_4=\sqrt{-\frac34\ln p},
+$$
+
+where $p\in(0,1)$ is the unique solution of
+
+$$
+3p^6+2p-2=0.
+$$
+
+Here $R_h(k;4)$ is the least integer $n$ such that every edge colouring of
+$K_n$ with four colours has a monochromatic $K_k$ minor. A $K_k$ minor
+consists of $k$ nonempty, connected, pairwise disjoint vertex sets with an
+edge between every two distinct sets. All logarithms are natural.
+
+In the namespace `HadwigerRamsey4Col`, the public statement in
+[Ramsey.lean](Ramsey.lean) is:
 
 ```lean
-theorem theorem1 {p : ℝ} (hp : 0<p ∧ p<1 ∧ 3*p^6+2*p-2=0) :
-    beta4^2=-(3/4 : ℝ)*Real.log p ∧ attainingInstance.objective=beta4
+theorem theorem1_1 :
+    Filter.Tendsto
+      (fun k : ℕ => (hadwigerRamsey k : ℝ) /
+        ((k : ℝ) * Real.sqrt (Real.log (k : ℝ))))
+      Filter.atTop (nhds beta4⁻¹)
 ```
 
-`AttainingConstruction.lean` specifies `attainingInstance` explicitly:
-four masses `1/4`; partitions `{01,23}`, `{02,13}`, `{03,12}`, and
-`{0123}`; diagonal densities `(1/3,1/3,1/3,0)`; and off-diagonal densities
-`parameter` in the unique pairing colour and `1-parameter` in the spanning
-colour. Its feasibility and all component entropies are checked directly.
-The unique root is named `parameter`; `beta4_eq` also gives the square-root
-form of the optimum.
+`hadwigerRamsey k` is exactly `ComponentTransfer.hadwigerRamsey 4 k`.
+The limit says that $R_h(k;4)/(k\sqrt{\ln k})$ tends to $\beta_4^{-1}$,
+which is the meaning of the displayed asymptotic formula.
+`beta4_eq_of_root` proves the stated value of $\beta_4$ for every root
+satisfying the specification above. `theorem1_1_explicit` substitutes that
+value into the limit itself, so its leading constant is
+$\bigl(\sqrt{-(3/4)\ln p}\bigr)^{-1}$.
 
-The lower bound applies to every original `ComponentInstance 4` via
-`instance_lower_bound`, with no assumption on its number of atoms or
-component pattern. `FiniteProgram.lower_bound` is the corresponding result
-for arbitrary finite atom and label types.
+## Proof and dependencies
 
-## Program and coordinates
+The result combines two already checked theorems:
 
-`Program.lean` reuses `ComponentTransfer.ComponentInstance 4` as
-`HadwigerRamsey4Col.ComponentInstance`, and defines `beta4` to be
-`ComponentTransfer.beta 4`.
+1. [Component transfer Theorem 5](../ComponentTransfer/Asymptotic.lean),
+   `ComponentTransfer.theorem5`, proves the Ramsey asymptotic for every
+   fixed number of colours $r\ge2$, with the reciprocal of the component
+   program's optimum as its leading constant.
+2. [The four-colour optimum](Theorem1.lean), `beta4_eq` and `theorem1`,
+   evaluates that program at $r=4$:
+   $\beta_4^2=-(3/4)\ln p$. It also proves that the infimum is attained.
 
-For the three-pairing pattern, `PairingData` gives the four masses and the
-probabilities available on its blocks. It allows zero masses, as in the
-manuscript. The fourth colour has probability `span i j`. For distinct atoms
-`i,j`, their unique pairing colour has off-diagonal probability `pair i j`
-and diagonal probabilities `diag i j` and `diag j i`. The three pairings are
-`{01,23}`, `{02,13}`, and `{03,12}`. Thus the constraints say:
+`Ramsey.lean` specializes the first theorem to four colours and substitutes
+the exact constant from the second. Both ingredients are unconditional
+Lean proofs, and both are included in the default repository build.
 
-- off the diagonal, `span i j + pair i j = 1`;
-- on atom `i`, `span i i + sum (diag i j, j != i) = 1`.
+## Supporting component optimization
 
-All probabilities that enter an energy lie in `[0,1)`. `spanEnergy` is the
-ordered double sum for the spanning colour. `pairEnergy i j` is the entropy
-of the paired component `{i,j}`, including both diagonal contributions and
-both off-diagonal terms. `pairEnergy_symm` proves that reversing `i,j` gives
-the same energy, so there are six paired energies and one spanning energy.
-These energies are the **squared** energies used by the general program's
-square-root objective.
+The [component optimization guide](ComponentOptimization.md) records the
+numbered lemmas, proof details, and reused Mathlib results.
 
-## Checked results
+The program uses positive atom masses summing to one, four component
+partitions, and symmetric colour densities in $[0,1)$ summing to one on
+every ordered pair. A colour's density vanishes between different parts of
+its partition. Component entropy includes diagonal terms, and the objective
+is the square root of the largest component entropy. `beta4` is defined as
+`ComponentTransfer.beta 4`, the infimum of this objective over all finite
+instances.
 
-- `Patterns.lean`: `lemma2` classifies every four-coordinate word family of
-  Hamming diameter at most two. `PatternFamily` explicitly states the three
-  alternatives: two fixed coordinates, a radius-one ball with arbitrary
-  centre, or the four-word triangle after coordinate and symbol relabelling.
-  The proof works for any nonempty alphabet with decidable equality, and
-  includes empty families. Three suitable words constrain any compatible
-  word to a ball plus one exception; the exception forces the triangle.
-- `ProgramPatterns.lean`: `component_words_close` derives Hamming diameter
-  at most two directly from program feasibility. The theorem
-  `component_pattern_classification` applies Lemma 2 to actual component
-  instances; distinctness of their label words is unnecessary.
-- `Parameters.lean`: existence and uniqueness of `p` in `(0,1)` satisfying
-  `3*p^6 + 2*p - 2 = 0`. `parameter` names this root.
-- `Analytic.lean`: logarithmic tangent bounds, the two-colour weighted-cost
-  inequality, explicit lower bounds for `log(3/2)` and `log 2`, and
-  `tStar p = -(3/4)*log p < 2213/10000` for the positive polynomial root.
-- `LargeAtom.lean`: `lemma3` proves that every atom has mass strictly below
-  `2/5` if all seven energies are at most `tStar p`. The specialization
-  `lemma3_at_optimum` uses the uniquely defined `parameter`, with no extra
-  analytic estimates as hypotheses. The stronger
-  `PairingData.large_atom_of_threshold` proves the conclusion even if all
-  seven energies are merely bounded by `2213/10000`.
-- `Entropy.lean`: defines `entropy = H`, its derivative `entropySlope`,
-  `weight = (1-parameter)/parameter`, and the manuscript's coefficients.
-  It proves the derivative identities and `1/3 < weight < 11/32`.
-- `Coefficients.lean`: the strict inequalities `alphaCoefficient > 5/4`
-  and `gammaCoefficient > -1`, using rational logarithm estimates directly.
-- `EntropyQuadratic.lean`: the bound
-  `entropy (w+d) >= entropy w + entropySlope w*d - 2*d^2` whenever
-  `w >= 1/3` and `abs d <= 3/20`. A polynomial correction makes the entropy
-  remainder convex on this interval, so Mathlib's stationary-point minimum
-  theorem supplies the bound. This replaces the manuscript's integral
-  Taylor-remainder calculation and proves the estimate uniformly for all
-  `w >= 1/3`.
-- `Lemma4.lean`: `lemma4` combines every inequality of Lemma 4, with the
-  manuscript's uniquely defined algebraic parameter and no extra hypotheses.
-- `StabilityData.lean`: the weights `pairWeight = w_ij`, row sums
-  `rowWeight = S_i`, logarithmic terms `diagonalDual = D_i`, and
-  `dualValue = N(a)`. It proves the exact row and variance identities.
-- `StabilityMoments.lean`: bounds on the second through fourth moments,
-  including `sum a_i^2 <= 9/25`, and the final stability polynomial bound.
-  The square-sum cap uses a finite pair-merging argument and algebraic
-  inequalities; Cauchy–Schwarz supplies the centered fourth-moment bound.
-- `StabilityIdentities.lean`: the exact moment expansions and the baseline
-  identity `uniformValue = (1+6*weight)*tStar parameter`.
-- `StabilityEntropy.lean`: diagonal logarithm and off-diagonal entropy
-  estimates, combined into `four_atom_stability` with the manuscript's
-  exact coefficient `3/100`.
-- `WeightedCosts.lean` and `PairingDual.lean`: the general weighted
-  two-colour inequality, diagonal tangents at possibly negative formal
-  densities, and the weighted dual bound relating `N(a)` to actual feasible
-  component energies. The theorem `PairingData.optimum_lower_bound` proves
-  that any common upper bound on the seven component energies is at least
-  `tStar parameter`, without an atom-size assumption.
-- `Lemma5.lean`: `lemma5` is the stability assertion of Proposition 5;
-  `lemma5_pairing_lower_bound` is its concluding assertion for feasible
-  pairing patterns. `dualValue_eq_unordered` verifies that the code's
-  ordered off-diagonal sum equals the manuscript's `2 * sum (i < j)`.
-- `CapacityNumerics.lean`: exact rational enclosures of the exponential at
-  `251/200` and `41/40`, and the logarithmic estimate at the second anchor.
-  These use Mathlib's checked exponential Taylor bounds and logarithm series.
-- `CapacityCalculus.lean`: a reusable anchor argument for square-root
-  normalization. The normalized function increases before the anchor;
-  after the anchor, its derivative bound controls the barrier `C * sqrt z`.
-  This avoids constructing a global maximizing critical point.
-- `CapacityFirst.lean`: `1 - exp(-z) <= (16/25) * sqrt z` for `z > 0`.
-  Convexity of the exponential supplies the head estimate at `251/200`.
-- `CapacityLog.lean` and `CapacitySecond.lean`: the derivative identities,
-  concavity of the logarithmic derivative test on `[0,41/40]`, and
-  `3 * log((3-exp(-z))/2) <= (413/500) * sqrt z` for `z > 0`.
-- `Capacity.lean` and `Lemma6.lean`: `capacityF` and `capacityG` with the
-  manuscript's zero-mass convention, the exact substitution `z = t/s^2`,
-  and `lemma6`, proving both capacity bounds for every `t > 0` and `s >= 0`.
+[AttainingConstruction.lean](AttainingConstruction.lean) checks the attaining
+instance explicitly: four masses $1/4$, partitions
 
-## Completing the classification argument
+$$
+\{12,34\},\qquad\{13,24\},\qquad\{14,23\},\qquad\{1234\},
+$$
 
-- `FiniteProgram.lean` expresses the same program with arbitrary finite
-  atom and label types and a common entropy bound.
-- `BlockAverages.lean`, `Merging.lean`, and `MergingEntropy.lean` merge equal
-  full component-label words. Mathlib's finite Jensen inequality for the
-  concave logarithm proves that no component entropy increases; the merged
-  words are distinct.
-- `ComponentCapacity.lean` derives component density capacities by the same
-  logarithmic Jensen bound, and proves monotonicity in component mass.
-- `ThresholdBounds.lean` proves the strict numerical estimates at
-  `2213/10000` with rational exponential and logarithm bounds.
-  `FixedPattern.lean` excludes the two-fixed-coordinate case.
-- `BallGeometry.lean`, `BallEntropyBasic.lean`, `BallAggregation.lean`,
-  `BallNumerics.lean`, and `BallExclusion.lean` exclude a radius-one ball.
-  The class masses include the possible centre and the four arms. The
-  entropy estimate forces an arm of mass greater than `33/50`; its main
-  component then has mass below `17/50`, contradicting the density capacity
-  bounds. Individual singleton components are kept separate throughout.
-- `ReindexProgram.lean`, `PairingReduction.lean`, and `TriangleReduction.lean`
-  connect the surviving pattern to `PairingData`. A missing triangle word
-  puts the other three words in a radius-one ball, so all four words must
-  occur below the threshold. This avoids extending the densities to absent
-  atoms. The finite relabelling preserves all constraints and entropies.
-- `Theorem1.lean` applies the classification, proves the lower bound for the
-  original program, and combines it with the attaining construction.
+diagonal densities $(1/3,1/3,1/3,0)$, and, on each distinct pair, density
+$p$ in its unique pairing colour and $1-p$ in the fourth colour.
 
-## Reused public code and verification
+The lower bound applies to every finite component instance, with no
+restriction on its number of atoms or component pattern. Its main steps are:
 
-The merging and component-capacity steps reuse `ConcaveOn.le_map_sum`
-from Mathlib's `Analysis.Convex.Jensen`, applied to `Real.strictConcaveOn_log_Ioi`.
-Finite sums are regrouped using `Finset.sum_fiberwise`.
-The Hamming metric comes from Mathlib's
-[`InformationTheory.Hamming`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/InformationTheory/Hamming.lean).
-The numerical logarithm estimates use the already-proved partial-sum bounds
-`Real.sum_range_le_log_div` and `Real.log_div_le_sum_range_add` in
-[`Log.Deriv`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/SpecialFunctions/Log/Deriv.lean).
-The tangent estimates use `Real.log_le_sub_one_of_pos`. No separate graphon
-or minor theory is needed for these lemmas. The quadratic entropy bound
-reuses `convexOn_of_hasDerivWithinAt2_nonneg` and
-`ConvexOn.isMinOn_of_rightDeriv_eq_zero` from Mathlib's
-[`Convex.Deriv`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Analysis/Convex/Deriv.lean).
-The moment estimates reuse `Finset.sum_mul_sq_le_sq_mul_sq` from Mathlib's
-[`BigOperators.Ring.Finset`](https://github.com/leanprover-community/mathlib4/blob/v4.33.0/Mathlib/Algebra/Order/BigOperators/Ring/Finset.lean).
-The capacity estimates reuse Mathlib's `Real.sum_le_exp_of_nonneg`,
-`Real.exp_bound'`, convexity of `exp`, and derivative monotonicity and
-concavity theorems. All transcendental numerical bounds are proved from
-these results with exact rational arithmetic.
+- Merge identical component-label words using logarithmic Jensen bounds
+  ([MergingEntropy.lean](MergingEntropy.lean)).
+- Classify the resulting words into two fixed coordinates, a radius-one
+  Hamming ball, or the four-atom pairing pattern
+  ([Patterns.lean](Patterns.lean)).
+- Exclude the first two cases using the checked capacity bounds
+  ([FixedPattern.lean](FixedPattern.lean), [BallExclusion.lean](BallExclusion.lean),
+  and [Lemma6.lean](Lemma6.lean)).
+- Apply the four-atom stability and dual bounds to the surviving pattern
+  ([Lemma5.lean](Lemma5.lean), [TriangleReduction.lean](TriangleReduction.lean)).
+
+This also formalizes Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6 of
+`four_colour_analytic.tex`; the local manuscript is excluded from version
+control. The numerical estimates use Mathlib's exponential and logarithm
+bounds with exact rational arithmetic.
+
+## Verification
 
 Run `lake build` and `python3 scripts/check_proofs.py` at the repository root.
-The default build includes this development; its root module prints the
-kernel dependencies of the public results.
+The project uses Lean **4.33.0** and the matching Mathlib release. The root
+module [HadwigerRamsey4Col.lean](../HadwigerRamsey4Col.lean) imports the main
+Ramsey theorem and prints its kernel dependencies, including those of the
+version with the exact constant substituted.

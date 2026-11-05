@@ -4,9 +4,15 @@ import HadwigerRamsey4Col.Lemma4
 import HadwigerRamsey4Col.Lemma5
 import HadwigerRamsey4Col.Lemma6
 import HadwigerRamsey4Col.Theorem1
+import HadwigerRamsey4Col.Ramsey
 
-/-! Four-colour component optimization: Theorem 1 and numbered results 2–6 of the local
-analytic manuscript. The program itself reuses `ComponentTransfer`. -/
+/-! The four-colour Hadwiger--Ramsey asymptotic with its exact leading constant.
+The component optimization proves Theorem 1 and numbered results 2–6 of the local
+analytic manuscript; the Ramsey limit follows from `ComponentTransfer.theorem5`. -/
+
+#print axioms HadwigerRamsey4Col.beta4_eq_of_root
+#print axioms HadwigerRamsey4Col.theorem1_1
+#print axioms HadwigerRamsey4Col.theorem1_1_explicit
 
 #print axioms HadwigerRamsey4Col.lemma2
 #print axioms HadwigerRamsey4Col.component_pattern_classification
