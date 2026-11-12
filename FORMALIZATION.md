@@ -1,22 +1,17 @@
 # Formalization status
 
-Claim numbers throughout this guide follow `hadramnov12.tex`, including
-references in the historical build records. The inserted Corollary 3.4
-shifts the former Lemmas 3.4--3.7 to Lemmas 3.5--3.8 and the former
-Corollary 3.8 to Corollary 3.9. Lean declaration and module names are stable.
-
 Theorem 1.1 is proved as `HadwigerRamsey.theorem1_1` in
 `HadwigerRamsey/Ramsey.lean`. It defines the three-colour Hadwiger--Ramsey
 number as the least forcing order and derives its exact asymptotic
 coefficient from the checked Theorems 1.2 and 1.3. The README displays
 the public Lean statement; the final section below documents this deduction.
 
-Theorem 1.5 from the October 31 manuscript is **proved
+Theorem 1.5 is **proved
 in Lean 4.33.0** as `HadwigerRamsey.thomasonupper` in
 `HadwigerRamsey/ThomasonUpper.lean`. The exact statement and all logical
 differences from the manuscript argument are recorded in its section below.
 
-Theorem 1.4 of `hadramoct30.tex` is proved in Lean 4.
+Theorem 1.4 is proved in Lean 4.
 The endpoint is `HadwigerRamsey.thomasonlower` in
 `HadwigerRamsey/ThomasonLower.lean`.
 
@@ -151,7 +146,7 @@ in the same build and source guard.
 
 ## Related formalizations and reused results
 
-Search performed on 31 October 2026. Targeted searches for the paper's
+Targeted searches for the paper's
 title, authors, random clique minors, and permissible partitions did not
 locate a complete existing formalization of the Bollobás–Catlin–Erdős
 result. This is a search outcome, not a claim that none exists.
@@ -438,8 +433,8 @@ all proofs.
 Theorem 1.4's endpoint remains `HadwigerRamsey.thomasonlower` in
 `HadwigerRamsey/ThomasonLower.lean`. Its full declaration, including all
 quantifiers, independence/measurability hypotheses, the condition L > epsilon,
-and the real-valued probability conclusion, is unchanged from the previous
-version and agrees with the October 31 manuscript. The proof and its supporting
+and the real-valued probability conclusion, is unchanged by the toolchain
+migration and agrees with the manuscript. The proof and its supporting
 `Probability.lean` and `Finite.lean` use Mathlib's renamed `probReal_univ`
 in place of `measureReal_univ_eq_one`. There is no change to the mathematical
 argument, and no new hypothesis, unproved assumption, or numerical evaluation
@@ -475,7 +470,6 @@ previous version and are unchanged.
 **Theorem 1.5 is proved in Lean.** The public endpoint is
 `HadwigerRamsey.thomasonupper` in `HadwigerRamsey/ThomasonUpper.lean`;
 its proof is `ThomasonUpper.thomasonupper` in `ThomasonUpper/Final.lean`.
-The October 31 TeX source remains ignored and is not part of the repository.
 `ThomasonUpper/Progress.lean` collects the previously checked ingredients.
 
 `ThomasonUpper.Statement` in `Definitions.lean` records the full statement.
@@ -918,7 +912,6 @@ potential edge belongs to exactly one graph and all three satisfy
 `IsThreeDecomposition` expresses the exact unique-colour condition for
 every pair of distinct vertices. The constant beta is the same previously
 formalized constant `sqrt(-log(10-4*sqrt(6)))/2`.
-The source is the updated local October 31 manuscript; it stays ignored.
 
 The proof uses Theorem 1.4 explicitly. It reuses the
 existing three-label finite probability measure from `RandomLabels.lean`,
@@ -1006,7 +999,6 @@ with bipartition (A,B), |A| = |B| >= n-zero, and at least
 The statement is unchanged. Mathlib's `IsBipartiteWith` describes the
 bipartite edges and disjointness; `A union B = univ` explicitly states
 that (A,B) covers the vertex set, as required by the word bipartition.
-The updated October 31 source was reread and remains ignored by Git.
 
 The proof explicitly uses Theorem 1.5. Mathlib reuse
 includes the handshaking lemma, finite cardinality and intersection bounds,
@@ -1068,7 +1060,7 @@ Logical correspondence and differences from the manuscript:
    K follows. The core's clique minor is transferred back to H by the
    previously proved injective-homomorphism minor transport.
 
-8. The updated manuscript allows equality at the size cutoff:
+8. The manuscript allows equality at the size cutoff:
    `|A| = |B| >= n-zero`. The internal class-map helper retains its strict
    cutoff N; the public endpoint chooses n-zero = N+1. Thus the equality
    case at the public cutoff also satisfies the existing helper's hypothesis.
@@ -1123,8 +1115,8 @@ The endpoint is `HadwigerRamsey.denseMinor` in
 `HadwigerRamsey/DenseMinor.lean`. For every K > 0 it supplies gamma > 0
 and a positive integer n-zero. For all n >= n-zero and all simple graphs
 H on Fin n with at least `(1-gamma)*choose(n,2)` edges, it proves
-`K*n/sqrt(log n) <= hadwigerNumber H`. This is the updated manuscript's
-statement, unchanged. The TeX source was reread and remains ignored.
+`K*n/sqrt(log n) <= hadwigerNumber H`. This is the manuscript's
+statement, unchanged.
 
 The proof explicitly calls Lemma 3.3 with coefficient 3*K.
 Mathlib reuse includes finite relation-interedge counts and their complement
@@ -1174,14 +1166,13 @@ report for `HadwigerRamsey.denseMinor` lists only `propext`,
 root build.
 
 
-## Lemma 3.2, revised controlled partitions
+## Lemma 3.2: controlled partitions
 
 The endpoint is `HadwigerRamsey.connectedsets` in
 `HadwigerRamsey/ConnectedSets.lean`. For every epsilon > 0 and eta > 0,
 it supplies delta > 0, uniformly for every finite graph on Fin n, and a
-partition satisfying all six conditions of the revised definition in the
-local October 31 manuscript. There is no sufficiently-large-order
-hypothesis. The manuscript was reread and has not been edited or uploaded.
+partition satisfying all six conditions of the manuscript's controlled-partition
+definition. There is no sufficiently-large-order hypothesis.
 
 `ControlledPartition.Decomposition` contains a finite family of nonempty
 pieces and the two distinguished classes X and Y. The family is pairwise
@@ -1281,7 +1272,7 @@ root build.
 ## Lemma 3.6
 
 The endpoint is `HadwigerRamsey.twobigsets` in
-`HadwigerRamsey/TwoBigSets.lean`, following the revised local October 31
+`HadwigerRamsey/TwoBigSets.lean`, following the
 manuscript. For epsilon,C > 0, it supplies a positive integer n-zero and
 delta > 0. For every three-colour decomposition of the complete graph on
 n >= n-zero vertices, either two distinct colours each satisfy the sparse
@@ -1382,14 +1373,13 @@ dependency audit confirms the required uses of Lemmas 3.2, 3.1,
 and 3.3. All earlier endpoints remain in the root build.
 
 
-## Theorem 1.3, revised November 4 argument
+## Theorem 1.3
 
 The public endpoint is `HadwigerRamsey.mainthm` in
 `HadwigerRamsey/Main.lean`. Its statement is the manuscript's exact
 asymptotic lower bound: for every epsilon > 0, every sufficiently large
 three-colour decomposition of K_n has some colour with Hadwiger number at
-least `(1-epsilon)*beta*n/sqrt(log n)`. The local October 31 TeX file was
-reread after its substantial November 4 revisions, and remains ignored.
+least `(1-epsilon)*beta*n/sqrt(log n)`.
 
 `Main.mainthm_small` invokes Lemmas 3.6, 3.2, 3.3, and 3.5,
 Theorem 1.5, and Corollary 3.9.
@@ -1589,7 +1579,7 @@ remain as documented in their respective sections. In particular, this
 does not strengthen the separate A.3 complete-family endpoint to its
 full original-vertex equipartition statement.
 
-Verification on November 4, 2026: the full `lake build` passes on
+Verification when Theorem 1.1 was added: the full `lake build` passed on
 Lean/Mathlib 4.33.0 (8867 jobs). The source guard checks all 163 Lean
 files. All 95 root foundation reports use only `propext`,
 `Classical.choice`, and `Quot.sound`, including `theorem1_1`, the

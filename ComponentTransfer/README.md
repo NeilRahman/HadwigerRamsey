@@ -1,10 +1,12 @@
 # Component transfer formalization
 
 This directory proves **Theorems 3, 4, and 5 and Lemmas 6, 7, and 8** of
-`comptransfer.tex`, for every fixed number of colours `r ≥ 2`. In particular,
+[comptransfer.tex](comptransfer.tex), for every fixed number of colours `r ≥ 2`. In particular,
 `ComponentTransfer.theorem5` proves the unconditional limit
 `hadwigerRamsey r k / (k * sqrt(log k)) → (beta r)⁻¹`.
-The manuscript stays local and is excluded from version control.
+
+The Lean development roughly follows the arguments in this TeX source.
+The implementation details are described below.
 
 The optimization parameter is defined from the manuscript's finite component
 instances, independently of the Ramsey number.

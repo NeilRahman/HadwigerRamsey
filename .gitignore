@@ -14,10 +14,6 @@
 # Local research notes, excluded from the repository.
 /thomasonupper-counterexample/
 
-# These manuscripts stay local; other TeX files may be tracked explicitly.
-/hadramoct30.tex
-/hadramoct31.tex
-/hadramnov12.tex
-/four_colour_analytic.tex
-/ComponentTransfer/comptransfer.tex
+# Root-level drafts stay local; published sources live with their developments.
+/*.tex
 /ComponentTransfer/comptransfer_lemma7_second_moment.tex

@@ -4,9 +4,9 @@ The main four-colour Hadwiger–Ramsey asymptotic and its exact leading
 constant are stated in the [README](README.md). This guide records the
 supporting optimization results and their implementation.
 
-This development formalizes **Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6** of the local manuscript
-`four_colour_analytic.tex`. It builds on the general component program in
-`ComponentTransfer`. The manuscript is excluded from version control.
+This development formalizes **Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6** of
+[four_colour_analytic.tex](four_colour_analytic.tex). It builds on the general
+component program in `ComponentTransfer`.
 
 ## Exact optimum and attainment
 

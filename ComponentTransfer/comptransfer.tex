@@ -1,0 +1,397 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\had}{\operatorname{had}}
+\newcommand{\PP}{\mathcal P}
+\title{A component transfer theorem for Hadwiger--Ramsey numbers}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\section{The minor bounds and component optimization}
+
+Write $\had(G)$ for the largest integer $t$ such that $G$ contains a $K_t$
+minor, and $\kappa(G)$ for its vertex connectivity. All logarithms are natural.
+We use the following two bounds of Norin and Rahman.
+
+\begin{theorem}[Theorem 1.4 from {\cite{norinrahman}}]\label{thm:random}
+For every $\varepsilon>0$ there exists $n_0=n_0(\varepsilon)$ such that the
+following holds for every $n\geq n_0$. Let $(X_1,\ldots,X_k)$ be a partition
+of $[n]$, and let $0\leq p_{ij}=p_{ji}\leq1-\varepsilon$ for all
+$i,j\in[k]$. Form a random graph $G$ on $[n]$ by including each edge $uv$,
+with $u\in X_i$ and $v\in X_j$, independently with probability $p_{ij}$.
+Put $\alpha_i=|X_i|/n$ and
+\[
+ L=\sqrt{-\sum_{i,j=1}^k\alpha_i\alpha_j\log(1-p_{ij})}.
+\]
+If $L>\varepsilon$, then
+\[
+ \mathbb P\left(\had(G)\leq(1+\varepsilon)L\frac{n}{\sqrt{\log n}}\right)
+ \geq1-\varepsilon.
+\]
+\end{theorem}
+
+\begin{theorem}[Theorem 1.5 from {\cite{norinrahman}}]\label{thm:minor}
+For every $\varepsilon>0$ there exists $n_0=n_0(\varepsilon)$ such that the
+following holds for every $n\geq n_0$. Let $G$ be an $n$-vertex graph with
+$\kappa(G)\geq\varepsilon n$, and let $(X_1,\ldots,X_k)$ be a partition of
+$V(G)$. Put
+\[
+ \alpha_i=\frac{|X_i|}{n},\qquad
+ p_{ij}=\frac{e_G(X_i,X_j)}{|X_i||X_j|}\quad(i\ne j),\qquad
+ p_{ii}=\frac{e(G[X_i])}{\binom{|X_i|}{2}},
+\]
+and $p_{ij}^*=\min\{p_{ij},1-\varepsilon\}$.
+If $\alpha_i\geq\varepsilon$ for every $i\in[k]$, then
+\[
+ \had(G)\geq\frac{n}{\sqrt{\log n}}
+ \left(\sqrt{-\sum_{i,j=1}^k\alpha_i\alpha_j
+                    \log(1-p_{ij}^*)}-\varepsilon\right).
+\]
+\end{theorem}
+
+Fix an integer $r\geq2$. A \emph{component instance} consists of an integer
+$k\geq1$, positive masses $\alpha_1,\ldots,\alpha_k$ summing to one,
+partitions $\PP_1,\ldots,\PP_r$ of $[k]$, and symmetric matrices
+$(p^c_{ij})_{i,j\in[k]}$ with entries in $[0,1)$ such that
+\[
+ \sum_{c=1}^r p^c_{ij}=1,
+ \qquad
+ p^c_{ij}=0\quad\text{if $i,j$ belong to different parts of $\PP_c$}.
+\]
+Define
+\begin{equation}\label{eq:program}
+ \beta_r=\inf\;\max_{\substack{c\in[r]\\ C\in\PP_c}}
+       \sqrt{-\sum_{i,j\in C}\alpha_i\alpha_j\log(1-p^c_{ij})},
+\end{equation}
+where the infimum is over all component instances. All double sums are over
+ordered pairs. The one-part instance with $p^c_{11}=1/r$ shows that $\beta_r$ is
+finite. Also $\beta_r\geq1/r>0$. Indeed, for an instance with objective
+value $M$, put
+\[
+ s_C=\sum_{i\in C}\alpha_i,\qquad
+ d_{c,C}=\sum_{i,j\in C}\alpha_i\alpha_jp^c_{ij}.
+\]
+Since $-\log(1-p)\geq p$, we have
+$d_{c,C}\leq\min\{M^2,s_C^2\}\leq Ms_C$. Summing over all colours and
+their parts gives $1\leq rM$, proving the claimed lower bound.
+
+\begin{theorem}\label{thm:transfer}
+For every integer $r\geq2$ and every $\varepsilon>0$, all sufficiently large
+$r$-edge-coloured complete graphs $K_n$ have a colour class $G_c$, $c\in[r]$, satisfying
+\[
+ \had(G_c)\geq(\beta_r-\varepsilon)\frac{n}{\sqrt{\log n}}.
+\]
+\end{theorem}
+
+\begin{theorem}\label{thm:construction}
+For every integer $r\geq2$ and every $\varepsilon>0$, all sufficiently large
+$n$ admit an $r$-edge-colouring of $K_n$ whose colour classes $G_1,\ldots,G_r$
+satisfy
+\[
+ \had(G_c)\leq(\beta_r+\varepsilon)\frac{n}{\sqrt{\log n}}
+ \qquad\text{for every }c\in[r].
+\]
+\end{theorem}
+
+Let $R_h(k;r)$ be the least integer $n$ such that every $r$-edge-colouring
+of $K_n$ contains a monochromatic $K_k$ minor.
+Theorems~\ref{thm:transfer} and~\ref{thm:construction} give the following.
+
+\begin{theorem}\label{thm:ramsey}
+For every fixed integer $r\geq2$,
+\[
+ R_h(k;r)=\left(\beta_r^{-1}+o(1)\right)k\sqrt{\log k}.
+\]
+\end{theorem}
+
+\section{The random construction}
+
+\begin{proof}[Proof of Theorem~\ref{thm:construction}]
+Fix a component instance with objective value $M<\beta_r+\varepsilon/2$.
+For each colour $c$ and each $C\in\PP_c$, put
+\[
+ s_C=\sum_{i\in C}\alpha_i,\qquad
+ E_{c,C}=\sqrt{-\sum_{i,j\in C}\alpha_i\alpha_j\log(1-p^c_{ij})}.
+\]
+Thus $s_C>0$ and $E_{c,C}\leq M$. Let $q=\sum_{c=1}^r|\PP_c|$.
+Since the instance is finite and all its densities are strictly less than
+one, we may choose $\delta>0$ such that
+\[
+ q\delta<1,\qquad
+ p^c_{ij}\leq1-\delta\quad\text{for all }c,i,j,\qquad
+ (1+\delta)M<\beta_r+\varepsilon,
+\]
+and $2\delta<E_{c,C}/s_C$ for every pair $(c,C)$ with $E_{c,C}>0$.
+
+For every sufficiently large $n$, partition $[n]$ into $k$ sets
+$X_1,\ldots,X_k$ of sizes $n_i=\alpha_in+O(1)$. Independently for each
+edge $uv$ with $u\in X_i$ and $v\in X_j$, assign colour $c$ with probability
+$p^c_{ij}$. These probabilities sum to one. For a fixed colour $c$, its edge
+indicators are independent, and there are no colour-$c$ edges between
+$U_C=\bigcup_{i\in C}X_i$ and $U_D$ for distinct $C,D\in\PP_c$.
+
+Write $N_C=|U_C|$ and
+\[
+ E_{c,C,n}=\sqrt{-\sum_{i,j\in C}
+              \frac{n_in_j}{n^2}\log(1-p^c_{ij})},\qquad
+ L_{c,C,n}=\frac{n}{N_C}E_{c,C,n}.
+\]
+Then $N_C/n\to s_C$, $E_{c,C,n}\to E_{c,C}$, and
+$L_{c,C,n}\to E_{c,C}/s_C$. If $E_{c,C}>0$, then
+$L_{c,C,n}>\delta$ and $N_C\geq n_0(\delta)$ for all sufficiently large $n$.
+Theorem~\ref{thm:random}, applied to $G_c[U_C]$ with its partition
+$(X_i)_{i\in C}$ and parameter $\delta$, gives
+\[
+ \had(G_c[U_C])\leq(1+\delta)L_{c,C,n}
+                         \frac{N_C}{\sqrt{\log N_C}}
+\]
+with probability at least $1-\delta$. On this event,
+\[
+ \frac{\had(G_c[U_C])\sqrt{\log n}}{n}
+ \leq(1+\delta)E_{c,C,n}\sqrt{\frac{\log n}{\log N_C}}
+ <\beta_r+\varepsilon
+\]
+for all sufficiently large $n$: the middle expression tends to
+$(1+\delta)E_{c,C}\leq(1+\delta)M<\beta_r+\varepsilon$.
+
+If $E_{c,C}=0$, positivity of the masses forces $p^c_{ij}=0$ for all
+$i,j\in C$. In that case $G_c[U_C]$ is edgeless and has Hadwiger number
+$1$, which also satisfies the required bound for sufficiently large $n$.
+A union bound over the at most $q$ positive-energy pairs gives simultaneous
+success with probability at least $1-q\delta>0$. Choose a colouring in this
+event. Since the sets $U_C$, $C\in\PP_c$, have no colour-$c$ edges between
+them,
+\[
+ \had(G_c)=\max_{C\in\PP_c}\had(G_c[U_C])
+ \leq(\beta_r+\varepsilon)\frac{n}{\sqrt{\log n}}
+ \qquad(c\in[r]),
+\]
+as required.
+\end{proof}
+
+\section{Connectivity and graph limits}
+
+\begin{lemma}\label{lem:core}
+Fix $0<\rho<1/4$ and $\sigma>0$. Suppose an $N$-vertex graph $H$ satisfies
+\[
+ e_H(A,V(H)\setminus A)\geq\sigma N^2
+ \quad\text{whenever}\quad
+ \rho N\leq|A|\leq(1-\rho)N.
+\]
+For sufficiently large $N$, there is an induced subgraph of $H$ on more than
+$(1-\rho)N$ vertices with vertex connectivity at least
+$\lfloor\sigma N/2\rfloor$.
+\end{lemma}
+\begin{proof}
+Put $t=\lfloor\sigma N/2\rfloor$. A cut with one side of size
+$\lfloor N/2\rfloor$ gives $\sigma\leq1/4$, so $t\leq N/8$.
+Starting with $H$, whenever the current induced graph is not $t$-connected,
+take a separation with nonempty sides $A,B$, $|A|\leq|B|$, and separator
+$Z$ of size less than $t$. Delete $A$ and retain $Z\cup B$. Fewer than
+$t|A|$ edges join the deleted vertices to those retained.
+
+Suppose the set $D$ of deleted vertices first reaches size $\rho N$.
+Before this step fewer than $\rho N$ vertices had been deleted, and the
+last deleted side has size at most $N/2$. Hence
+\[
+ \rho N\leq|D|<\rho N+N/2<(1-\rho)N.
+\]
+Every edge from $D$ to its complement was counted when its endpoint in $D$
+was deleted. Thus
+\[
+ e_H(D,V(H)\setminus D)<t|D|\leq\frac{\sigma N^2}{2},
+\]
+contrary to the cut hypothesis. Therefore fewer than $\rho N$ vertices are
+ever deleted. The current graph always has more than $3N/4>t$ vertices,
+so every failure of $t$-connectivity admits the required separation. The
+process terminates with the desired induced subgraph.
+\end{proof}
+
+An \emph{$r$-colour graphon} is a tuple $(W_1,\ldots,W_r)$ of symmetric
+measurable functions $[0,1]^2\to[0,1]$ with $\sum_{c=1}^r W_c=1$ almost everywhere.
+Write $\mu$ for Lebesgue measure. Coloured graph-limit compactness
+\cite{decorated} gives a convergent subsequence of every sequence of
+$r$-edge-coloured complete graphs of orders tending to infinity. Convergence
+is in the cut metric, with a common alignment for all colours.
+
+A graphon $W$ on a probability space is \emph{connected} if
+$\int_{A\times A^{\mathrm c}}W>0$ whenever $0<\mu(A)<1$. By the component decomposition
+\cite[Lemma 5.5]{janson}, each $W_c$ admits a countable measurable partition
+\begin{equation}\label{eq:components}
+ [0,1]=Z_c\mathbin{\dot\cup}\bigcup_{j\geq1}S_{c,j}
+\end{equation}
+up to null sets, where each $S_{c,j}$ has positive measure and supports a
+connected restriction, and $W_c$ vanishes almost everywhere outside
+$\bigcup_j S_{c,j}^2$. Restrictions are viewed with normalized measure.
+
+If graphs $H_n$ converge to a connected graphon, then for every $\rho>0$
+there is $\sigma>0$ such that, for all sufficiently large $n$, every cut of
+$H_n$ whose sides have size at least $\rho|H_n|$ has at least
+$\sigma|H_n|^2$ edges \cite[Theorem 1.10(i)]{janson}.
+
+\begin{lemma}\label{lem:realize}
+Suppose $r$-edge-coloured graphs of orders $n\to\infty$ converge to
+$(W_1,\ldots,W_r)$. Every fixed finite measurable partition of $[0,1]$ into
+sets of positive measure can be realized by vertex partitions such that
+relative part sizes and edge densities between parts converge to their
+graphon values. For every union of parts, the induced coloured graphs
+converge to the corresponding restricted graphon with normalized measure.
+\end{lemma}
+\begin{proof}
+Align the step graphons to the limit in cut norm. Their vertex cells have
+measure $1/n$. Independently assign each vertex to a partition class, using
+the proportions of its cell lying in the measurable classes as probabilities.
+
+Fix a finite coloured graph with a specified partition class for each
+vertex. Its expected normalized count under these assignments differs by
+$O(1/n)$ from the corresponding integral in the aligned step graphons:
+only maps with repeated vertices contribute an error. The cut-norm counting
+lemma, with the class indicators as vertex weights, makes these integrals
+converge to their values in the limit. Changing one vertex assignment alters
+any fixed normalized count by $O(1/n)$, so bounded differences give
+concentration. A diagonal choice over the countably many such test graphs
+produces deterministic partitions for which all these counts converge.
+Single-vertex and single-edge tests give the part sizes and densities;
+summing over the permitted vertex classes and normalizing gives convergence
+of every induced restriction.
+\end{proof}
+
+\section{Proof of the transfer theorem}
+
+\begin{lemma}\label{lem:lift}
+Suppose $r$-edge-coloured graphs of orders $n\to\infty$ converge to
+$(W_1,\ldots,W_r)$, and let $G_{c,n}$ be their colour-$c$ graphs.
+Let $S$ be a positive-measure connected component of $W_c$, and let
+$A_1,\ldots,A_k\subseteq S$ be disjoint measurable sets of positive measure.
+Put
+\[
+ \lambda_i=\mu(A_i),\qquad
+ p_{ij}=\frac{1}{\lambda_i \lambda_j}\int_{A_i\times A_j}W_c.
+\]
+Then
+\begin{equation}\label{eq:lift}
+ \liminf_{n\to\infty}\frac{\had(G_{c,n})\sqrt{\log n}}{n}
+ \geq\sqrt{-\sum_{i,j=1}^k \lambda_i \lambda_j\log(1-p_{ij})},
+\end{equation}
+where $-\log0=+\infty$.
+\end{lemma}
+\begin{proof}
+Apply Lemma~\ref{lem:realize} to the partition consisting of the $A_i$,
+$S\setminus\bigcup_{i=1}^k A_i$, and $[0,1]\setminus S$, omitting null parts.
+Let $S_n$ and $A_{i,n}$ be the corresponding vertex sets. Then
+$|S_n|/n\to\mu(S)>0$, and $G_{c,n}[S_n]$ converges to the connected
+restriction of $W_c$ to $S$.
+
+Let $\eta$ be the smallest measure of a positive-measure part of this
+partition lying in $S$. Fix $0<\zeta<1$, $\nu>0$, and
+$0<\rho<\min\{1/4,\eta/4\}$. The connected-limit cut bound and
+Lemma~\ref{lem:core} give induced subgraphs $H_n\subseteq G_{c,n}[S_n]$
+such that
+\[
+ |S_n\setminus V(H_n)|<\rho n,\qquad
+ \kappa(H_n)\geq\gamma n
+\]
+for some fixed $\gamma>0$ and all sufficiently large $n$.
+Write $N_n=|H_n|$. Intersect the realized partition of $S_n$ with $V(H_n)$.
+Every resulting part has size at least $\eta n/2$, and hence relative size
+at least $\eta/2$ in $H_n$.
+
+For $i\leq k$, write $u_{i,n}=|A_{i,n}\cap V(H_n)|/n$, and let $q_{ij,n}$
+be the densities between these parts in $H_n$, with diagonal densities
+defined as in Theorem~\ref{thm:minor}. Then
+\[
+ u_{i,n}=\lambda_i+O(\rho)+o(1),\qquad
+ q_{ij,n}=p_{ij}+O(\rho)+o(1).
+\]
+The constants depend only on the fixed sets $A_i$; diagonal densities
+have an additional $o(1)$ correction from excluding loops.
+
+Set $f_\zeta(p)=-\log(1-\min\{p,1-\zeta\})$, and choose
+\[
+ 0<\delta\leq\min\{\gamma,\eta/2,\zeta,\nu\}.
+\]
+Apply Theorem~\ref{thm:minor} to $H_n$ with parameter $\delta$ and the full
+intersected partition. Its connectivity and part-size hypotheses hold
+because $N_n\leq n$. Since $f_\delta\geq f_\zeta$, retaining only the
+terms corresponding to $A_1,\ldots,A_k$ gives
+\[
+ \frac{\had(G_{c,n})\sqrt{\log n}}{n}
+ \geq\sqrt{\frac{\log n}{\log N_n}}
+ \left(\sqrt{\sum_{i,j=1}^k u_{i,n}u_{j,n}f_\zeta(q_{ij,n})}
+             -\delta\frac{N_n}{n}\right).
+\]
+Here the factors $N_n$ cancel against the normalization of the partition
+masses. Since $N_n$ is bounded below by a positive multiple of $n$ and
+$f_\zeta$ is bounded and Lipschitz, for a constant $C_\zeta$ independent
+of $\rho$ and $\nu$ we obtain
+\[
+ \liminf_{n\to\infty}\frac{\had(G_{c,n})\sqrt{\log n}}{n}
+ \geq\sqrt{\max\left\{0,
+            \sum_{i,j=1}^k \lambda_i \lambda_j f_\zeta(p_{ij})-C_\zeta\rho\right\}}
+       -\nu.
+\]
+Let $\nu\downarrow0$, then $\rho\downarrow0$, and finally
+$\zeta\downarrow0$. Monotone convergence of the finite sum proves
+\eqref{eq:lift}, including the case of an infinite right-hand side.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:transfer}]
+The conclusion is immediate if $\beta_r\leq\varepsilon$. Otherwise, if it
+fails, there are $r$-edge-coloured complete graphs of orders $n\to\infty$
+and a constant $0\leq B<\beta_r$ such that
+\[
+ \max_{c\in[r]}\frac{\had(G_{c,n})\sqrt{\log n}}{n}\leq B.
+\]
+Pass to a convergent subsequence with limit $(W_1,\ldots,W_r)$, and use
+the component partitions \eqref{eq:components}. Their common refinement
+is countable; its positive-measure atoms $A_i$ cover $[0,1]$ up to a null
+set. Put
+\[
+ \lambda_i=\mu(A_i),\qquad
+ p^c_{ij}=\frac{1}{\lambda_i \lambda_j}\int_{A_i\times A_j}W_c.
+\]
+For each colour, give an atom the label of the part of
+\eqref{eq:components} containing it, retaining $Z_c$ as one label.
+The densities sum to one and vanish between different labels; every
+colour-$c$ density involving an atom in $Z_c$ is zero.
+
+All $p^c_{ij}$ are strictly less than one. Indeed, if $p^c_{ij}=1$, the
+atoms concerned lie in a common connected component of $W_c$, and
+Lemma~\ref{lem:lift} applied to these atoms gives an infinite lower bound,
+contradicting $B<\infty$.
+
+Choose finitely many atoms whose total measure $s$ satisfies $s \beta_r>B$.
+Keep their densities and labels and normalize their masses to $\lambda_i/s$.
+This is a component instance, so \eqref{eq:program} supplies a colour $c$
+and one of its label classes $C$ for which
+\[
+ -\sum_{i,j\in C}\lambda_i \lambda_j\log(1-p^c_{ij})
+ \geq s^2\beta_r^2>B^2.
+\]
+This class has positive energy and therefore lies in a connected component
+of $W_c$, rather than in $Z_c$. Lemma~\ref{lem:lift} applied to its finitely
+many atoms contradicts the upper bound $B$.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{norinrahman}
+Sergey Norin and Neil Rahman,
+\emph{Asymptotics of the three-color Hadwiger-Ramsey numbers}, manuscript.
+
+\bibitem{decorated}
+L\'aszl\'o Lov\'asz and Bal\'azs Szegedy,
+\emph{Limits of compact decorated graphs}, arXiv:1010.5155, 2010.
+\url{https://arxiv.org/abs/1010.5155}.
+
+\bibitem{janson}
+Svante Janson,
+\emph{Connectedness in graph limits}, arXiv:0802.3795, 2008.
+\url{https://arxiv.org/abs/0802.3795}.
+\end{thebibliography}
+\end{document}

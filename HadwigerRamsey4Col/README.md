@@ -61,7 +61,9 @@ Lean proofs, and both are included in the default repository build.
 
 ## Supporting component optimization
 
-The [component optimization guide](ComponentOptimization.md) records the
+The Lean component optimization proof roughly follows the arguments in
+[four_colour_analytic.tex](four_colour_analytic.tex). The
+[component optimization guide](ComponentOptimization.md) records the
 numbered lemmas, proof details, and reused Mathlib results.
 
 The program uses positive atom masses summing to one, four component
@@ -97,8 +99,8 @@ restriction on its number of atoms or component pattern. Its main steps are:
   ([Lemma5.lean](Lemma5.lean), [TriangleReduction.lean](TriangleReduction.lean)).
 
 This also formalizes Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6 of
-`four_colour_analytic.tex`; the local manuscript is excluded from version
-control. The numerical estimates use Mathlib's exponential and logarithm
+[four_colour_analytic.tex](four_colour_analytic.tex).
+The numerical estimates use Mathlib's exponential and logarithm
 bounds with exact rational arithmetic.
 
 ## Verification
