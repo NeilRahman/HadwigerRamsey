@@ -15,7 +15,7 @@ namespace Optimization
 /-- The nonnegative logarithmic cost of a probability strictly below one. -/
 noncomputable def logCost (p : ℝ) : ℝ := -log (1-p)
 
-/-- The double sum appearing under the square roots in Lemma `opt`. -/
+/-- The double sum appearing under the square roots in Lemma 3.8. -/
 noncomputable def energy {k : ℕ} (α : Fin k → ℝ) (q : Fin k → Fin k → ℝ) : ℝ :=
   ∑ i, ∑ j, α i * α j * logCost (q i j)
 
@@ -51,7 +51,7 @@ lemma energy_nonneg {k : ℕ} {α : Fin k → ℝ} {q : Fin k → Fin k → ℝ}
   sum_nonneg (fun i _ => sum_nonneg (fun j _ =>
     mul_nonneg (mul_nonneg (hα i) (hα j)) (logCost_nonneg (hq0 i j) (hq1 i j))))
 
-/-- The logarithmic lower bound behind `opt`; one-sided mass constraints suffice. -/
+/-- The logarithmic lower bound behind Lemma 3.8; one-sided mass constraints suffice. -/
 lemma energy_average_lower {k : ℕ} (α p : Fin k → ℝ) (qB qG : Fin k → Fin k → ℝ)
     (hα : ∀ i, 0 ≤ α i) (hs : ∑ i, α i = 1) (hp0 : ∀ i, 0 ≤ p i)
     (hB : ∀ i j, qB i j < 1) (hG : ∀ i j, qG i j < 1)
@@ -113,7 +113,7 @@ lemma diagonal_le_function {x p : ℝ} (hx : 0 ≤ x) (hp0 : 0 ≤ p) (hp1 : p <
     log_le_log (by linarith) (by linarith)
   exact mul_le_mul_of_nonneg_left hlogs (sq_nonneg x)
 
-/-- A strengthened form of `opt`, allowing zero weights and one-sided mass constraints. -/
+/-- A strengthened form of Lemma 3.8, allowing zero weights and one-sided mass constraints. -/
 theorem opt_of_nonneg (k : ℕ) (α p : Fin k → ℝ) (qB qG : Fin k → Fin k → ℝ)
     (hα : ∀ i, 0 ≤ α i) (hs : ∑ i, α i = 1)
     (hp0 : ∀ i, 0 ≤ p i) (hp1 : ∀ i, p i < 1)
@@ -137,7 +137,7 @@ theorem opt_of_nonneg (k : ℕ) (α p : Fin k → ℝ) (qB qG : Fin k → Fin k 
   linarith
 
 end Optimization
-/-- Lemma `opt`, with the hypotheses and alternatives of the manuscript. -/
+/-- Lemma 3.8, with the hypotheses and alternatives of the manuscript. -/
 theorem opt (k : ℕ) (α p : Fin k → ℝ) (qB qG : Fin k → Fin k → ℝ)
     (hα : ∀ i, 0 < α i) (hs : ∑ i, α i = 1)
     (hp0 : ∀ i, 0 ≤ p i) (hp1 : ∀ i, p i < 1)

@@ -24,7 +24,7 @@ theorem bounded_dimensions (N : ℕ) {ζ : ℝ} (hζ : 0 < ζ) :
 
 end OptApprox
 
-/-- Corollary `optapprox`, with closed bounds and an explicitly positive tolerance. -/
+/-- Corollary 3.9, with closed bounds and an explicitly positive tolerance. -/
 theorem optapprox (ζ : ℝ) (hζ : 0 < ζ) :
     ∃ δ : ℝ, 0 < δ ∧ ∀ (k : ℕ), 0 < k → (k : ℝ) ≤ 1/ζ →
       ∀ (α p : Fin k → ℝ) (qB qG : Fin k → Fin k → ℝ),

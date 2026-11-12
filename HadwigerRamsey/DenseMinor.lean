@@ -5,7 +5,7 @@ open Finset Real
 namespace HadwigerRamsey
 set_option maxHeartbeats 800000
 
-/-- Lemma 3.4 (`denseMinor`). The reduction explicitly uses `bipMinor`. -/
+/-- Lemma 3.5 (`denseMinor`). The reduction explicitly uses `bipMinor`. -/
 theorem denseMinor (K : ℝ) (hK : 0 < K) :
     ∃ gamma : ℝ, 0 < gamma ∧ ∃ n₀ : ℕ, 0 < n₀ ∧
       ∀ n ≥ n₀, ∀ H : SimpleGraph (Fin n),

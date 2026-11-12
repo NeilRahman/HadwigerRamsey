@@ -8,6 +8,8 @@ import HadwigerRamsey.ConnectedSets
 import HadwigerRamsey.ControlledPartition.Interpretation
 import HadwigerRamsey.DenseMinor
 import HadwigerRamsey.BipMinor
+import HadwigerRamsey.UnequalBipMinor
+import HadwigerRamsey.UnequalBipMinorAudit
 import HadwigerRamsey.Existence
 import HadwigerRamsey.ThomasonLower
 import HadwigerRamsey.BigSet
@@ -95,6 +97,8 @@ import HadwigerRamsey.ThomasonUpper
 #print axioms HadwigerRamsey.hadwigerNumber_le_of_fibers
 
 #print axioms HadwigerRamsey.bipMinor
+#print axioms HadwigerRamsey.unequalBipMinor
+#print axioms HadwigerRamsey.bipartite_interedges_card
 #print axioms HadwigerRamsey.BipMinor.low_degree_vertices_small
 #print axioms HadwigerRamsey.BipMinor.connected_quarter
 #print axioms HadwigerRamsey.BipMinor.exists_core

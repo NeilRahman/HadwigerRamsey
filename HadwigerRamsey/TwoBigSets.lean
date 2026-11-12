@@ -11,7 +11,7 @@ namespace HadwigerRamsey
 namespace TwoBigSets
 open ControlledPartition
 
-/-- One colour has the sparse or almost-spanning connected outcome of Lemma 3.5. -/
+/-- One colour has the sparse or almost-spanning connected outcome of Lemma 3.6. -/
 def Good {n : ℕ} (G : SimpleGraph (Fin n)) (ε δ : ℝ) : Prop :=
   (G.edgeFinset.card : ℝ) ≤ 3*ε*(n : ℝ)^2 ∨
     ∃ S : Finset (Fin n), (1-ε)*n ≤ (S.card : ℝ) ∧ RealConnected G S (δ*n)
@@ -30,7 +30,7 @@ theorem small_parts_of_not_good {n : ℕ} (G : SimpleGraph (Fin n))
 end TwoBigSets
 open TwoBigSets ControlledPartition
 
-/-- Lemma 3.5, explicitly using the controlled-partition theorem `connectedsets`. -/
+/-- Lemma 3.6, explicitly using the controlled-partition theorem `connectedsets`. -/
 theorem twobigsets (ε C : ℝ) (hε : 0 < ε) (hC : 0 < C) :
     ∃ n₀ : ℕ, 0 < n₀ ∧ ∃ δ : ℝ, 0 < δ ∧
       ∀ n ≥ n₀, ∀ G : Fin 3 → SimpleGraph (Fin n), IsThreeDecomposition G →

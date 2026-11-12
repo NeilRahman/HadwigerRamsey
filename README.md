@@ -1,7 +1,7 @@
 # Hadwiger–Ramsey
 
 Lean formalization of the local research manuscript
-`hadramoct31.tex`, including its subsequent revisions. The manuscript and
+`hadramnov12.tex`, building on the earlier October 31 version. The manuscript and
 local counterexample notes are excluded from version control.
 
 The project uses Lean **4.33.0** and the matching Mathlib release. Both local
@@ -72,6 +72,8 @@ by four equal masses with three pairing partitions and one spanning partition.
 
 ## Supporting results and scope
 
+Claim numbers below follow the November 12 manuscript.
+
 Theorem 1.2 is proved as `HadwigerRamsey.existencethm`,
 for every sufficiently large integer order, including odd orders.
 It constructs a three-colour decomposition with each Hadwiger number at
@@ -80,13 +82,21 @@ The entry module is `HadwigerRamsey/Existence.lean`.
 
 Theorem 1.3 is proved as `HadwigerRamsey.mainthm` in
 `HadwigerRamsey/Main.lean`, following the revised November 4 proof in the
-local October 31 manuscript. Its proof explicitly uses Lemmas 3.2--3.5,
-Theorem 1.5, and Corollary 3.8; the build checks those dependencies.
+local October 31 manuscript. Its proof explicitly uses Lemmas 3.2, 3.3, 3.5, and 3.6,
+Theorem 1.5, and Corollary 3.9; the build checks those dependencies.
+It does not directly invoke the new Corollary 3.4: its existing trimming
+and unequal-part minor helpers effectively re-prove that corollary.
+
+Corollary 3.4 is proved as `HadwigerRamsey.unequalBipMinor` in
+`HadwigerRamsey/UnequalBipMinor.lean`. It extends Lemma 3.3 to
+`|B| >= |A| >= n₀`, with density at least `1-gamma` and the bound
+`K*|A|/sqrt(log |A|)`. It reuses the existing trimming helper and the
+same constants supplied by Lemma 3.3.
 
 Theorem 1.4, the inhomogeneous random-graph upper bound
 on the Hadwiger number, is fully proved in Lean.
 
-Lemma 3.4 is proved as `HadwigerRamsey.denseMinor` in
+Lemma 3.5 is proved as `HadwigerRamsey.denseMinor` in
 `HadwigerRamsey/DenseMinor.lean`, explicitly using Lemma 3.3.
 A deterministic missing-edge estimate replaces the random balanced-cut
 argument, with a smaller auxiliary density error and a larger cutoff.
@@ -106,20 +116,20 @@ manuscript's splitting, absorption, merging, and separator-trimming argument.
 The six controlled-partition conditions are explicit in
 `ControlledPartition.Controlled`.
 
-Lemma 3.5 is proved as `HadwigerRamsey.twobigsets` in
+Lemma 3.6 is proved as `HadwigerRamsey.twobigsets` in
 `HadwigerRamsey/TwoBigSets.lean`. Its proof explicitly obtains controlled
 partitions from Lemma 3.2, applies Lemma 3.1, and applies Lemma 3.3
 to the remaining colour. The build checks these theorem dependencies.
 
-Lemma 3.6 is proved as `HadwigerRamsey.fopt`; its alternative
+Lemma 3.7 is proved as `HadwigerRamsey.fopt`; its alternative
 cubic-bound proof and endpoint convention are described in the guide.
 
-Lemma 3.7 is proved as `HadwigerRamsey.opt`. Its symbolic proof reuses
-Lemma 3.6 and Mathlib, with a stronger helper allowing zero weights and
+Lemma 3.8 is proved as `HadwigerRamsey.opt`. Its symbolic proof reuses
+Lemma 3.7 and Mathlib, with a stronger helper allowing zero weights and
 one-sided mass constraints.
 
-Corollary 3.8 is proved as `HadwigerRamsey.optapprox`, with closed
-parameter bounds and δ > 0. Its proof explicitly depends on Lemma 3.7 through
+Corollary 3.9 is proved as `HadwigerRamsey.optapprox`, with closed
+parameter bounds and δ > 0. Its proof explicitly depends on Lemma 3.8 through
 positive-support restriction and probability rescaling, followed by
 compactness. The build checks that theorem dependency.
 

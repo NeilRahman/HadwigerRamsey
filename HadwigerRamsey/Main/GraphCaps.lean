@@ -7,7 +7,7 @@ open HadwigerRamsey.ThomasonUpper
 namespace HadwigerRamsey.Main
 
 /-- A uniformly small Hadwiger number caps every sufficiently large internal
-or bipartite density. The witnesses are those supplied by Lemmas 3.3 and 3.4. -/
+or bipartite density. The witnesses are those supplied by Lemmas 3.3 and 3.5. -/
 theorem set_density_caps {n NB ND : ℕ} (G : SimpleGraph (Fin n))
     {lam ζ γD γB : ℝ} (hlam : 0 < lam) (hζD : ζ ≤ γD) (hζB : ζ ≤ γB)
     (hcut : ((max ND NB+2 : ℕ) : ℝ) ≤ lam/2*n)

@@ -1,5 +1,10 @@
 # Formalization status
 
+Claim numbers throughout this guide follow `hadramnov12.tex`, including
+references in the historical build records. The inserted Corollary 3.4
+shifts the former Lemmas 3.4--3.7 to Lemmas 3.5--3.8 and the former
+Corollary 3.8 to Corollary 3.9. Lean declaration and module names are stable.
+
 Theorem 1.1 is proved as `HadwigerRamsey.theorem1_1` in
 `HadwigerRamsey/Ramsey.lean`. It defines the three-colour Hadwiger--Ramsey
 number as the least forcing order and derives its exact asymptotic
@@ -174,11 +179,11 @@ result. This is a search outcome, not a claim that none exists.
 - Mathlib also provides finite union bounds, exponential/logarithm and
   square-root identities, ceilings, finite sums, and graph connectivity.
 
-The earlier two formalizations use Mathlib directly. Lemma 3.6 additionally
+The earlier two formalizations use Mathlib directly. Lemma 3.7 additionally
 uses the vendored LeanCert interval-analysis subset described below.
 
 
-## Lemma 3.6: optimization
+## Lemma 3.7: optimization
 
 The endpoint is `HadwigerRamsey.fopt` in `HadwigerRamsey/FOpt.lean`.
 It quantifies over every natural k and α : Fin k → ℝ, assumes αᵢ ≥ 0
@@ -251,7 +256,7 @@ supplies the rational interval and Taylor/logarithm enclosure theorems.
 The exact source, notices and compatibility changes are recorded in
 `vendor/lean-cert/README.md`. This is reused analytic infrastructure,
 not an existing formalization of this particular optimization inequality.
-A targeted public search for the optimization inequality in Lemma 3.6 did
+A targeted public search for the optimization inequality in Lemma 3.7 did
 not locate a pre-existing proof of the exact inequality.
 
 The new first-party modules are:
@@ -269,22 +274,22 @@ The new first-party modules are:
 
 The three endpoints above are imported and their dependency reports
 printed in `HadwigerRamsey.lean`. The source guard also checks vendored
-Lean sources. The Lemma 3.6 endpoint requires only `propext`,
+Lean sources. The Lemma 3.7 endpoint requires only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 
-## Lemma 3.7: optimization
+## Lemma 3.8: optimization
 
 `HadwigerRamsey.opt` in `HadwigerRamsey/Opt.lean` proves the manuscript's
 three-way alternative with positive weights summing to one, probabilities
 in [0,1), the exact diagonal/off-diagonal sum conditions, and the same β.
 The conclusion writes out the manuscript's negative double sums explicitly.
-Matrix symmetry is not required, consistently with the statement of Lemma 3.7.
+Matrix symmetry is not required, consistently with the statement of Lemma 3.8.
 No additional hypotheses or numerical approximations are introduced.
 
 The argument follows the manuscript: negate the alternatives, square the
 three strict inequalities, average the two matrix costs, use logarithm
-concavity, bound the diagonal terms by f(αᵢ), and contradict Lemma 3.6.
+concavity, bound the diagonal terms by f(αᵢ), and contradict Lemma 3.7.
 Mathlib's `Real.strictConcaveOn_log_Ioi.concaveOn` directly supplies the
 midpoint inequality, which is equivalent to convexity of −log(1−x).
 The other reused results include `Real.log_le_log`,
@@ -308,34 +313,34 @@ analytic library or vendored code for this lemma.
   replaces the exact mass equalities by pᵢ+qᴮᵢᵢ+qᴳᵢᵢ ≥ 1 and
   qᴮᵢⱼ+qᴳᵢⱼ ≥ 1 for i ≠ j. This is proved directly, using monotonicity
   of the logarithmic cost before the same midpoint inequality. It does
-  not require rescaling probabilities. The public Lemma 3.7 declaration
+  not require rescaling probabilities. The public Lemma 3.8 declaration
   specializes the helper to the original positive-weight/equality
   hypotheses. The stronger helper is available for reuse; the later
-  Corollary 3.8 proof instead uses the explicitly requested reduction
-  to Lemma 3.7.
+  Corollary 3.9 proof instead uses the explicitly requested reduction
+  to Lemma 3.8.
 - In `diagonal_le_function`, a zero weight is handled directly before
   division by αᵢ². For a positive weight, the proof follows the
   manuscript's exponential comparison. The constant β is proved
   positive as `HadwigerRamsey.beta_pos`, and all logarithm domains and
   radicand nonnegativity are justified explicitly. These are consequences
   of the existing assumptions, not new conditions.
-- There are no other logical changes to the Lemma 3.7 argument.
-  Corollary 3.8 is treated separately below.
+- There are no other logical changes to the Lemma 3.8 argument.
+  Corollary 3.9 is treated separately below.
 
 The manuscript source remains unchanged; the preceding corrections are
-implemented in the Lean proof and recorded here. The Corollary 3.8
+implemented in the Lean proof and recorded here. The Corollary 3.9
 formalization below uses the agreed closed bounds and explicitly positive δ.
 
 The root module imports `Opt.lean` and prints dependency reports for both
-Lemma 3.7 and `Optimization.opt_of_nonneg`. Both use only
+Lemma 3.8 and `Optimization.opt_of_nonneg`. Both use only
 `propext`, `Classical.choice`, and `Quot.sound`, including their dependency
-on Lemma 3.6.
+on Lemma 3.7.
 
 
-## Corollary 3.8: approximate optimization
+## Corollary 3.9: approximate optimization
 
 `HadwigerRamsey.optapprox` in `HadwigerRamsey/OptApprox.lean` proves the
-agreed closed version of Corollary 3.8: for every ζ > 0 there is δ > 0,
+agreed closed version of Corollary 3.9: for every ζ > 0 there is δ > 0,
 uniform in every positive dimension k ≤ 1/ζ and every choice of data.
 Weights satisfy αᵢ ≥ 0 and ∑αᵢ = 1; probabilities satisfy
 0 ≤ pᵢ,qᴮᵢⱼ,qᴳᵢⱼ ≤ 1−ζ. Matrix symmetry is included as in the manuscript.
@@ -344,22 +349,22 @@ inequalities, cannot all hold. The negative double sums are written out
 explicitly in the public statement, with the same β as before.
 There is no additional restriction such as ζ < 1 or αᵢ > 0.
 
-### Explicit dependency on Lemma 3.7
+### Explicit dependency on Lemma 3.8
 
 The new proof does not directly invoke `Optimization.opt_of_nonneg`.
 Instead its checked proof dependencies follow this chain:
 
-Corollary 3.8 → `OptApprox.bounded_dimensions` →
+Corollary 3.9 → `OptApprox.bounded_dimensions` →
 `OptApprox.fixed_dimension` → `OptApprox.defect_pos_on_bad` →
 `Optimization.opt_closed_from_opt` →
 `Optimization.opt_nonneg_equalities_from_opt` →
-`Optimization.opt_fintype` → **Lemma 3.7**.
+`Optimization.opt_fintype` → **Lemma 3.8**.
 
 `OptApprox/DependencyAudit.lean` inspects the elaborated proof expressions,
-checks that this endpoint reaches the public Lemma 3.7 declaration, and prints
+checks that this endpoint reaches the public Lemma 3.8 declaration, and prints
 the path during the root build. This is a dependency audit, not a proof
-premise. Lemma 3.7 itself still has its original proof
-through the earlier stronger helper and Lemma 3.6.
+premise. Lemma 3.8 itself still has its original proof
+through the earlier stronger helper and Lemma 3.7.
 
 ### Complete proof details and manuscript correspondence
 
@@ -374,15 +379,15 @@ through the earlier stronger helper and Lemma 3.6.
    are unchanged because every deleted row or column has zero weight.
    Mathlib's `Finset.sum_congr_set`, `Fintype.sum_equiv`, and
    `Fintype.equivFin` justify the restriction and reindexing needed to
-   apply Lemma 3.7.
+   apply Lemma 3.8.
 3. **Convert mass inequalities to equalities:** for each diagonal index,
    divide pᵢ, qᴮᵢᵢ, qᴳᵢᵢ by their sum; for each off-diagonal pair,
    divide qᴮᵢⱼ, qᴳᵢⱼ by their sum. All denominators are at least one.
    The new probabilities stay nonnegative and strictly below one and
-   the required sums become one. Applying Lemma 3.7 after positive-support
+   the required sums become one. Applying Lemma 3.8 after positive-support
    restriction gives an outcome for the reduced data. Monotonicity of
    −log(1−t), square root, and the weighted costs transfers that outcome
-   back to the original data. Symmetry is not needed for Lemma 3.7, so no
+   back to the original data. Symmetry is not needed for Lemma 3.8, so no
    symmetry condition is required by these reduction lemmas.
 4. **Make compactness concrete:** for fixed k, form the compact product
    box of weights in [0,1] and probabilities in [0,1−ζ]. The bound
@@ -394,7 +399,7 @@ through the earlier stronger helper and Lemma 3.6.
    D = ∑ᵢ max(1−pᵢ−qᴮᵢᵢ−qᴳᵢᵢ,0)
    + ∑ᵢ≠ⱼ max(1−qᴮᵢⱼ−qᴳᵢⱼ,0).
    This is continuous and nonnegative. It is strictly positive on `Bad`:
-   otherwise all mass sums are at least one, and the reduction to Lemma 3.7
+   otherwise all mass sums are at least one, and the reduction to Lemma 3.8
    contradicts the gap ζ in (c)–(e). If `Bad` is nonempty, its minimum
    m is positive. Choose δ = m/(k+k²+1). Conditions (a)–(b) would give
    D ≤ (k+k²)δ < m, a contradiction. If `Bad` is empty, choose δ = 1.
@@ -450,7 +455,7 @@ certificate values are unchanged. Expression evaluation and the convex minimum
 argument use explicit definitional conversions in `FOpt/Envelope.lean`.
 The dependency audit explicitly requests theorem bodies with
 `ConstantInfo.value? (allowOpaque := true)`, as required by Lean 4.33's API;
-it still checks the actual proof-expression path from Corollary 3.8 to Lemma 3.7.
+it still checks the actual proof-expression path from Corollary 3.9 to Lemma 3.8.
 
 The first migration started from `main` and preserved the unfinished
 Theorem 1.5 development separately on `codex/thomasonupper`. That branch
@@ -460,7 +465,7 @@ been completed as described below.
 
 Validation on the migration: the full Lean 4.33 build passed (8737 jobs),
 the source guard passed for all 32 Lean source files, and the dependency audit
-confirmed the path from Corollary 3.8 to Lemma 3.7. The root axiom reports for
+confirmed the path from Corollary 3.9 to Lemma 3.8. The root axiom reports for
 all completed endpoints contain only `propext`, `Classical.choice`, and
 `Quot.sound`. The five public endpoint declarations were compared against the
 previous version and are unchanged.
@@ -1068,7 +1073,7 @@ Logical correspondence and differences from the manuscript:
    cutoff N; the public endpoint chooses n-zero = N+1. Thus the equality
    case at the public cutoff also satisfies the existing helper's hypothesis.
    This only shifts the existential cutoff by one, without changing the
-   density parameter or mathematical argument. The application in Lemma 3.4
+   density parameter or mathematical argument. The application in Lemma 3.5
    passes its existing strict bound via `.le`; its statement is unchanged.
 
 Verification of the non-strict-cutoff update: `lake build` passes for the
@@ -1078,7 +1083,41 @@ report for `HadwigerRamsey.bipMinor` lists only `propext`, `Classical.choice`,
 and `Quot.sound`. All earlier formalized results remain in the root build.
 
 
-## Lemma 3.4
+## Corollary 3.4: unequal bipartite parts
+
+The public endpoint `HadwigerRamsey.unequalBipMinor` in
+`HadwigerRamsey/UnequalBipMinor.lean` states the new corollary exactly:
+for every K > 0 there are gamma > 0 and a positive integer n-zero such that
+every bipartite graph H with bipartition (A,B),
+`|B| >= |A| >= n-zero`, and at least `(1-gamma)*|A|*|B|` edges satisfies
+`had(H) >= K*|A|/sqrt(log |A|)`. The two finite parts are explicitly disjoint
+and cover `Fin n`, as required by a bipartition. There are no additional
+hypotheses or changes to the cutoff or coefficient.
+
+The proof obtains the same gamma and n-zero from the public Lemma 3.3.
+Mathlib's bipartite degree-sum identity identifies the total edge count
+with the crossing-edge count. The existing `Main.cross_minor_unequal`
+helper then applies `Main.balanced_dense_subsets` and
+`TwoBigSets.cross_minor`: trim the larger part to the smaller part's size
+without reducing density, apply Lemma 3.3, and transfer the minor back.
+
+The only difference from the written argument is the subset-selection
+proof. The manuscript chooses a uniformly random subset and compares its
+expected edge count. The reused Lean helper instead repeatedly removes
+a vertex whose degree into the opposite part is at most the current
+average. This gives the same existence conclusion and density bound,
+with the same constants. Positivity of both part sizes follows from the
+positive cutoff; the proof needs no extra boundary-case assumption.
+
+**Theorem 1.3 does not directly use Corollary 3.4.** Its existing proof
+effectively re-proves the required unequal-part bound through
+`Main.cross_minor_unequal` and the same trimming argument, using Lemma 3.3
+directly. The new corollary exposes that already proved argument as a
+public statement. Theorem 1.3's proof is preserved; only its supporting
+comments are renumbered. The new corollary's dependency audit checks its
+direct use of Lemma 3.3 and the existing unequal-part helper.
+
+## Lemma 3.5
 
 The endpoint is `HadwigerRamsey.denseMinor` in
 `HadwigerRamsey/DenseMinor.lean`. For every K > 0 it supplies gamma > 0
@@ -1239,7 +1278,7 @@ connectivity-interpretation theorems. All earlier endpoints remain in the
 root build.
 
 
-## Lemma 3.5
+## Lemma 3.6
 
 The endpoint is `HadwigerRamsey.twobigsets` in
 `HadwigerRamsey/TwoBigSets.lean`, following the revised local October 31
@@ -1256,7 +1295,7 @@ same `RealConnected` predicate as Lemma 3.2, already proved equivalent to
 the earlier integer vertex-connectivity definition. There are no additional
 assumptions on epsilon or C in the public statement.
 
-The actual proof of Lemma 3.5 calls Lemma 3.2
+The actual proof of Lemma 3.6 calls Lemma 3.2
 to obtain delta and both controlled partitions; its dependency is not
 merely an import. The proof also calls Lemma 3.3 to obtain its parameters.
 `TwoBigSets.large_separated_sets` calls Lemma 3.1.
@@ -1338,7 +1377,7 @@ The local manuscript has not been edited or uploaded.
 Verification: the full project passes `lake build` on Lean/Mathlib 4.33.0
 (8841 jobs). The source guard checks all 137 Lean files. All 80 root
 foundation reports use only `propext`, `Classical.choice`, and `Quot.sound`,
-including Lemma 3.5 and its supporting theorems. The proof-term
+including Lemma 3.6 and its supporting theorems. The proof-term
 dependency audit confirms the required uses of Lemmas 3.2, 3.1,
 and 3.3. All earlier endpoints remain in the root build.
 
@@ -1352,8 +1391,8 @@ three-colour decomposition of K_n has some colour with Hadwiger number at
 least `(1-epsilon)*beta*n/sqrt(log n)`. The local October 31 TeX file was
 reread after its substantial November 4 revisions, and remains ignored.
 
-`Main.mainthm_small` invokes Lemmas 3.5, 3.2, 3.3, and 3.4,
-Theorem 1.5, and Corollary 3.8.
+`Main.mainthm_small` invokes Lemmas 3.6, 3.2, 3.3, and 3.5,
+Theorem 1.5, and Corollary 3.9.
 Their conclusions supply the parameters and partitions used by the
 construction. No manuscript claim referenced in this proof is supplied
 as an additional unproved premise. `Main/DependencyAudit.lean` inspects
@@ -1362,9 +1401,9 @@ of Theorem 1.5 is used as its public theorem; the previously documented
 weaker standalone A.3 helper needs no further assertion here.
 
 The manuscript's contradiction argument is followed in order: two good
-colours from Lemma 3.5; a controlled partition of the remaining colour;
-a final exceptional class; density caps from Lemmas 3.3 and 3.4;
-conditions (a)--(e) of Corollary 3.8; and the optimization contradiction.
+colours from Lemma 3.6; a controlled partition of the remaining colour;
+a final exceptional class; density caps from Lemmas 3.3 and 3.5;
+conditions (a)--(e) of Corollary 3.9; and the optimization contradiction.
 The code separates these steps into the following modules:
 
 - `Partition.lean`: index the controlled pieces, optionally retaining the
@@ -1382,7 +1421,7 @@ The code separates these steps into the following modules:
 - `Analytic.lean`, `Numerics.lean`, `Parameters.lean`: logarithmic bounds,
   fixed numerical margins, and positive choices of all auxiliary errors.
 - `OptimizationData.lean`, `Configuration.lean`: fill the last row and
-  column by one-half, fill its p coordinate by zero, and use Corollary 3.8.
+  column by one-half, fill its p coordinate by zero, and use Corollary 3.9.
 - `LocalCosts.lean`, `Contradiction.lean`, `Final.lean`: assemble the
   classwise, global, and uniform-order bounds into the target theorem.
 
@@ -1392,14 +1431,14 @@ Logical correspondence and all variations from the written argument:
    replacing the manuscript's without-loss-of-generality relabelling.
    If a colour is sparse, its selected P is the entire vertex set exactly
    as in the text; otherwise P is the near-spanning connected set supplied
-   by the public Lemma 3.5.
+   by the public Lemma 3.6.
 2. The controlled pieces are a finite family and are enumerated
    arbitrarily. The retained large Y class need not be penultimate.
    Each active class carries either its robust-connectivity property or
    its degenerate-remainder property; the exceptional class is always last.
    The threshold 20*lambda*n, exceptional-size bound 21*lambda*n, and
    part-count bound 2/lambda are unchanged. An empty exceptional class is
-   retained, giving it zero mass, which Corollary 3.8 permits.
+   retained, giving it zero mass, which Corollary 3.9 permits.
 3. Choose
    `lambda = min(1/1000, min(epsilon*beta/1000, epsilon*beta^2/10000))`.
    This smaller explicit choice supplies the manuscript's required smallness
@@ -1447,7 +1486,7 @@ Logical correspondence and all variations from the written argument:
    a sign assumption on an intermediate entropy-minus-theta expression.
    It is an algebraic reorganization of the manuscript's lower-bound
    argument. The active-energy bounds use <= where the manuscript proves
-   <; the closed inequalities in Corollary 3.8 require only <=.
+   <; the closed inequalities in Corollary 3.9 require only <=.
 9. In the sparse-colour case, concavity of logarithm proves the same chord
    inequality `-log(1-q) <= (-log zeta)/(1-zeta)*q`; no separate derivative
    proof of the monotonicity of the ratio is needed. Mathlib's elementary
@@ -1458,11 +1497,11 @@ Logical correspondence and all variations from the written argument:
     `(2*alpha-last-alpha-last^2)*log 2`. Lean proves this identity and uses
     the same bound by `42*lambda*log 2`. The active energy and this error
     give the closed bounds `sqrt(full energy) <= beta-zeta` required by
-    Corollary 3.8, with all final probability caps and symmetries checked.
-11. Let NB,ND,NT be the cutoffs supplied by Lemmas 3.3 and 3.4 and
+    Corollary 3.9, with all final probability caps and symmetries checked.
+11. Let NB,ND,NT be the cutoffs supplied by Lemmas 3.3 and 3.5 and
     Theorem 1.5, respectively, and put M=max(max(ND,NB),NT). The final
     size cutoff
-    is the maximum of the Lemma 3.5 cutoff, 2*NT, 4,
+    is the maximum of the Lemma 3.6 cutoff, 2*NT, 4,
     `ceil(2*(M+2)/lambda)`, `ceil(10/lambda)`, and `ceil(1/epsilon-zero)`.
     These make every smaller graph large enough for the invoked result,
     keep logarithmic denominators positive, and absorb the sparse 1/n

@@ -67,7 +67,7 @@ theorem sparse_active_energy {n m : ℕ} (G : SimpleGraph (Fin n)) (hn : 0 < n)
   have hmul := mul_le_mul_of_nonneg_left hsum hf
   nlinarith only [hc,hmul]
 
-/-- Both alternatives supplied by Lemma 3.5 give the active entropy gap. -/
+/-- Both alternatives supplied by Lemma 3.6 give the active entropy gap. -/
 theorem colour_energy_gap {n m N : ℕ} (G : SimpleGraph (Fin n))
     {ε lam e θ δ₀ ζ : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1)
     (hlam : 0 < lam) (hlamsmall : lam ≤ 1/100) (he : 0 ≤ e)
