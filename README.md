@@ -40,24 +40,10 @@ meaning of the displayed asymptotic formula. The proof in
 checked Theorems 1.2 and 1.3, with integer rounding and the change from
 $\ln n$ to $\ln k$ made explicit.
 
-## General number of colours
+## Four colours
 
-The companion development in [ComponentTransfer](ComponentTransfer/README.md)
-proves the component transfer theorem and the general asymptotic for every
-fixed `r ≥ 2`:
-
-$$
-R_h(k;r)=\bigl(\beta_r^{-1}+o(1)\bigr)k\sqrt{\ln k}.
-$$
-
-Here `beta r` is the infimum of the finite component optimization program
-in that development. The unconditional endpoint is
-`ComponentTransfer.theorem5`; its proof supplies both the transfer lower
-bound (Theorem 3) and construction upper bound (Theorem 4), together with
-the graphon realization and entropy lifting lemmas. Both developments are
-included in the default local and GitHub Actions build.
-
-The [four-colour development](HadwigerRamsey4Col/README.md) proves
+The [four-colour development](HadwigerRamsey4Col/README.md) resolves the
+asymptotics of the four-colour Hadwiger–Ramsey numbers:
 
 $$
 R_h(k;4)=\bigl(\beta_4^{-1}+o(1)\bigr)k\sqrt{\ln k},
@@ -65,10 +51,17 @@ R_h(k;4)=\bigl(\beta_4^{-1}+o(1)\bigr)k\sqrt{\ln k},
 \beta_4=\sqrt{-\frac34\ln p},
 $$
 
-where $p\in(0,1)$ is the unique root of $3p^6+2p-2=0$. Its main theorem is
-`HadwigerRamsey4Col.theorem1_1`. The proof combines the general component
-transfer theorem with the exact four-colour component optimum, attained
-by four equal masses with three pairing partitions and one spanning partition.
+where $p\in(0,1)$ is the unique root of $3p^6+2p-2=0$. The main Lean
+theorem is `HadwigerRamsey4Col.theorem1_1`.
+
+This result is proved through the
+[component transfer theorem](ComponentTransfer/README.md), which relates
+Hadwiger–Ramsey asymptotics to a finite component optimization problem.
+Combining that theorem with the exact four-colour component optimum gives
+the constant above. The optimum is attained by four equal masses with
+three pairing partitions and one spanning partition. The component
+transfer and optimization proofs are both checked in Lean and included
+in the default local and GitHub Actions build.
 
 ## Supporting results and scope
 
