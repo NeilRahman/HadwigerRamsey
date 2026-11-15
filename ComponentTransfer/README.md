@@ -1,17 +1,21 @@
 # Proposition 4.1: component transfer
 
-This directory proves **Proposition 4.1**: for every fixed number of
-colours `r ≥ 2`, `ComponentTransfer.theorem5` proves the unconditional limit
+This directory formalizes **Proposition 4.1** of *Asymptotics of the
+three-color Hadwiger-Ramsey numbers* by **Sergey Norin and Neil Rahman**.
+For every fixed number of colours `r ≥ 2`, `ComponentTransfer.theorem5`
+proves the unconditional limit
 `hadwigerRamsey r k / (k * sqrt(log k)) → (beta r)⁻¹`.
 
 The Lean development roughly follows the arguments in
-[comptransfer.tex](comptransfer.tex), whose Theorem 5 is Proposition 4.1.
+[comptransfer.tex](comptransfer.tex). Its Theorem 5 is Proposition 4.1 of
+*Asymptotics of the three-color Hadwiger-Ramsey numbers*.
 Theorems 3 and 4 and Lemmas 6–8 of that companion source supply the supporting
-results. Their numbers below refer to the companion source, not to the main
-paper. The implementation details are described below.
+results. Their numbers below refer to that companion source.
+The implementation details are described below.
 
-Proposition 4.1 is used by [Proposition 4.2](../HadwigerRamsey4Col/README.md)
-to obtain the four-colour asymptotic from the exact component optimum.
+This transfer result is used by [Proposition 4.2](../HadwigerRamsey4Col/README.md)
+of *Asymptotics of the three-color Hadwiger-Ramsey numbers* to obtain the
+four-colour asymptotic from the exact component optimum.
 
 The optimization parameter is defined from the manuscript's finite component
 instances, independently of the Ramsey number.
@@ -23,7 +27,7 @@ instances, independently of the Ramsey number.
   `r`-edge-colouring of the complete graph in which every colour graph has
   Hadwiger number at most `(beta r + ε) * n / sqrt (log n)`.
   `constructionBound` is the equivalent filter formulation. The proof uses
-  the previously checked random-minor bound (Theorem 1 of this manuscript).
+  the previously checked random-minor bound (Theorem 1 of the companion source).
 - `ConstructionParameters.lean`: a common positive error parameter for the
   finite family of component estimates, the probability union bound, and
   the strict margin above the near-minimizing objective.

@@ -1,8 +1,10 @@
 # Hadwiger–Ramsey
 
-Lean formalization of the three-colour Hadwiger–Ramsey asymptotics
-(Theorem 1.1), the component transfer result (Proposition 4.1), and the
-four-colour asymptotics (Proposition 4.2).
+Lean formalization of results from *Asymptotics of the three-color
+Hadwiger-Ramsey numbers* by **Sergey Norin and Neil Rahman**. These include
+the three-colour Hadwiger–Ramsey asymptotics (Theorem 1.1), the component
+transfer result (Proposition 4.1), and the four-colour asymptotics
+(Proposition 4.2).
 
 The project uses Lean **4.33.0** and the matching Mathlib release. Both local
 builds and GitHub Actions read the version from `lean-toolchain`.

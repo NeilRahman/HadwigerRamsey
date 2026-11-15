@@ -1,8 +1,10 @@
 # Proposition 4.2: four-colour Hadwiger–Ramsey asymptotic
 
-This development proves **Proposition 4.2**, the four-colour
-Hadwiger–Ramsey asymptotic with its explicit leading constant. Its proof
-uses [Proposition 4.1](../ComponentTransfer/README.md), the component transfer theorem.
+This development formalizes **Proposition 4.2** of *Asymptotics of the
+three-color Hadwiger-Ramsey numbers* by **Sergey Norin and Neil Rahman**:
+the four-colour Hadwiger–Ramsey asymptotic with its explicit leading constant.
+Its proof uses [Proposition 4.1](../ComponentTransfer/README.md) of
+*Asymptotics of the three-color Hadwiger-Ramsey numbers*, the component transfer theorem.
 
 ## Main result
 
@@ -48,7 +50,8 @@ $\bigl(\sqrt{-(3/4)\ln p}\bigr)^{-1}$.
 
 The result combines two already checked theorems:
 
-1. [Proposition 4.1](../ComponentTransfer/Asymptotic.lean),
+1. [Proposition 4.1](../ComponentTransfer/Asymptotic.lean) of
+   *Asymptotics of the three-color Hadwiger-Ramsey numbers*,
    `ComponentTransfer.theorem5`, proves the Ramsey asymptotic for every
    fixed number of colours $r\ge2$, with the reciprocal of the component
    program's optimum as its leading constant.
@@ -103,7 +106,8 @@ The supporting optimization development formalizes Theorem 1, Lemmas 2–4,
 Proposition 5, and Lemma 6 of
 [four_colour_analytic.tex](four_colour_analytic.tex).
 Those numbers refer to the companion source; the resulting Hadwiger–Ramsey
-asymptotic is Proposition 4.2 of the main paper. The Lean declaration name
+asymptotic is Proposition 4.2 of *Asymptotics of the three-color
+Hadwiger-Ramsey numbers*. The Lean declaration name
 `theorem1_1` is retained for compatibility.
 The numerical estimates use Mathlib's exponential and logarithm
 bounds with exact rational arithmetic.

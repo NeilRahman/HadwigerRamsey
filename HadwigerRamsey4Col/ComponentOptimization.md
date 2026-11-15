@@ -1,16 +1,18 @@
 # Component optimization proof guide
 
-Proposition 4.2, the four-colour Hadwiger–Ramsey asymptotic with its exact leading
-constant, is stated in the [README](README.md). It uses Proposition 4.1,
-the [component transfer theorem](../ComponentTransfer/README.md).
-This guide records the
-supporting optimization results and their implementation.
+The [README](README.md) states Proposition 4.2 of *Asymptotics of the
+three-color Hadwiger-Ramsey numbers* by **Sergey Norin and Neil Rahman**:
+the four-colour Hadwiger–Ramsey asymptotic with its exact leading constant.
+Its proof uses Proposition 4.1 of *Asymptotics of the three-color
+Hadwiger-Ramsey numbers*, the [component transfer theorem](../ComponentTransfer/README.md).
+This guide records the supporting optimization results and their implementation.
 
 This development formalizes **Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6** of
 [four_colour_analytic.tex](four_colour_analytic.tex). It builds on the general
 component program in `ComponentTransfer`.
 The numbered supporting results below refer to this companion TeX source;
-the final asymptotic is Proposition 4.2 of the main paper.
+the final asymptotic is Proposition 4.2 of *Asymptotics of the three-color
+Hadwiger-Ramsey numbers*.
 
 ## Exact optimum and attainment
 

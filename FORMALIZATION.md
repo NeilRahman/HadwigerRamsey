@@ -1,5 +1,9 @@
 # Formalization status
 
+This guide records the formalization of the numbered results in
+*Asymptotics of the three-color Hadwiger-Ramsey numbers* by
+**Sergey Norin and Neil Rahman**.
+
 ## Numbered results
 
 The statuses below concern the stated mathematical results. A more general
@@ -65,13 +69,15 @@ The short-path argument in Lemma A.4, the greedy domination argument in the
 proof of Theorem 1.5, and the intermediate calculations in Appendix B remain
 proved Lean helpers; they are not separate numbered manuscript results.
 
-Proposition 4.1 is the component transfer theorem, also presented as Theorem 5
-in [comptransfer.tex](ComponentTransfer/comptransfer.tex). Proposition 4.2 is
-the four-colour Hadwiger–Ramsey asymptotic: it applies Proposition 4.1 to the
-optimum established following [four_colour_analytic.tex](HadwigerRamsey4Col/four_colour_analytic.tex).
+Propositions 4.1 and 4.2 of *Asymptotics of the three-color Hadwiger-Ramsey
+numbers* are the component transfer theorem and the four-colour
+Hadwiger–Ramsey asymptotic, respectively. The former is also presented as
+Theorem 5 in [comptransfer.tex](ComponentTransfer/comptransfer.tex).
+The latter applies that transfer theorem to the optimum established following
+[four_colour_analytic.tex](HadwigerRamsey4Col/four_colour_analytic.tex).
 The companion sources retain their own supporting-result numbering; the
 Lean names `ComponentTransfer.theorem5` and `HadwigerRamsey4Col.theorem1_1`
-are stable declaration names, not main-paper claim numbers.
+are retained as stable declaration names.
 
 ## Main theorem endpoints
 
