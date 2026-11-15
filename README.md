@@ -34,8 +34,39 @@ theorem theorem1_1 :
       Filter.atTop (nhds beta⁻¹)
 ```
 
-`hadwigerRamsey k` is the least vertex count with the stated forcing
-property. `Filter.Tendsto` says that its ratio to $k\sqrt{\ln k}$ tends to
+Here `hadwigerRamsey k` is exactly $R_h(k;3)$. The definitions in the
+namespace `HadwigerRamsey` are:
+
+```lean
+def IsThreeDecomposition {n : ℕ} (G : Fin 3 → SimpleGraph (Fin n)) : Prop :=
+  ∀ u v, u ≠ v → ∃! i, (G i).Adj u v
+
+def ForcesMinor (n k : ℕ) : Prop :=
+  ∀ G : Fin 3 → SimpleGraph (Fin n), IsThreeDecomposition G →
+    ∃ i : Fin 3, HasCliqueMinor (G i) k
+
+noncomputable def hadwigerRamsey (k : ℕ) : ℕ :=
+  Nat.find (Ramsey.forcesMinor_exists k)
+```
+
+`Fin n` is the vertex set $\{0,\ldots,n-1\}$, and `Fin 3` indexes the
+three colours. The graph `G i` contains the edges of colour `i`.
+`∃! i` means that exactly one colour contains each pair of distinct
+vertices, so `IsThreeDecomposition` describes an edge colouring of $K_n$.
+`HasCliqueMinor (G i) k` means that colour contains a $K_k$ minor, using
+the branch sets described above. Thus `ForcesMinor n k` quantifies over
+**every** three-colouring.
+
+`Nat.find` selects the **least** natural number satisfying `ForcesMinor n k`;
+`Ramsey.forcesMinor_exists k` is the proved existence of such an order.
+The checked results `hadwigerRamsey_spec` and `hadwigerRamsey_le` verify
+that this order forces the minor and is no larger than any other forcing
+order. These definitions and proofs can be inspected in
+[Decomposition.lean](HadwigerRamsey/Decomposition.lean),
+[Graph.lean](HadwigerRamsey/Graph.lean), and
+[Ramsey/Definition.lean](HadwigerRamsey/Ramsey/Definition.lean).
+
+`Filter.Tendsto` says that the ratio to $k\sqrt{\ln k}$ tends to
 $\beta^{-1}$ as the integer $k$ tends to infinity; this is exactly the
 meaning of the displayed asymptotic formula. The proof in
 [Ramsey.lean](HadwigerRamsey/Ramsey.lean) deduces this limit from the

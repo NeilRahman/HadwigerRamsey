@@ -38,7 +38,45 @@ theorem theorem1_1 :
       Filter.atTop (nhds beta4⁻¹)
 ```
 
-`hadwigerRamsey k` is exactly `ComponentTransfer.hadwigerRamsey 4 k`.
+Here `hadwigerRamsey k` is exactly $R_h(k;4)$. It is defined in the
+namespace `HadwigerRamsey4Col` by:
+
+```lean
+noncomputable abbrev hadwigerRamsey (k : ℕ) : ℕ :=
+  ComponentTransfer.hadwigerRamsey 4 k
+```
+
+The underlying definitions in the namespace `ComponentTransfer`, with
+`HadwigerRamsey` open, are:
+
+```lean
+def IsDecomposition {r n : ℕ} (G : Fin r → SimpleGraph (Fin n)) : Prop :=
+  ∀ u v, u ≠ v → ∃! c, (G c).Adj u v
+
+def ForcesMinor (r n k : ℕ) : Prop :=
+  ∀ G : Fin r → SimpleGraph (Fin n), IsDecomposition G →
+    ∃ c : Fin r, HasCliqueMinor (G c) k
+
+noncomputable def hadwigerRamsey (r k : ℕ) : ℕ :=
+  sInf {n | ForcesMinor r n k}
+```
+
+`Fin n` is the vertex set $\{0,\ldots,n-1\}$, and `Fin r` indexes the
+colours. The graph `G c` contains the edges of colour `c`; `∃! c` requires
+exactly one colour for each pair of distinct vertices. Thus
+`ForcesMinor 4 n k` says that **every** four-colouring of $K_n$ has a colour
+containing a $K_k$ minor. `HasCliqueMinor` uses the branch sets described above.
+
+`sInf` takes the infimum of these natural-number orders. The set is proved
+nonempty for `r ≥ 2` using the transfer bound, so this infimum is its
+**least element**. The checked results `ComponentTransfer.hadwigerRamsey_spec`
+and `ComponentTransfer.hadwigerRamsey_le` establish that it forces the minor
+and is no larger than any other forcing order. See
+[ComponentTransfer/Ramsey.lean](../ComponentTransfer/Ramsey.lean) for the
+definitions and leastness proofs, [Graph.lean](../HadwigerRamsey/Graph.lean)
+for `HasCliqueMinor`, and [Ramsey.lean](Ramsey.lean) for the specialization
+to four colours.
+
 The limit says that $R_h(k;4)/(k\sqrt{\ln k})$ tends to $\beta_4^{-1}$,
 which is the meaning of the displayed asymptotic formula.
 `beta4_eq_of_root` proves the stated value of $\beta_4$ for every root
