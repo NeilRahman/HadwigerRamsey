@@ -10,15 +10,15 @@ namespace HadwigerRamsey4Col
 noncomputable abbrev hadwigerRamsey (k : ℕ) : ℕ :=
   ComponentTransfer.hadwigerRamsey 4 k
 
-/-- The exact four-colour constant, for any root satisfying the manuscript's specification. -/
+/-- The exact constant in Proposition 4.2, for any root satisfying its specification. -/
 theorem beta4_eq_of_root {p : ℝ} (hp : 0 < p ∧ p < 1 ∧ 3*p^6+2*p-2=0) :
     beta4 = sqrt (-(3/4 : ℝ)*log p) := by
   have he : p = parameter := ExistsUnique.unique exists_unique_parameter hp parameter_spec
   subst p
   exact beta4_eq
 
-/-- The four-colour analogue of Theorem 1.1: the Hadwiger--Ramsey asymptotic.
-The leading constant is evaluated by `beta4_eq_of_root`. -/
+/-- Proposition 4.2: the four-colour Hadwiger--Ramsey asymptotic, using Proposition 4.1.
+The leading constant is evaluated by `beta4_eq_of_root`; the declaration name is retained. -/
 theorem theorem1_1 :
     Filter.Tendsto
       (fun k : ℕ => (hadwigerRamsey k : ℝ) /
@@ -26,7 +26,7 @@ theorem theorem1_1 :
       Filter.atTop (nhds beta4⁻¹) := by
   simpa only [hadwigerRamsey, beta4] using ComponentTransfer.theorem5 4 (by decide)
 
-/-- The same asymptotic with the exact algebraic-logarithmic constant substituted. -/
+/-- Proposition 4.2 with the exact algebraic-logarithmic constant substituted. -/
 theorem theorem1_1_explicit {p : ℝ} (hp : 0 < p ∧ p < 1 ∧ 3*p^6+2*p-2=0) :
     Filter.Tendsto
       (fun k : ℕ => (hadwigerRamsey k : ℝ) /

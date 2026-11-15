@@ -35,7 +35,7 @@ theorem IsCompleteEquipartition.sum_card {V : Type*} [Fintype V] [DecidableEq V]
   exact hh.symm
 
 /-- Mathlib's equitable-family bound gives the precise floor-average
-part sizes needed when A.1 is used in the asymptotic corollary. -/
+part sizes needed when Lemma A.1 is used in the alternative to Lemma A.3. -/
 theorem IsCompleteEquipartition.card_part_bounds {V : Type*} [Fintype V] [DecidableEq V]
     {G : SimpleGraph V} {m : ℕ} {W : Fin m → Finset V}
     (hW : IsCompleteEquipartition G W) (i : Fin m) :

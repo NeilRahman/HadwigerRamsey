@@ -29,7 +29,7 @@ theorem pathInterior_card {n : ℕ} {G : SimpleGraph (Fin n)}
   omega
 
 /-- The internal vertices of a disjoint family use at most the available
-vertices. This is the counting input to appendix Lemma A.4. -/
+vertices. This is the short-path counting input within Lemma A.4. -/
 theorem sum_pathInterior_card_le {n : ℕ} {G : SimpleGraph (Fin n)}
     {u v : Fin n} (P : Finset (G.Path u v))
     (hd : (P : Set (G.Path u v)).PairwiseDisjoint pathInterior) :
@@ -38,7 +38,7 @@ theorem sum_pathInterior_card_le {n : ℕ} {G : SimpleGraph (Fin n)}
   rw [← card_biUnion hd]
   simpa using card_le_univ (P.biUnion pathInterior)
 
-/-- The short-path counting part of A.4, starting from any family of at
+/-- The short-path counting step in Lemma A.4, starting from any family of at
 least k distinct internally vertex-disjoint paths supplied by Menger. -/
 theorem short_paths_of_family {n k : ℕ} {G : SimpleGraph (Fin n)}
     {u v : Fin n} (huv : u ≠ v) (hk : 0 < k)

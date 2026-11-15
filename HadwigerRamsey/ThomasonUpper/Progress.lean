@@ -24,8 +24,11 @@ Checked appendix ingredients used in the completed proof of Theorem 1.5.
 
 The public endpoint `HadwigerRamsey.thomasonupper` is in
 `HadwigerRamsey/ThomasonUpper.lean`; `Final.lean` assembles the proof.
-A.1 has its full complete-equipartition conclusion. The uniform
-complete-family consequence of A.3 is in `AsymptoticFamily.lean`.
+Lemma A.1 has its full complete-equipartition conclusion. The alternative
+to Lemma A.2 is in `DensityDeletion.lean`; it uses uncapped entropy.
+The alternative to Lemma A.3 is in `AsymptoticFamily.lean`, with a lower bound
+on complementary densities and no assertion of coverage or balance.
+`ReservoirExistence.lean` proves a stronger result covering Lemma A.4.
 The reservoirs, allocation budgets, capped spanning subgraph, and
 finite clique-minor construction imported here supply the final assembly.
 -/

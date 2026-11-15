@@ -1,7 +1,8 @@
-# Four-colour Hadwiger–Ramsey asymptotic
+# Proposition 4.2: four-colour Hadwiger–Ramsey asymptotic
 
-This development proves the four-colour analogue of Theorem 1.1 of the
-Hadwiger–Ramsey manuscript, with an explicit leading constant.
+This development proves **Proposition 4.2**, the four-colour
+Hadwiger–Ramsey asymptotic with its explicit leading constant. Its proof
+uses [Proposition 4.1](../ComponentTransfer/README.md), the component transfer theorem.
 
 ## Main result
 
@@ -24,7 +25,7 @@ $K_n$ with four colours has a monochromatic $K_k$ minor. A $K_k$ minor
 consists of $k$ nonempty, connected, pairwise disjoint vertex sets with an
 edge between every two distinct sets. All logarithms are natural.
 
-In the namespace `HadwigerRamsey4Col`, the public statement in
+In the namespace `HadwigerRamsey4Col`, the public statement of Proposition 4.2 in
 [Ramsey.lean](Ramsey.lean) is:
 
 ```lean
@@ -47,7 +48,7 @@ $\bigl(\sqrt{-(3/4)\ln p}\bigr)^{-1}$.
 
 The result combines two already checked theorems:
 
-1. [Component transfer Theorem 5](../ComponentTransfer/Asymptotic.lean),
+1. [Proposition 4.1](../ComponentTransfer/Asymptotic.lean),
    `ComponentTransfer.theorem5`, proves the Ramsey asymptotic for every
    fixed number of colours $r\ge2$, with the reciprocal of the component
    program's optimum as its leading constant.
@@ -98,8 +99,12 @@ restriction on its number of atoms or component pattern. Its main steps are:
 - Apply the four-atom stability and dual bounds to the surviving pattern
   ([Lemma5.lean](Lemma5.lean), [TriangleReduction.lean](TriangleReduction.lean)).
 
-This also formalizes Theorem 1, Lemmas 2–4, Proposition 5, and Lemma 6 of
+The supporting optimization development formalizes Theorem 1, Lemmas 2–4,
+Proposition 5, and Lemma 6 of
 [four_colour_analytic.tex](four_colour_analytic.tex).
+Those numbers refer to the companion source; the resulting Hadwiger–Ramsey
+asymptotic is Proposition 4.2 of the main paper. The Lean declaration name
+`theorem1_1` is retained for compatibility.
 The numerical estimates use Mathlib's exponential and logarithm
 bounds with exact rational arithmetic.
 

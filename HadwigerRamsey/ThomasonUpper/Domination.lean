@@ -88,7 +88,7 @@ theorem exists_dominating_set_of_pow_lt_one {V U : Type*}
   have : a ∈ A.filter fun a => ∀ b ∈ M, ¬R a b := mem_filter.mpr ⟨ha, hn⟩
   simp [card_eq_zero.mp hz] at this
 
-/-- The precise logarithmic budget in Lemma `lem:dominating-set`.
+/-- A logarithmic budget for the greedy domination step in Theorem 1.5.
 Nonempty finite sides make all logarithms and the greedy choices meaningful. -/
 theorem exists_dominating_set {V U : Type*} [DecidableEq V] [DecidableEq U]
     (A : Finset V) (B : Finset U) (hA : A.Nonempty) (hB : B.Nonempty)

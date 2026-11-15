@@ -12,9 +12,10 @@ namespace HadwigerRamsey.ThomasonUpper
 
 set_option maxHeartbeats 1600000
 
-/-- The complete-family consequence of A.3 needed for Theorem 1.5.
-Vertices discarded in the trimming step need not be added back, since
-the final minor construction uses only the complete family. -/
+/-- The complete-family alternative to Lemma A.3 used for Theorem 1.5.
+This assumes complementary densities bounded below and uses uncapped entropy.
+It does not assert coverage, balance, or the manuscript's sharp upper part count.
+Vertices discarded in trimming need not be added back for the minor construction. -/
 theorem asymptotic_complete_family {a lambda eta : ℝ}
     (ha : 0 < a) (ha1 : a ≤ 1) (hlambda : 0 < lambda)
     (heta : 0 < eta) (heta1 : eta < 1) :

@@ -4,8 +4,8 @@ open Real
 
 namespace HadwigerRamsey.ThomasonUpper
 
-/-- The uniform auxiliary constants required at the beginning of A.3.
-The strict gain and ratio conditions are the manuscript's actual choices. -/
+/-- Uniform auxiliary constants for the complete-family alternative to Lemma A.3.
+The gain and ratio conditions implement the same entropy-margin argument. -/
 theorem exists_multitype_asymptotic_parameters {a lambda eta : ℝ}
     (ha : 0 < a) (hlambda : 0 < lambda) (heta : 0 < eta) :
     ∃ gamma xi tau phi omega : ℝ,

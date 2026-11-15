@@ -14,7 +14,7 @@ theorem measurableSet_allIn {I Ω : Type*} [MeasurableSpace Ω]
   MeasurableSet.biInter (Set.to_countable _) (fun i _ => hA i)
 
 /-- Disjoint vertex sets give independent all-label events. This is the
-independence step for the internally disjoint paths in appendix A.5. -/
+independence step for the internally disjoint paths in Lemma A.4. -/
 theorem independent_allIn {I J Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) (A : I → Set Ω) (hA : ∀ i, MeasurableSet (A i))
     (hind : iIndepSet A μ) (S : J → Finset I)

@@ -6,9 +6,10 @@ import HadwigerRamsey4Col.Lemma6
 import HadwigerRamsey4Col.Theorem1
 import HadwigerRamsey4Col.Ramsey
 
-/-! The four-colour Hadwiger--Ramsey asymptotic with its exact leading constant.
-The component optimization proves Theorem 1 and numbered results 2–6 of the local
-analytic manuscript; the Ramsey limit follows from `ComponentTransfer.theorem5`. -/
+/-! Proposition 4.2: the four-colour Hadwiger--Ramsey asymptotic.
+The component optimization proves Theorem 1 and supporting results 2–6 of
+`four_colour_analytic.tex`; the Ramsey limit uses Proposition 4.1,
+`ComponentTransfer.theorem5`. -/
 
 #print axioms HadwigerRamsey4Col.beta4_eq_of_root
 #print axioms HadwigerRamsey4Col.theorem1_1

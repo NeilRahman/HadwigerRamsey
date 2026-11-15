@@ -1,12 +1,17 @@
-# Component transfer formalization
+# Proposition 4.1: component transfer
 
-This directory proves **Theorems 3, 4, and 5 and Lemmas 6, 7, and 8** of
-[comptransfer.tex](comptransfer.tex), for every fixed number of colours `r ≥ 2`. In particular,
-`ComponentTransfer.theorem5` proves the unconditional limit
+This directory proves **Proposition 4.1**: for every fixed number of
+colours `r ≥ 2`, `ComponentTransfer.theorem5` proves the unconditional limit
 `hadwigerRamsey r k / (k * sqrt(log k)) → (beta r)⁻¹`.
 
-The Lean development roughly follows the arguments in this TeX source.
-The implementation details are described below.
+The Lean development roughly follows the arguments in
+[comptransfer.tex](comptransfer.tex), whose Theorem 5 is Proposition 4.1.
+Theorems 3 and 4 and Lemmas 6–8 of that companion source supply the supporting
+results. Their numbers below refer to the companion source, not to the main
+paper. The implementation details are described below.
+
+Proposition 4.1 is used by [Proposition 4.2](../HadwigerRamsey4Col/README.md)
+to obtain the four-colour asymptotic from the exact component optimum.
 
 The optimization parameter is defined from the manuscript's finite component
 instances, independently of the Ramsey number.

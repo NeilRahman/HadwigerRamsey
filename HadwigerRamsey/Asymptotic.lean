@@ -29,7 +29,7 @@ lemma eventually_sqrt_log_le (c : ℝ) (hc : 0 < c) :
   simpa only [← Real.sqrt_eq_rpow, Real.rpow_one] using h
 
 
-/-- Uniform asymptotic estimate, Lemma `lem:uniform-decay` of the manuscript. -/
+/-- Uniform asymptotic estimate used after Lemma B.1 to prove Theorem 1.4. -/
 theorem uniform_tail_bound (ε B : ℝ) (hε : 0 < ε) (_hB : 0 ≤ B) :
     ∃ n₀ : ℕ, ∀ n ≥ n₀, ∀ Λ : ℝ, ε^2 ≤ Λ → Λ ≤ B →
       let R := (1+ε) * (n : ℝ) * sqrt Λ / sqrt (log n)

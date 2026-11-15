@@ -1,7 +1,8 @@
 # Hadwiger–Ramsey
 
-Lean formalization of the three-colour and four-colour Hadwiger–Ramsey
-asymptotics, together with the general component transfer theorems.
+Lean formalization of the three-colour Hadwiger–Ramsey asymptotics
+(Theorem 1.1), the component transfer result (Proposition 4.1), and the
+four-colour asymptotics (Proposition 4.2).
 
 The project uses Lean **4.33.0** and the matching Mathlib release. Both local
 builds and GitHub Actions read the version from `lean-toolchain`.
@@ -39,10 +40,10 @@ meaning of the displayed asymptotic formula. The proof in
 checked Theorems 1.2 and 1.3, with integer rounding and the change from
 $\ln n$ to $\ln k$ made explicit.
 
-## Four colours
+## Four colours: Proposition 4.2
 
-The [four-colour development](HadwigerRamsey4Col/README.md) resolves the
-asymptotics of the four-colour Hadwiger–Ramsey numbers:
+**Proposition 4.2.** The [four-colour development](HadwigerRamsey4Col/README.md)
+proves the asymptotics of the four-colour Hadwiger–Ramsey numbers:
 
 $$
 R_h(k;4)=\bigl(\beta_4^{-1}+o(1)\bigr)k\sqrt{\ln k},
@@ -53,8 +54,7 @@ $$
 where $p\in(0,1)$ is the unique root of $3p^6+2p-2=0$. The main Lean
 theorem is `HadwigerRamsey4Col.theorem1_1`.
 
-This result is proved through the
-[component transfer theorem](ComponentTransfer/README.md), which relates
+The proof uses [Proposition 4.1, the component transfer theorem](ComponentTransfer/README.md), which relates
 Hadwiger–Ramsey asymptotics to a finite component optimization problem.
 Combining that theorem with the exact four-colour component optimum gives
 the constant above. The optimum is attained by four equal masses with
@@ -63,6 +63,21 @@ transfer and optimization proofs are both checked in Lean and included
 in the default local and GitHub Actions build.
 
 ## Supporting results and scope
+
+| Numbered results | Lean status |
+| --- | --- |
+| Theorems 1.1–1.5 | Proved. |
+| Lemmas 3.1–3.3 and 3.5–3.8; Corollaries 3.4 and 3.9 | Proved. |
+| Propositions 4.1 and 4.2 | Proved in `ComponentTransfer` and `HadwigerRamsey4Col`, respectively. |
+| Lemma A.1 | Proved, with the class-index set explicitly nonempty. |
+| Lemma A.2 | Not proved as stated: Lean uses a different stability estimate for uncapped entropy under a lower bound on complementary densities. |
+| Lemma A.3 | Not proved as stated: Lean uses a complete family in a suitably capped graph, without asserting full vertex coverage, balanced part sizes, or the stated sharp upper bound on the number of parts. |
+| Lemma A.4 | Covered by a stronger proved reservoir estimate; the displayed path count follows for sufficiently large orders. |
+| Lemma B.1 | Proved in a more general edge-weighted form. |
+
+The variations in Lemmas A.2 and A.3 are part of a similar but different
+proof of Theorem 1.5; its full statement is proved. The
+[formalization guide](FORMALIZATION.md#numbered-results) gives the precise correspondence.
 
 Theorem 1.2 is proved as `HadwigerRamsey.existencethm`,
 for every sufficiently large integer order, including odd orders.
@@ -97,8 +112,8 @@ large core of a dense balanced bipartite graph; the statement matches the
 manuscript. The auxiliary constants and pruning
 argument differ as detailed in the guide.
 
-Lemma 3.1, for a nonempty ground set, is also proved as
-`HadwigerRamsey.bigset`; see the guide for the empty-set boundary condition.
+Lemma 3.1, for a nonempty ground set as in the manuscript, is proved as
+`HadwigerRamsey.bigset`.
 
 Lemma 3.2 is proved as `HadwigerRamsey.connectedsets` in
 `HadwigerRamsey/ConnectedSets.lean`, following the
@@ -112,7 +127,7 @@ partitions from Lemma 3.2, applies Lemma 3.1, and applies Lemma 3.3
 to the remaining colour. The build checks these theorem dependencies.
 
 Lemma 3.7 is proved as `HadwigerRamsey.fopt`; its alternative
-cubic-bound proof and endpoint convention are described in the guide.
+cubic-bound proof is described in the guide.
 
 Lemma 3.8 is proved as `HadwigerRamsey.opt`. Its symbolic proof reuses
 Lemma 3.7 and Mathlib, with a stronger helper allowing zero weights and
@@ -127,19 +142,11 @@ Theorem 1.5 is fully proved as `HadwigerRamsey.thomasonupper` in
 `HadwigerRamsey/ThomasonUpper.lean`. Its statement has the exact ordered
 double sum, capped densities, and additive error outside the square root.
 The appendix development is in `HadwigerRamsey/ThomasonUpper/`, including
-Lemma A.1, vertex-deletion stability (Lemma A.2), the uniform complete-family
-consequence of Corollary A.3, random reservoirs, and the final clique-minor
+Lemma A.1, the alternatives to Lemmas A.2 and A.3 described above,
+the stronger reservoir result covering Lemma A.4, and the final clique-minor
 construction.
 The Menger step uses the existing public finite vertex-Menger proof
 vendored in `vendor/menger/`.
-
-**Corollary A.3 has a weaker standalone conclusion in Lean:** the proved
-complete-family result supplies the required disjoint sets, edges between
-distinct sets, part-count bounds, and maximum part-size bound, but does
-not assert that they cover the original graph or have globally balanced
-sizes. Theorem 1.5 uses only the proved properties and has its full stated
-conclusion. All numbered main-text claims are formalized; see the guide
-for this appendix distinction and the other stated technical conventions.
 
 The endpoints use only the standard classical foundations. The kernel reports only
 `propext`, `Classical.choice`, and `Quot.sound`.

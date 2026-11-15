@@ -65,7 +65,8 @@ theorem fixed_partition_bound {s : ℕ} (hs : 2 ≤ s) (f : Fin n → Fin s)
     (fun a _ => Finset.sum_nonneg (fun e _ => hw e))
     ((sum_cross_weights_le f w hw).trans hT)
 
-/-- Corollary `cor:finite`: a union bound over all vertex-to-part maps. -/
+/-- Lemma B.1 in the more general edge-weighted form: a union bound over
+all vertex-to-part maps. The block specialization takes `T = n^2*L^2/2`. -/
 theorem finite_minor_bound {s : ℕ} (hs : 2 ≤ s)
     (w : Edge n → ℝ) (hw : ∀ e, 0 ≤ w e)
     (hA : ∀ e, MeasurableSet (edgeEvent G e))

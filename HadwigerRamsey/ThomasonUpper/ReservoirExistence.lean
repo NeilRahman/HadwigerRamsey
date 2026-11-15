@@ -7,7 +7,7 @@ open Finset MeasureTheory ProbabilityTheory Real
 
 namespace HadwigerRamsey.ThomasonUpper
 
-/-- Convert A.4 into the fixed path-length bound used in A.5. -/
+/-- The short-path step used to prove the reservoir result, Lemma A.4. -/
 theorem short_paths_linear_connectivity {n : ℕ} (G : SimpleGraph (Fin n))
     {c : ℝ} (hc : 0 < c) (hn : 0 < n)
     (hconn : c*n ≤ (vertexConnectivity G : ℝ)) {u v : Fin n} (huv : u ≠ v) :
@@ -28,7 +28,8 @@ theorem short_paths_linear_connectivity {n : ℕ} (G : SimpleGraph (Fin n))
     linarith [hlen p hp]
   exact_mod_cast hpR
 
-/-- The three conclusions of appendix A.5, at a specified sampling rate. -/
+/-- A stronger form of Lemma A.4 at a specified sampling rate.
+The path count is at least `n*r^H` whenever `r ≤ c/4`. -/
 def Reservoirs {n : ℕ} (G : SimpleGraph (Fin n)) (c r : ℝ) (H : ℕ)
     (C D : Finset (Fin n)) : Prop :=
   Disjoint C D ∧ (C.card : ℝ) ≤ 2*r*n ∧ (D.card : ℝ) ≤ 2*r*n ∧
@@ -38,7 +39,7 @@ def Reservoirs {n : ℕ} (G : SimpleGraph (Fin n)) (c r : ℝ) (H : ℕ)
       (∀ p ∈ Q, p.val.length ≤ H ∧ pathInterior p ⊆ C) ∧
       (Q : Set (G.Path u v)).PairwiseDisjoint pathInterior
 
-/-- A finite form of A.5. The numerical failure-probability condition is
+/-- A finite, stronger form of Lemma A.4. The numerical failure-probability condition is
 subsequently discharged by the eventual logarithmic sampling rate. -/
 theorem reservoirs_of_failure_lt_one {n : ℕ} (G : SimpleGraph (Fin n))
     {c r : ℝ} (hc : 0 < c) (hn : 0 < n) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2)
@@ -143,8 +144,9 @@ theorem reservoirs_of_failure_lt_one {n : ℕ} (G : SimpleGraph (Fin n))
     · intro p hp q hq hpq
       exact hPdisj e (mem_filter.mp hp).1 (mem_filter.mp hq).1 hpq
 
-/-- Appendix A.5 with the manuscript's exact sampling rate, path bound,
-and number of surviving paths. The order threshold depends only on c. -/
+/-- A stronger reservoir theorem covering Lemma A.4, with the same sampling
+rate and path-length bound. Its `c*n*r^(H-1)/4` paths give the manuscript's
+`n*r^H` for all sufficiently large orders. The threshold depends only on c. -/
 theorem exists_reservoirs (c : ℝ) (hc : 0 < c) :
     ∃ N : ℕ, ∀ n ≥ N, ∀ G : SimpleGraph (Fin n),
       c*n ≤ (vertexConnectivity G : ℝ) →

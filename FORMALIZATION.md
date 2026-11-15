@@ -1,5 +1,80 @@
 # Formalization status
 
+## Numbered results
+
+The statuses below concern the stated mathematical results. A more general
+Lean theorem can cover a statement without repeating it as a separate wrapper.
+The two substantive exceptions are Lemmas A.2 and A.3: the proof of
+Theorem 1.5 uses related results with different intermediate statements.
+
+| Result | Lean status and endpoint |
+| --- | --- |
+| Theorem 1.1 | Proved: `HadwigerRamsey.theorem1_1`. |
+| Theorem 1.2 | Proved: `HadwigerRamsey.existencethm`. |
+| Theorem 1.3 | Proved: `HadwigerRamsey.mainthm`. |
+| Theorem 1.4 | Proved: `HadwigerRamsey.thomasonlower`. |
+| Theorem 1.5 | Proved: `HadwigerRamsey.thomasonupper`. |
+| Lemma 3.1 | Proved: `HadwigerRamsey.bigset`, with the stated nonempty ground set. |
+| Lemma 3.2 | Proved: `HadwigerRamsey.connectedsets`. |
+| Lemma 3.3 | Proved: `HadwigerRamsey.bipMinor`. |
+| Corollary 3.4 | Proved: `HadwigerRamsey.unequalBipMinor`. |
+| Lemma 3.5 | Proved: `HadwigerRamsey.denseMinor`. |
+| Lemma 3.6 | Proved: `HadwigerRamsey.twobigsets`. |
+| Lemma 3.7 | Proved: `HadwigerRamsey.fopt`, including weights zero and one. |
+| Lemma 3.8 | Proved: `HadwigerRamsey.opt`. |
+| Corollary 3.9 | Proved: `HadwigerRamsey.optapprox`, with closed bounds and positive δ. |
+| Proposition 4.1 | Proved: `ComponentTransfer.theorem5` in `ComponentTransfer/Asymptotic.lean`. |
+| Proposition 4.2 | Proved: `HadwigerRamsey4Col.theorem1_1` and `theorem1_1_explicit` in `HadwigerRamsey4Col/Ramsey.lean`. |
+| Lemma A.1 | Proved: `ThomasonUpper.multitype_complete_equipartition`, with the class-index set explicitly nonempty. |
+| Lemma A.2 | Not proved as stated. `ThomasonUpper.vertex_deletion_stability` supplies a different, uncapped-entropy stability result. |
+| Lemma A.3 | Not proved as stated. `ThomasonUpper.asymptotic_complete_family` supplies a related complete-family result under a lower bound on complementary densities. |
+| Lemma A.4 | Covered by the stronger proved theorem `ThomasonUpper.exists_reservoirs`; see the numerical comparison below. |
+| Lemma B.1 | Proved in the more general edge-weighted form `HadwigerRamsey.finite_minor_bound`. |
+
+Here `ThomasonUpper` abbreviates the namespace `HadwigerRamsey.ThomasonUpper`.
+The substantive appendix distinctions are:
+
+- **Lemma A.2:** the manuscript bounds the change in capped entropy by
+  `12*delta/a^3` for `delta <= a/4` and `n >= 4/a`. Lean instead controls
+  uncapped entropy when every complementary density is at least `a` and
+  deletion is sufficiently small. Its bound is
+  `(16/a^2 + 4*log(2/a)/a)*delta`. The stated capped estimate with its
+  specific constant and full parameter range is not an existing Lean endpoint.
+- **Lemma A.3:** Lean assumes complementary densities at least `a`, works
+  with uncapped entropy, and returns nonempty, pairwise disjoint, mutually
+  joined sets. It proves the required asymptotic lower count, but uses an
+  upper count `C*n/sqrt(log n)` and a part-size bound `C*sqrt(log n)`.
+  It does not assert coverage of the original graph, globally balanced sizes,
+  or the manuscript's sharp upper count `n*sqrt(Lambda_a(G)/log n)`.
+  In Theorem 1.5, Lean first selects a spanning subgraph with capped densities,
+  controls the rounding error, and uses this complete family to build the minor.
+- **Lemma A.4:** Lean proves the same reservoir sizes and at least
+  `r*degree(v)/2` neighbours in the dominating reservoir. Its path count is
+  `c*n*r^(h-1)/4`, which is at least `n*r^h` once `r <= c/4`.
+  Since `r = 1/log(log n)`, this holds for sufficiently large orders.
+  There is no separate wrapper spelling out the weaker `n*r^h` count;
+  the stronger theorem is what the formalized construction uses. Its proof
+  uses Mathlib's Hoeffding bound in place of the manuscript's Chernoff bound.
+- **Lemma B.1:** `finite_minor_bound` permits arbitrary nonnegative edge
+  weights with total at most `T`. Taking `T = n^2*L^2/2` and using
+  `edge_card_real`, `blockLambda_identity`, and `total_weight_le` gives
+  exactly the displayed finite estimate. This specialization is used inside
+  the checked proof of Theorem 1.4; no separate manuscript-shaped wrapper is needed.
+
+The short-path argument in Lemma A.4, the greedy domination argument in the
+proof of Theorem 1.5, and the intermediate calculations in Appendix B remain
+proved Lean helpers; they are not separate numbered manuscript results.
+
+Proposition 4.1 is the component transfer theorem, also presented as Theorem 5
+in [comptransfer.tex](ComponentTransfer/comptransfer.tex). Proposition 4.2 is
+the four-colour Hadwiger–Ramsey asymptotic: it applies Proposition 4.1 to the
+optimum established following [four_colour_analytic.tex](HadwigerRamsey4Col/four_colour_analytic.tex).
+The companion sources retain their own supporting-result numbering; the
+Lean names `ComponentTransfer.theorem5` and `HadwigerRamsey4Col.theorem1_1`
+are stable declaration names, not main-paper claim numbers.
+
+## Main theorem endpoints
+
 Theorem 1.1 is proved as `HadwigerRamsey.theorem1_1` in
 `HadwigerRamsey/Ramsey.lean`. It defines the three-colour Hadwiger--Ramsey
 number as the least forcing order and derives its exact asymptotic
@@ -57,15 +132,15 @@ by nonnegativity of probability.
 
 | Manuscript ingredient | Lean declaration / module |
 | --- | --- |
-| Observation B.1: minor gives permissible partition | `HasCliqueMinor.permissible`, `Graph.lean` |
+| Lemma B.1: minor gives a permissible partition | `HasCliqueMinor.permissible`, `Graph.lean` |
 | Hadwiger number and branch-set meaning | `hadwigerNumber`, `hasCliqueMinor_iff_le_hadwigerNumber`, `Graph.lean` |
-| Lemma B.2: total-weight identity | `total_weight_identity`, `Weights.lean` |
+| Lemma B.1: total-weight identity | `total_weight_identity`, `Weights.lean` |
 | Disjoint block pairs use independent edges | `probability_allHits`, `Probability.lean` |
 | Probability of no edge across a block pair | `probability_noHit`, `Probability.lean` |
 | Finite Jensen and exponential product estimate | `sum_exp_neg_ge`, `permissible_product_bound`, `Analytic.lean` |
-| Lemma B.3: fixed-partition bound | `fixed_partition_bound`, `Finite.lean` |
-| Corollary B.4: union bound | `finite_minor_bound`, `Finite.lean` |
-| Lemma B.5: uniform asymptotics | `uniform_tail_bound`, `Asymptotic.lean` |
+| Lemma B.1: fixed-partition bound | `fixed_partition_bound`, `Finite.lean` |
+| Lemma B.1: union bound and finite estimate | `finite_minor_bound`, `Finite.lean` |
+| Theorem 1.4: uniform asymptotics after Lemma B.1 | `uniform_tail_bound`, `Asymptotic.lean` |
 | Block average equals vertex-pair average | `blockLambda_identity`, `Blocks.lean` |
 | Measurability of finite graph properties | `measurableSet_graph_property`, `Measurability.lean` |
 | Theorem 1.4 | `thomasonlower`, `ThomasonLower.lean` |
@@ -113,14 +188,9 @@ stated alternatives: a part of either partition has size at least
 parts of both partitions. The subsets are chosen as intersections of
 parts; no new partition notion is introduced.
 
-**Boundary condition:** the manuscript does not explicitly require n > 0.
-With the usual definition of partitions into nonempty parts, its literal
-statement fails for n = 0: both partitions are empty, so neither outcome
-can supply the required parts. The Lean theorem makes the nonemptiness
-condition explicit. It implies k > 0 from the partition-size bound, so
-no separate positivity assumption on k is needed. This is the version
-used by the later application to a large vertex set. The manuscript has
-not been edited.
+**Boundary condition:** both the manuscript and Lean require a nonempty
+ground set. This implies k > 0 from the partition-size bound, so no
+separate positivity assumption on k is needed.
 
 The proof follows the manuscript. Large intersection cells cannot differ
 in both their row and column if the second outcome fails. A short logical
@@ -188,11 +258,10 @@ manuscript's β = sqrt(−log(10−4 sqrt 6))/2. The public definitions are
 
 ### Complete differences from the manuscript's argument
 
-1. **Endpoint completion:** the manuscript defines f only on [0,1),
-   although its hypotheses allow αᵢ = 1 and its proof uses h(1). We use
-   the same formula at x = 1. At x = 0 the total Lean expression equals
-   zero and agrees with the specified f(0). No extra hypothesis excludes
-   zero weights or a weight of one. Values outside [0,1] are irrelevant.
+1. **Endpoints:** the formula is used on [0,1], as in the manuscript.
+   At x = 0 the total Lean expression equals zero and agrees with the
+   specified f(0). No extra hypothesis excludes zero weights or a weight
+   of one. Values outside [0,1] are irrelevant.
 2. **Exact constants:** write q = 10 − 4 sqrt 6, c = −log(q)/4 = β²,
    F = log 2 − c, and a = 4F − 16cq/(2−q). The auxiliary constant a
    and cubic P(x) = Fx + ax(x−1/2)(1−x) are new. Lean proves a ≥ 0.
@@ -294,10 +363,9 @@ analytic library or vendored code for this lemma.
 
 ### Mathematical correspondence and differences
 
-- The averaging step uses the **sum** of the two logarithms, implementing
-  the agreed correction to the two minus signs in the manuscript.
-  All sums use the same index set `Fin k`, implementing the agreed fixes
-  of the stray k/ℓ indices (the Lean name k simply denotes the dimension).
+- The averaging step uses the **sum** of the two logarithms, as in the
+  manuscript. All sums use the same index set `Fin k`; the Lean name k
+  denotes the dimension called ℓ in the manuscript.
 - `Optimization.logCost p` abbreviates −log(1−p).
   `Optimization.energy α q` is the sum of the weighted logarithmic costs;
   `energy_eq_neg_sum` proves equality with the displayed negative double
@@ -322,9 +390,8 @@ analytic library or vendored code for this lemma.
 - There are no other logical changes to the Lemma 3.8 argument.
   Corollary 3.9 is treated separately below.
 
-The manuscript source remains unchanged; the preceding corrections are
-implemented in the Lean proof and recorded here. The Corollary 3.9
-formalization below uses the agreed closed bounds and explicitly positive δ.
+The Corollary 3.9 formalization below uses the manuscript's closed bounds
+and explicitly positive δ.
 
 The root module imports `Opt.lean` and prints dependency reports for both
 Lemma 3.8 and `Optimization.opt_of_nonneg`. Both use only
@@ -335,7 +402,7 @@ on Lemma 3.7.
 ## Corollary 3.9: approximate optimization
 
 `HadwigerRamsey.optapprox` in `HadwigerRamsey/OptApprox.lean` proves the
-agreed closed version of Corollary 3.9: for every ζ > 0 there is δ > 0,
+statement of Corollary 3.9: for every ζ > 0 there is δ > 0,
 uniform in every positive dimension k ≤ 1/ζ and every choice of data.
 Weights satisfy αᵢ ≥ 0 and ∑αᵢ = 1; probabilities satisfy
 0 ≤ pᵢ,qᴮᵢⱼ,qᴳᵢⱼ ≤ 1−ζ. Matrix symmetry is included as in the manuscript.
@@ -363,12 +430,10 @@ through the earlier stronger helper and Lemma 3.7.
 
 ### Complete proof details and manuscript correspondence
 
-1. **Agreed statement changes:** the strict bounds on the weights and
-   probabilities are replaced by the compact closure αᵢ ≥ 0 and
-   pᵢ,qᶜᵢⱼ ≤ 1−ζ, and the conclusion explicitly supplies δ > 0.
-   The manuscript file is preserved; these are the intended corrections
-   specified in the conversation. All other hypotheses and all five
-   conditions are retained.
+1. **Statement:** the weights and probabilities have the manuscript's
+   closed bounds αᵢ ≥ 0 and pᵢ,qᶜᵢⱼ ≤ 1−ζ, and the conclusion
+   explicitly supplies δ > 0. All hypotheses and all five conditions
+   are retained.
 2. **Remove zero weights:** restrict the index set to {i | αᵢ > 0}.
    The surviving weights still sum to one. All weighted matrix sums
    are unchanged because every deleted row or column has zero weight.
@@ -507,7 +572,7 @@ Checked components:
 | Connectivity implies the required degree-sum bound | `connectivity_mul_order_le_twice_edges` |
 | Uniform lower bound epsilon(1-epsilon) on Lambda-star | `cappedLambda_lower`, `DensityLower.lean` |
 | Positive class masses make diagonal densities well-defined | `class_size_two` |
-| Lemma A.6: greedy domination with the manuscript's exact logarithmic budget | `exists_dominating_set`, `Domination.lean` |
+| Greedy domination in the proof of Theorem 1.5, with a logarithmic budget | `exists_dominating_set`, `Domination.lean` |
 | Disjoint finite allocations from a reservoir | `disjoint_reservoir_selection`, `Selection.lean` |
 | Allocation of all dominating sets M-a with epsilon/8 and epsilon R/4 constants | `reservoir_dominating_sets`, `ReservoirDomination.lean` |
 | Discarding defective ordered pairs costs at most their number | `discard_defective_pairs`, `Deletion.lean` |
@@ -517,13 +582,13 @@ Checked components:
 | Public finite vertex-Menger proof, with its full proof dependency subset | `Lax17Proofs.SimpleGraph.Menger.finite_vertex_menger_sharp`, `vendor/menger/` |
 | Cut connectivity supplies disjoint set-to-set paths | `disjoint_paths_between_large_sets`, `Menger.lean` |
 | Cut connectivity supplies internally disjoint paths, including adjacent endpoints | `internally_disjoint_paths`, `Menger.lean` |
-| Appendix A.4, with positive connectivity and the same constants | `short_paths_vertexConnectivity`, `short_paths`, `Menger.lean`; counting in `ShortPaths.lean` |
+| Short-path step in Lemma A.4, with positive connectivity | `short_paths_vertexConnectivity`, `short_paths`, `Menger.lean`; counting in `ShortPaths.lean` |
 | Greedily choose globally disjoint interiors from large candidate families | `exists_path_avoiding`, `allocate_path_interiors`, `PathAllocation.lean` |
-| Appendix A.2: actual vertex-deletion stability, including diagonal densities and Lambda | `vertex_deletion_stability`, `DensityDeletion.lean` |
+| Alternative to Lemma A.2: vertex-deletion stability for uncapped entropy with complementary densities bounded below | `vertex_deletion_stability`, `DensityDeletion.lean` |
 | Positive integer rounding with exact total and coordinate error at most 1/ell | `positive_rounded_masses`, `Rounding.lean` |
 | Exact-multiple class trimming, positive common multiplicity, and uniform deletion bound | `rounded_class_trimming`, `Trimming.lean` |
 | Regularized logarithmic weights: loss at most tau/a and uniform perturbation stability | `regularizedLambda_error`, `regularizedLambda_stability`, `Regularization.lean` |
-| Appendix A.5 with the exact sampling rate, path length, reservoir sizes, and surviving-path threshold | `exists_reservoirs`, `ReservoirExistence.lean` |
+| Stronger form covering Lemma A.4, with the same sampling rate, path length, and reservoir sizes | `exists_reservoirs`, `ReservoirExistence.lean` |
 | Independent path-survival events and Hoeffding event-count bounds | `IndependentBlocks.lean`, `Concentration.lean`, `ReservoirSampling.lean` |
 | The three failure probabilities have sum below one uniformly for large n | `reservoir_failure_eventually_lt_one`, `ReservoirAsymptotic.lean` |
 | Disjoint connected cores and the finite final clique-minor construction | `connected_reservoir_cores`, `cliqueMinor_of_reservoirs`, `ConnectedCores.lean`, `FiniteAssembly.lean` |
@@ -543,22 +608,22 @@ Checked components:
 | Equipartition part sizes lie between floor(n/m) and floor(n/m)+1 | `IsCompleteEquipartition.card_part_bounds`, `CompleteEquipartition.lean` |
 | Exact log P formula, rounded quadratic margin, and uniform probability decay | `log_partitionFailure`, `rounded_quadratic_entropy_margin`, `eventually_partitionFailure_small`, `PartitionFailure.lean`, `PartitionFailureAsymptotic.lean` |
 | Uniform at-least-(1-eta)*s parts for exact-multiple classes under the entropy margin, explicitly using A.1 | `multitype_many_parts_of_entropy_margin`, `MultitypeAsymptotic.lean` |
-| Uniform auxiliary constants satisfying both strict gain/ratio inequalities and all three cost bounds in A.3 | `exists_multitype_asymptotic_parameters`, `AsymptoticParameters.lean` |
+| Uniform auxiliary constants for the alternative to Lemma A.3 | `exists_multitype_asymptotic_parameters`, `AsymptoticParameters.lean` |
 | Exact transport of deletion data to an actual graph on Fin (n-|Z|) | `Restriction.lean`, `restrictedLambda` |
 | Uniform rounded scale, entropy error, and part count/size comparisons | `RoundedScale.lean`, `TrimmedEntropy.lean`, `AsymptoticFiniteBounds.lean` |
-| Uniform complete-family consequence of A.3, explicitly using A.1 | `asymptotic_complete_family`, `AsymptoticFamily.lean` |
+| Alternative to Lemma A.3: uniform complete family under a complementary-density lower bound, explicitly using Lemma A.1 | `asymptotic_complete_family`, `AsymptoticFamily.lean` |
 | Capping followed by reservoir deletion, with exact total entropy error | `exists_capped_restriction`, `CappedRestriction.lean` |
 | Final uniform cutoffs, logarithmic order comparison, and additive accuracy | `FinalEventually.lean`, `FinalScale.lean` |
 | Theorem 1.5 with the exact target statement | `HadwigerRamsey.thomasonupper`, `ThomasonUpper.lean`, `Final.lean` |
 
 All ingredients needed for the target theorem are proved and assembled.
-`asymptotic_complete_family` proves the uniform complete-family consequence
-of A.3 from the actual rounded and trimmed graph parameters, explicitly
-using A.1. It returns pairwise disjoint nonempty mutually joined parts
-with the required count and size bounds, without requiring them to cover
-the discarded vertices. This is all the final minor construction uses;
-see difference 35 below. The final theorem caps the graph, removes the
-reservoirs, applies this result, and converts the family into a clique minor.
+`asymptotic_complete_family` proves the alternative to Lemma A.3 described
+in the numbered-results table, from actual rounded and trimmed graph
+parameters and explicitly using Lemma A.1. It returns pairwise disjoint
+nonempty mutually joined parts, with the count and size bounds needed for
+the final minor construction. See difference 35 below. The final theorem
+selects reservoirs, caps the graph, removes the reservoirs from that graph,
+applies this result, and converts the family into a clique minor.
 All size cutoffs and approximation errors are uniform over the graph,
 number of classes, and partition, depending only on epsilon.
 
@@ -592,7 +657,7 @@ Logical correspondence and every change from the manuscript argument:
 1. No hypothesis or conclusion of Theorem 1.5 has been changed. The
    endpoint proves the original target proposition. Changes to intermediate
    statements and arguments are recorded individually below.
-2. The standalone Lemma A.6 explicitly assumes both finite sides
+2. The standalone greedy-domination helper explicitly assumes both finite sides
    are nonempty. Those qualifications make the manuscript's logarithm
    and greedy choices meaningful. In the actual reservoir allocation,
    nonemptiness of the unused reservoir is proved from the positive
@@ -601,15 +666,16 @@ Logical correspondence and every change from the manuscript argument:
 3. Domination is proved for a finite relation rather than a bundled
    bipartite graph, by the same double-counting and greedy iteration.
 4. Analytic stability is expressed with the total absolute change in the
-   class masses. The manuscript's maximum-coordinate estimate follows
-   after the bounded-number-of-classes argument. This is now assembled
-   with the graph-deletion estimates and the uniform asymptotic application.
+   class masses. Lean bounds this using coordinate estimates and the
+   bounded number of classes. This is assembled with graph-deletion
+   estimates and the uniform asymptotic application; it is not the
+   explicit capped-entropy statement of Lemma A.2.
 5. The final connected-core lemma is slightly more general than the
    appendix: any disjoint connected dominating enlargements suffice.
    It preserves the same branch-set argument. No new assertion about
    finding those enlargements is assumed to establish Theorem 1.5.
-6. Appendix A.4 explicitly assumes positive connectivity, as already
-   authorized. Its parameter `k` may be any positive lower bound on the
+6. The short-path helper used for Lemma A.4 assumes positive connectivity.
+   Its parameter `k` may be any positive lower bound on the
    vertex connectivity, so the manuscript's value follows by taking
    `k = vertexConnectivity G`. The path count is written `k ≤ 2 * Q.card`,
    which is exactly the claimed real inequality `Q.card ≥ k/2`.
@@ -632,20 +698,22 @@ Logical correspondence and every change from the manuscript argument:
    the consecutive-pair lists in the sets `M_a`. The reservoir existence,
    the asymptotic inequality ensuring that condition, and the construction
    of the connected cores are not assumed proved by this lemma.
-10. Appendix A.2 now has a complete uniform endpoint for every `a > 0`.
+10. The alternative stability result used in place of Lemma A.2 has a
+    uniform endpoint for every `a > 0`.
     One possible explicit choice is
     `C = 2 + 8/a + 16/a^2 + 4*abs(log(2/a))/a` and
-    `N = ceil(4/a) + 1`. Its entropy conclusion assumes `C*delta <= a/2`,
-    an explicit version of the manuscript's sufficiently-small-delta
-    qualification. The mass and density estimates hold throughout the
-    original range `0 <= delta < a/2`. Although intermediate helpers
+    `N = ceil(4/a) + 1`. Its uncapped-entropy conclusion assumes all
+    complementary densities are at least `a` and `C*delta <= a/2`.
+    The mass and density estimates hold throughout `0 <= delta < a/2`.
+    This is not Lemma A.2's capped estimate `12*delta/a^3` on its full
+    stated range. Although intermediate helpers
     assume `a <= 1`, the uniform endpoint derives this from the nonempty
     graph and class-size hypotheses; it is not a new hypothesis.
-11. A.2 uses Mathlib's existing relation-density perturbation bound instead
+11. Lean's alternative to Lemma A.2 uses Mathlib's relation-density perturbation bound instead
     of reproducing the manuscript's edge-loss computation. A diagonal
     block is represented on ordered distinct vertex pairs; the numerator
     and denominator both double, so its density is exactly the original
-    unordered-pair density. This yields the explicit stronger bounds
+    unordered-pair density. This yields the explicit bounds
     `2*delta` for each mass change and `8*delta/a` for each density change.
     Surviving-class densities are computed directly in the original
     graph on the surviving classes. `deletedClassMass_eq_induced` and
@@ -673,16 +741,18 @@ Logical correspondence and every change from the manuscript argument:
     remains exactly `tau/a`. They do not assert the probabilistic
     complete-equipartition result by themselves; the assembled
     `asymptotic_complete_family` now explicitly applies A.1.
-15. A.5 uses exactly the manuscript's independent three-label experiment,
+15. Lemma A.4 uses the manuscript's independent three-label experiment,
     with probabilities `r`, `r`, and `1-2*r`. Mathlib's Hoeffding inequality
     replaces the quoted multiplicative Chernoff bounds. The resulting
     total failure bound is
     `2*exp(-2*r^2*n) + n*exp(-c*r^2*n/2)`
     `+ n^2*exp(-c*n*(r^(H-1))^2/4)`.
-    These exponents differ from the manuscript, but all three conclusions,
-    including `r = 1/log(log n)`, `H = ceil(2/c)+1`, and
-    `T = c*n*r^(H-1)/4`, are unchanged. The order threshold still depends
-    only on `c`.
+    These exponents differ from the manuscript. The sampling rate
+    `r = 1/log(log n)` and path length `H = ceil(2/c)+1` agree, while
+    Lean proves the stronger path count `T = c*n*r^(H-1)/4` and the
+    stronger neighbour bound `r*degree(v)/2`. For sufficiently large n,
+    `r <= c/4`, so `T >= n*r^H`, as required by Lemma A.4. The order
+    threshold still depends only on `c`.
 16. Path-survival probabilities may differ with path length. Their events
     are proved independent from disjoint interiors, and each probability
     is bounded below by `r^(H-1)`. Hoeffding is applied to these independent,
@@ -810,17 +880,17 @@ Logical correspondence and every change from the manuscript argument:
     classes and the quadratic margin, so it is a checked intermediate
     consequence used by the assembled complete-family endpoint below.
 
-30. The unspecified small/large constants in the start of A.3 are chosen
-    explicitly and uniformly. Lean takes gamma = min(eta,1)/8,
+30. The alternative to Lemma A.3 uses different explicit, uniform
+    auxiliary constants. Lean takes gamma = min(eta,1)/8,
     xi = gamma/(12*(1+gamma)^2), tau = min(1/2,a*xi*lambda/2),
     phi = min(1/2,xi*lambda/(2*(log(1/tau)+1))), and
-    omega = max(1,4/(xi*phi)). It proves both manuscript inequalities
+    omega = max(1,4/(xi*phi)). It proves the gain and ratio inequalities
     (1-2*xi)/(1+gamma) > 1-eta and
     (1+gamma)^2*(1-3*xi) > 1+2*xi, together with the three cost bounds.
     It also records phi < 1 and 3*xi <= 1, as satisfied by these choices
-    and needed by the finite and quadratic-margin helpers. This supplies
-    explicit witnesses for the manuscript's choices, without changing
-    the assumptions a > 0, lambda > 0, eta > 0.
+    and needed by the finite and quadratic-margin helpers. These replace
+    the manuscript's choice xi = min(1/20,eta/7) and its scale factor
+    1+3*xi, while retaining the rounding, trimming, and entropy-margin argument.
 
 31. Actual induced graphs are reindexed by a finite equivalence with
     `Fin (n-|Z|)`. Injectivity proves that class cardinalities, diagonal
@@ -845,16 +915,16 @@ Logical correspondence and every change from the manuscript argument:
     ordered double sums, and density conventions remain unchanged.
 35. Instead of redistributing A.3's discarded vertices back into its parts,
     `asymptotic_complete_family` keeps the complete equipartition of the
-    trimmed graph as a family in the original graph. It proves the same
-    lower and upper part counts and the required upper part-size bound.
-    Thus its standalone conclusion omits coverage and global balance on
-    the original vertex set. Theorem 1.5 only uses a disjoint complete
-    family outside the reservoirs, so these omissions require no change
-    to its statement. The finite A.1 endpoint still has its full complete
+    trimmed graph as a family in the original graph. Under the lower bound
+    on complementary densities, it proves the asymptotic lower count
+    using uncapped entropy, an upper count `C*n/sqrt(log n)`, and an
+    upper part-size bound `C*sqrt(log n)`. Its standalone conclusion omits
+    coverage, global balance, and Lemma A.3's sharp upper count. Theorem 1.5
+    only uses the weaker family bounds outside the reservoirs, so its
+    statement is unchanged. The finite Lemma A.1 endpoint has its full complete
     equipartition conclusion, including coverage and balance.
 36. The final accuracy choice is
     `eta = min(1/4, epsilon/(8*(sqrt(log(1/epsilon)+1)+1)))`.
-    Rather than introducing epsilon-prime and splitting off its >= 1 case,
     Lean bounds the total entropy error by `(epsilon/4)^2`, the deleted
     fraction by eta, and uses `4*eta*sqrt(B) <= epsilon`. A square-root
     inequality gives the required additive error directly. This changes
@@ -868,11 +938,11 @@ Logical correspondence and every change from the manuscript argument:
     the original G, where the final branch sets are connected. The case
     epsilon >= 1 is excluded by kappa(G) < n for positive n.
 
-38. Lean selects the reservoirs in G before selecting the capped spanning
-    subgraph H; the manuscript makes these independent choices in the
-    opposite order. The reservoir theorem uses only G and its connectivity,
-    while the capping theorem works uniformly for every eligible partition.
-    Both required conclusions therefore hold together in either order.
+38. Lean selects the reservoirs in G and then constructs a capped spanning
+    subgraph H before applying its uncapped-entropy helpers. The manuscript
+    works directly with capped entropy, using Lemmas A.2 and A.3, and does
+    not need this extra subgraph. The capping and rounding-error estimates
+    in Lean are proved; connectivity is used only in the original G.
 
 The completed project passes `lake build` on Lean/Mathlib 4.33.0
 (8807 jobs). The source guard passes for all 103 Lean source files.
@@ -1388,7 +1458,7 @@ construction. No manuscript claim referenced in this proof is supplied
 as an additional unproved premise. `Main/DependencyAudit.lean` inspects
 these proof dependencies as part of the root build. The completed proof
 of Theorem 1.5 is used as its public theorem; the previously documented
-weaker standalone A.3 helper needs no further assertion here.
+alternative standalone Lemma A.3 helper needs no further assertion here.
 
 The manuscript's contradiction argument is followed in order: two good
 colours from Lemma 3.6; a controlled partition of the remaining colour;
@@ -1447,7 +1517,8 @@ Logical correspondence and all variations from the written argument:
    Trim to the smaller side's size; the cross-edge density does not decrease.
    The actual public Lemma 3.3 bound is applied to this balanced graph and
    transferred back by the earlier injective minor-transport result.
-5. The diagonal restriction estimate reuses the existing A.2 bound
+5. The diagonal restriction estimate reuses the density-deletion bound
+   from Lean's alternative to Lemma A.2,
    `8*epsilon-zero/lambda` instead of reproving the manuscript's sharper
    one-sided bound `2*epsilon-zero/lambda`. For both colours the total
    diagonal error is at most `16*epsilon-zero/lambda <= xi`. The off-diagonal
@@ -1576,8 +1647,8 @@ Files:
 
 All previously recorded manuscript-to-Lean differences in the inputs
 remain as documented in their respective sections. In particular, this
-does not strengthen the separate A.3 complete-family endpoint to its
-full original-vertex equipartition statement.
+does not strengthen the alternative Lemma A.3 complete-family endpoint
+to the manuscript's full equipartition statement or sharp upper part count.
 
 Verification when Theorem 1.1 was added: the full `lake build` passed on
 Lean/Mathlib 4.33.0 (8867 jobs). The source guard checks all 163 Lean

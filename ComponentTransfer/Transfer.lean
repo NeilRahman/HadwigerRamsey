@@ -8,7 +8,7 @@ open HadwigerRamsey
 
 namespace ComponentTransfer
 
-/-- The unconditional component transfer bound. Common coloured compactness,
+/-- The lower bound supporting Proposition 4.1. Common coloured compactness,
 connected-component decomposition, entropy lifting, and finite truncation
 supply the two graphon structure inputs to the final contradiction. -/
 theorem transferBound (r : ℕ) (hr : 2 ≤ r) : TransferBound r (beta r) := by
@@ -18,7 +18,7 @@ theorem transferBound (r : ℕ) (hr : 2 ≤ r) : TransferBound r (beta r) := by
     exact ⟨s,hs,W,hsum,hconv⟩
   · exact Transfer.exists_colored_components
 
-/-- **Theorem 3 of `comptransfer.tex`.** Every sufficiently large complete
+/-- **Theorem 3 of `comptransfer.tex`, supporting Proposition 4.1.** Every sufficiently large complete
 `r`-edge-colouring has a colour with the asserted Hadwiger-number lower bound. -/
 theorem theorem3 (r : ℕ) (hr : 2 ≤ r) (ε : ℝ) (hε : 0 < ε) :
     ∃ n₀ : ℕ, ∀ n ≥ n₀, ∀ G : Fin r → SimpleGraph (Fin n),

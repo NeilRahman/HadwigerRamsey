@@ -302,7 +302,7 @@ theorem internally_disjoint_paths {n k : ℕ} {G : SimpleGraph (Fin n)}
         · exact hd ha hb hab
   · exact internally_disjoint_paths_of_nonadjacent huv hadj hconn
 
-/-- Appendix Lemma A.4: at least k/2 internally disjoint paths have
+/-- The short-path step of Lemma A.4: at least k/2 internally disjoint paths have
 length at most 2n/k+1. Positivity is explicit to give the quotient its
 intended meaning. -/
 theorem short_paths {n k : ℕ} {G : SimpleGraph (Fin n)}
@@ -315,7 +315,7 @@ theorem short_paths {n k : ℕ} {G : SimpleGraph (Fin n)}
   obtain ⟨Q, _, hcard, hlen, hdisj⟩ := short_paths_of_family huv hk P hc hd
   exact ⟨Q, hcard, hlen, hdisj⟩
 
-/-- A.4 stated with the graph's actual vertex connectivity and the
+/-- The short-path step of Lemma A.4 with the graph's actual vertex connectivity and the
 manuscript's real-valued lower bound on the number of paths. -/
 theorem short_paths_vertexConnectivity {n : ℕ} {G : SimpleGraph (Fin n)}
     {u v : Fin n} (huv : u ≠ v) (hk : 0 < vertexConnectivity G) :

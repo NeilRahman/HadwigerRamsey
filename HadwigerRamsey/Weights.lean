@@ -10,7 +10,7 @@ lemma sum_edges_eq_triangle {n : ℕ} (w : Fin n → Fin n → ℝ) :
     (by simp) (fun e => w e.1 e.2)]
   simp only [Finset.sum_filter, Fintype.sum_prod_type]
 
-/-- Lemma `lem:total-weight`, expressed using a sum over vertices. -/
+/-- The total-weight identity used in Lemma B.1, expressed as a vertex sum. -/
 theorem total_weight_identity {n : ℕ} (w : Fin n → Fin n → ℝ)
     (hsym : ∀ u v, w u v = w v u) :
     2 * (∑ e : Edge n, w e.val.1 e.val.2) + ∑ u, w u u = ∑ u, ∑ v, w u v := by

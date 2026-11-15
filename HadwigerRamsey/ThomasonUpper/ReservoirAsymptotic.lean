@@ -5,7 +5,7 @@ open Filter Real
 
 namespace HadwigerRamsey.ThomasonUpper
 
-/-- Exponential concentration still beats every union bound needed in A.5
+/-- Exponential concentration still beats every union bound needed in Lemma A.4
 when the exponent is n divided by a fixed power of log log n. -/
 theorem eventually_exp_loglog_power_le {c : ℝ} (hc : 0 < c) (K : ℕ) :
     ∀ᶠ n : ℕ in atTop,

@@ -24,7 +24,7 @@ theorem HasCliqueMinor.mono {V : Type*} {G : SimpleGraph V} {s t : ℕ}
   exact ⟨B ∘ e, fun i => hc (e i), fun i j hij => hd _ _ (e.injective.ne hij),
     fun i j hij => he _ _ (e.injective.ne hij)⟩
 
-/-- Observation `obs:minor-partition` of the manuscript. -/
+/-- The minor-to-partition step in Lemma B.1. -/
 theorem HasCliqueMinor.permissible {V : Type*} {G : SimpleGraph V} {s : ℕ}
     (h : HasCliqueMinor G s) (hs : 0 < s) : ∃ f : V → Fin s, Permissible G f := by
   classical

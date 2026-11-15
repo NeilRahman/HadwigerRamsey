@@ -15,7 +15,7 @@ theorem eventCount_label_eq {V : Type*} [Fintype V] [DecidableEq V]
   classical
   simp [eventCount, Set.indicator_apply]
 
-/-- A.5's reservoir-size tail, using Hoeffding in place of Chernoff. -/
+/-- Lemma A.4's reservoir-size tail, using Hoeffding in place of Chernoff. -/
 theorem label_count_upper {V : Type*} [Fintype V] [DecidableEq V]
     (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2) (S : Finset V) (b : Bool) :
     (randomLabels r hr hrhalf).real
@@ -46,7 +46,7 @@ theorem label_count_upper {V : Type*} [Fintype V] [DecidableEq V]
   · have hsR : (S.card : ℝ) ≠ 0 := by exact_mod_cast hs
     field_simp
 
-/-- A.5's neighbor-count tail for an arbitrary fixed vertex set. -/
+/-- Lemma A.4's neighbor-count tail for an arbitrary fixed vertex set. -/
 theorem label_count_lower {V : Type*} [Fintype V] [DecidableEq V]
     (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2) (S : Finset V) (b : Bool) :
     (randomLabels r hr hrhalf).real

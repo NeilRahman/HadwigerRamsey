@@ -8,7 +8,7 @@ namespace HadwigerRamsey.ThomasonUpper
 instance : MeasurableSpace (Option Bool) := ⊤
 instance : DiscreteMeasurableSpace (Option Bool) := ⟨fun _ => trivial⟩
 
-/-- The three labels C, D, and R used in A.5, with probabilities r,r,1-2r. -/
+/-- The three labels C, D, and R used in Lemma A.4, with probabilities r,r,1-2r. -/
 noncomputable def reservoirLabelPMF (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1/2) : PMF (Option Bool) :=
   PMF.ofFintype (fun i => ENNReal.ofReal (if i = none then 1-2*r else r)) (by
     rw [← ENNReal.ofReal_sum_of_nonneg (by

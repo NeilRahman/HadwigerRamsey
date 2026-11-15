@@ -62,7 +62,7 @@ theorem offDiag_survives_deletion {V : Type*} [DecidableEq V]
   nlinarith [sq_nonneg ((S.card : ℝ) - (S \ Z).card),
     mul_nonneg hz (by linarith : (0 : ℝ) ≤ 2 * S.card - 4)]
 
-/-- The diagonal part of A.2 reuses Mathlib's relation-density deletion
+/-- The diagonal estimate for Lean's alternative to Lemma A.2 uses Mathlib's relation-density deletion
 estimate after changing the sample space to distinct vertex pairs. -/
 theorem internalDensity_deletion_bound {V : Type*} [Fintype V] [DecidableEq V]
     (G : SimpleGraph V) (S Z : Finset V) (hS : 2 ≤ S.card) :
@@ -93,7 +93,7 @@ theorem retained_card_fraction {V : Type*} [DecidableEq V]
   rw [hid] at hm
   nlinarith
 
-/-- The off-diagonal part of A.2 is directly Mathlib's density estimate. -/
+/-- The off-diagonal estimate for Lean's alternative to Lemma A.2 uses Mathlib's density bound. -/
 theorem edgeDensity_deletion_bound {V : Type*} [Fintype V] [DecidableEq V]
     (G : SimpleGraph V) (S T Z : Finset V) {a δ N : ℝ}
     (ha : 0 < a) (hδ : 0 ≤ δ)
@@ -107,7 +107,7 @@ theorem edgeDensity_deletion_bound {V : Type*} [Fintype V] [DecidableEq V]
     (retained_card_fraction T Z ha hδ hT hZ)
   simpa only [SimpleGraph.edgeDensity, mul_div_assoc] using h
 
-/-- The elementary normalization estimate for the class masses in A.2. -/
+/-- The class-mass normalization estimate for Lean's alternative to Lemma A.2. -/
 theorem normalized_mass_deletion_bound {N z s t δ : ℝ}
     (hN : 0 < N) (hz : 0 ≤ z) (hδ : 0 ≤ δ) (hδhalf : δ ≤ 1/2)
     (hzδ : z ≤ δ * N) (ht : 0 ≤ t) (hts : t ≤ s)
@@ -228,7 +228,7 @@ theorem sum_deletedClassMass {n k : ℕ} (τ : Fin n → Fin k)
   simp only [deletedClassMass, ← sum_div, ← Nat.cast_sum, ← h]
   exact div_self (by exact_mod_cast (by omega : n - Z.card ≠ 0))
 
-/-- The combinatorial part of appendix A.2, with an explicit size threshold
+/-- The combinatorial input to Lean's alternative to Lemma A.2, with an explicit size threshold
 and constants: all class masses change by at most 2δ, and all block
 densities (including diagonal blocks) by at most 8δ/a. -/
 theorem vertex_deletion_bounds {n k : ℕ} (G : SimpleGraph (Fin n))
@@ -284,9 +284,9 @@ theorem vertex_deletion_bounds {n k : ℕ} (G : SimpleGraph (Fin n))
       exact (edgeDensity_deletion_bound G _ _ Z ha hδ (hsize i) (hsize j) hZ).trans
         (by apply div_le_div_of_nonneg_right _ ha.le; linarith)
 
-/-- The entropy conclusion of appendix A.2, with a uniform explicit
-constant. This combines actual graph-deletion estimates with the previously
-checked analytic stability lemma. -/
+/-- An uncapped-entropy alternative to Lemma A.2, assuming complementary
+densities bounded below. This combines graph deletion with analytic stability;
+it does not assert the manuscript's capped bound `12*δ/a^3`. -/
 theorem vertex_deletion_lambda_bound {n k : ℕ} (G : SimpleGraph (Fin n))
     (τ : Fin n → Fin k) (Z : Finset (Fin n)) {a δ : ℝ}
     (ha : 0 < a) (ha1 : a ≤ 1) (hδ : 0 ≤ δ) (hδa : δ < a/2)
@@ -345,9 +345,10 @@ theorem vertex_deletion_lambda_bound {n k : ℕ} (G : SimpleGraph (Fin n))
   rw [abs_sub_comm] at hfinal
   convert hfinal using 1; ring
 
-/-- Appendix A.2 with one constant depending only on a and a uniform
-order threshold. Complementary densities are written as 1 minus density;
-their pointwise changes equal the corresponding density changes. -/
+/-- A stability result used in place of Lemma A.2, with a uniform constant
+and order threshold. Its entropy conclusion assumes complementary densities
+bounded below and sufficiently small deletion; it concerns uncapped entropy.
+This is not the manuscript's explicit capped-entropy statement. -/
 theorem vertex_deletion_stability (a : ℝ) (ha : 0 < a) :
     ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, ∀ n ≥ N,
       ∀ G : SimpleGraph (Fin n), ∀ k : ℕ, ∀ τ : Fin n → Fin k,

@@ -10,8 +10,9 @@ import ComponentTransfer.RealizationLemma
 import ComponentTransfer.LiftingLemma
 
 /-!
-Theorems 3, 4, and 5 and Lemmas 6, 7, and 8 of the component-transfer manuscript.
-The general Hadwiger--Ramsey asymptotic is unconditional for every fixed r ≥ 2.
+Proposition 4.1: the general Hadwiger--Ramsey asymptotic for every fixed r ≥ 2.
+The development follows Theorems 3–5 and Lemmas 6–8 of `comptransfer.tex`;
+Theorem 5 of that companion source is Proposition 4.1 of the main paper.
 -/
 
 #print axioms ComponentTransfer.beta_pos
